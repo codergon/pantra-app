@@ -8,12 +8,32 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* PantraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PantraTests.m */; };
+		06F017C6B4EB4744BA75742B /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E51328DB992E431FB1D93731 /* DMSans-Regular.ttf */; };
+		08BDC9CF055F4C99AE58FDD6 /* 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7169CB8CCBB44A2A8FAEB586 /* 8.jpg */; };
+		0924A4DD9FD8485E9FF9E23D /* Roobert-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6BBAAFC66FFF49B38E239E7C /* Roobert-Regular.otf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Pantra.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Pantra.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		14EB53B0F8D7470A8FC22EBF /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C26DA45E9094A7AAB1A6704 /* 1.png */; };
+		17067F9EF99645E99818B3A1 /* AcidGrotesk-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEA98A4616424A78B9ADE6B2 /* AcidGrotesk-Regular.otf */; };
+		191B094730A5484C960667DB /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = C78F3CDCAE8D421A9931992D /* 3.png */; };
+		196E06E887194BE19CC707E0 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = 6235C89724E64811961A33FA /* 5.png */; };
+		2111FC838F6B4EEC80214A09 /* adaptive-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DFDD448A4474DDB98541F5E /* adaptive-icon.png */; };
+		2B565EA6B5E24105A81EEF82 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B02BB514414C868A78F201 /* 2.png */; };
+		3FD47954A28A47D0ACF0C079 /* screenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 67F017B945DA4B99A544CD1C /* screenshot.png */; };
+		4C517A2909E84B78A94BE9B1 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A2B51C6E1AD4186BE87B125 /* splash.png */; };
 		7699B88040F8A987B510C191 /* libPods-Pantra-PantraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Pantra-PantraTests.a */; };
+		7DB402D7567A4BD4BCF58824 /* 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F616B7AF4AAA4B83BFE039D9 /* 6.jpg */; };
+		7F013E1DE7064B38B6379A0B /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AAA002D65DB40F685347ECB /* icon.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8287F891F41947C29F32C756 /* Roobert-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0459D78DFA784206BABE924C /* Roobert-Medium.otf */; };
+		8AA63836218B496FA7D6148A /* favicon.png in Resources */ = {isa = PBXBuildFile; fileRef = D6EAB224A6C749E3B585E574 /* favicon.png */; };
+		8D87BCD9325D46A4ACE4B94E /* DMSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 031312BD72AA419CA1D294AA /* DMSans-Medium.ttf */; };
+		A63DD73A96FA415592166EF8 /* Roobert-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8AB4C61D297A4D2FA2F61F72 /* Roobert-SemiBold.otf */; };
+		A75E1A7A3FC44BC5AB3F1FA9 /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 719257EDA90E4F05B0EDCC9E /* 4.png */; };
+		D1345E67D9F54F61BE674884 /* AcidGrotesk-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEC4098541564F01AA556E06 /* AcidGrotesk-Medium.ttf */; };
+		E6B7752211A944F9BE905A24 /* 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 54B4687C8DA943D284EA6BC9 /* 7.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +50,9 @@
 		00E356EE1AD99517003FC87E /* PantraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PantraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* PantraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PantraTests.m; sourceTree = "<group>"; };
+		031312BD72AA419CA1D294AA /* DMSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Medium.ttf"; path = "../src/assets/fonts/DMSans/DMSans-Medium.ttf"; sourceTree = "<group>"; };
+		0459D78DFA784206BABE924C /* Roobert-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roobert-Medium.otf"; path = "../src/assets/fonts/Roobert/Roobert-Medium.otf"; sourceTree = "<group>"; };
+		05B02BB514414C868A78F201 /* 2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 2.png; path = ../src/assets/images/grads/2.png; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Pantra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pantra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Pantra/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Pantra/AppDelegate.mm; sourceTree = "<group>"; };
@@ -38,12 +61,29 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Pantra/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Pantra-PantraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pantra-PantraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-Pantra.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pantra.debug.xcconfig"; path = "Target Support Files/Pods-Pantra/Pods-Pantra.debug.xcconfig"; sourceTree = "<group>"; };
+		3C26DA45E9094A7AAB1A6704 /* 1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 1.png; path = ../src/assets/images/grads/1.png; sourceTree = "<group>"; };
+		54B4687C8DA943D284EA6BC9 /* 7.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 7.jpg; path = ../src/assets/images/grads/7.jpg; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Pantra.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pantra.release.xcconfig"; path = "Target Support Files/Pods-Pantra/Pods-Pantra.release.xcconfig"; sourceTree = "<group>"; };
+		5AAA002D65DB40F685347ECB /* icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = icon.png; path = ../src/assets/images/icon.png; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Pantra-PantraTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pantra-PantraTests.debug.xcconfig"; path = "Target Support Files/Pods-Pantra-PantraTests/Pods-Pantra-PantraTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Pantra.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pantra.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DFDD448A4474DDB98541F5E /* adaptive-icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "adaptive-icon.png"; path = "../src/assets/images/adaptive-icon.png"; sourceTree = "<group>"; };
+		6235C89724E64811961A33FA /* 5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 5.png; path = ../src/assets/images/grads/5.png; sourceTree = "<group>"; };
+		67F017B945DA4B99A544CD1C /* screenshot.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = screenshot.png; path = ../src/assets/images/screenshot.png; sourceTree = "<group>"; };
+		6BBAAFC66FFF49B38E239E7C /* Roobert-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roobert-Regular.otf"; path = "../src/assets/fonts/Roobert/Roobert-Regular.otf"; sourceTree = "<group>"; };
+		7169CB8CCBB44A2A8FAEB586 /* 8.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 8.jpg; path = ../src/assets/images/grads/8.jpg; sourceTree = "<group>"; };
+		719257EDA90E4F05B0EDCC9E /* 4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 4.png; path = ../src/assets/images/grads/4.png; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Pantra/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Pantra-PantraTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pantra-PantraTests.release.xcconfig"; path = "Target Support Files/Pods-Pantra-PantraTests/Pods-Pantra-PantraTests.release.xcconfig"; sourceTree = "<group>"; };
+		8AB4C61D297A4D2FA2F61F72 /* Roobert-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roobert-SemiBold.otf"; path = "../src/assets/fonts/Roobert/Roobert-SemiBold.otf"; sourceTree = "<group>"; };
+		9A2B51C6E1AD4186BE87B125 /* splash.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = splash.png; path = ../src/assets/images/splash.png; sourceTree = "<group>"; };
+		C78F3CDCAE8D421A9931992D /* 3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 3.png; path = ../src/assets/images/grads/3.png; sourceTree = "<group>"; };
+		CEA98A4616424A78B9ADE6B2 /* AcidGrotesk-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AcidGrotesk-Regular.otf"; path = "../src/assets/fonts/AcidGrotesk/AcidGrotesk-Regular.otf"; sourceTree = "<group>"; };
+		D6EAB224A6C749E3B585E574 /* favicon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = favicon.png; path = ../src/assets/images/favicon.png; sourceTree = "<group>"; };
+		E51328DB992E431FB1D93731 /* DMSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-Regular.ttf"; path = "../src/assets/fonts/DMSans/DMSans-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EEC4098541564F01AA556E06 /* AcidGrotesk-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AcidGrotesk-Medium.ttf"; path = "../src/assets/fonts/AcidGrotesk/AcidGrotesk-Medium.ttf"; sourceTree = "<group>"; };
+		F616B7AF4AAA4B83BFE039D9 /* 6.jpg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = 6.jpg; path = ../src/assets/images/grads/6.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +146,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4EA9339ADDBD4B46A05937DF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CEA98A4616424A78B9ADE6B2 /* AcidGrotesk-Regular.otf */,
+				0459D78DFA784206BABE924C /* Roobert-Medium.otf */,
+				6BBAAFC66FFF49B38E239E7C /* Roobert-Regular.otf */,
+				8AB4C61D297A4D2FA2F61F72 /* Roobert-SemiBold.otf */,
+				EEC4098541564F01AA556E06 /* AcidGrotesk-Medium.ttf */,
+				031312BD72AA419CA1D294AA /* DMSans-Medium.ttf */,
+				E51328DB992E431FB1D93731 /* DMSans-Regular.ttf */,
+				5DFDD448A4474DDB98541F5E /* adaptive-icon.png */,
+				D6EAB224A6C749E3B585E574 /* favicon.png */,
+				3C26DA45E9094A7AAB1A6704 /* 1.png */,
+				05B02BB514414C868A78F201 /* 2.png */,
+				C78F3CDCAE8D421A9931992D /* 3.png */,
+				719257EDA90E4F05B0EDCC9E /* 4.png */,
+				6235C89724E64811961A33FA /* 5.png */,
+				F616B7AF4AAA4B83BFE039D9 /* 6.jpg */,
+				54B4687C8DA943D284EA6BC9 /* 7.jpg */,
+				7169CB8CCBB44A2A8FAEB586 /* 8.jpg */,
+				5AAA002D65DB40F685347ECB /* icon.png */,
+				67F017B945DA4B99A544CD1C /* screenshot.png */,
+				9A2B51C6E1AD4186BE87B125 /* splash.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +189,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				4EA9339ADDBD4B46A05937DF /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -243,6 +311,26 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				17067F9EF99645E99818B3A1 /* AcidGrotesk-Regular.otf in Resources */,
+				8287F891F41947C29F32C756 /* Roobert-Medium.otf in Resources */,
+				0924A4DD9FD8485E9FF9E23D /* Roobert-Regular.otf in Resources */,
+				A63DD73A96FA415592166EF8 /* Roobert-SemiBold.otf in Resources */,
+				D1345E67D9F54F61BE674884 /* AcidGrotesk-Medium.ttf in Resources */,
+				8D87BCD9325D46A4ACE4B94E /* DMSans-Medium.ttf in Resources */,
+				06F017C6B4EB4744BA75742B /* DMSans-Regular.ttf in Resources */,
+				2111FC838F6B4EEC80214A09 /* adaptive-icon.png in Resources */,
+				8AA63836218B496FA7D6148A /* favicon.png in Resources */,
+				14EB53B0F8D7470A8FC22EBF /* 1.png in Resources */,
+				2B565EA6B5E24105A81EEF82 /* 2.png in Resources */,
+				191B094730A5484C960667DB /* 3.png in Resources */,
+				A75E1A7A3FC44BC5AB3F1FA9 /* 4.png in Resources */,
+				196E06E887194BE19CC707E0 /* 5.png in Resources */,
+				7DB402D7567A4BD4BCF58824 /* 6.jpg in Resources */,
+				E6B7752211A944F9BE905A24 /* 7.jpg in Resources */,
+				08BDC9CF055F4C99AE58FDD6 /* 8.jpg in Resources */,
+				7F013E1DE7064B38B6379A0B /* icon.png in Resources */,
+				3FD47954A28A47D0ACF0C079 /* screenshot.png in Resources */,
+				4C517A2909E84B78A94BE9B1 /* splash.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,8 +554,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89F9H4X24M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Pantra/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Pantra;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -493,7 +583,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89F9H4X24M;
 				INFOPLIST_FILE = Pantra/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Pantra;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

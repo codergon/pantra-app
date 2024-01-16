@@ -1,9 +1,15 @@
-/**
- * @format
- */
+import 'react-native-get-random-values';
+import 'react-native-url-polyfill/auto';
+import '@walletconnect/react-native-compat';
+import '@ethersproject/shims';
+
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en.json';
 
 import {AppRegistry} from 'react-native';
-import App from './App';
 import {name as appName} from './app.json';
+import AppProviders from './src/providers/Providers';
 
-AppRegistry.registerComponent(appName, () => App);
+TimeAgo.addDefaultLocale(en);
+
+AppRegistry.registerComponent(appName, () => AppProviders);

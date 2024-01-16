@@ -1,0 +1,85 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/AcidGrotesk/AcidGrotesk-Medium.ttf",
+      "sha1": "a6fd6eb19f5664d72db643803e92221f1e67ce43"
+    },
+    {
+      "path": "src/assets/fonts/AcidGrotesk/AcidGrotesk-Regular.otf",
+      "sha1": "b3503e9f9e91486282359501075343778fdc4a2e"
+    },
+    {
+      "path": "src/assets/fonts/DMSans/DMSans-Medium.ttf",
+      "sha1": "00ea5b83c109e751b844413d32e21b7689bf786d"
+    },
+    {
+      "path": "src/assets/fonts/DMSans/DMSans-Regular.ttf",
+      "sha1": "ac9a042a40e49e8cdbfe0e64e84d9b1c5724e98d"
+    },
+    {
+      "path": "src/assets/fonts/Roobert/Roobert-Medium.otf",
+      "sha1": "cac3497d780c66745c56d980de99d05f0988a481"
+    },
+    {
+      "path": "src/assets/fonts/Roobert/Roobert-Regular.otf",
+      "sha1": "6cfc3f6dacb6e64ebf4ecb3ad455c2c12777a80a"
+    },
+    {
+      "path": "src/assets/fonts/Roobert/Roobert-SemiBold.otf",
+      "sha1": "2efbbce2629a0d6bedbd50074c340e375a137fb3"
+    },
+    {
+      "path": "src/assets/images/adaptive-icon.png",
+      "sha1": "1e2cdd3e0f95b61340f7af619395495d6e043716"
+    },
+    {
+      "path": "src/assets/images/favicon.png",
+      "sha1": "43784ffd1e4310442b2832c83b08b414368ae651"
+    },
+    {
+      "path": "src/assets/images/grads/1.png",
+      "sha1": "9fb55eea582d60f4779388be3102a731aecad62f"
+    },
+    {
+      "path": "src/assets/images/grads/2.png",
+      "sha1": "454ae2e51ed5ed7305281586105fdacedc34d347"
+    },
+    {
+      "path": "src/assets/images/grads/3.png",
+      "sha1": "2e0b4c100ae15de23f0268a974ba38bcb65bc1a8"
+    },
+    {
+      "path": "src/assets/images/grads/4.png",
+      "sha1": "9fe2db2b172682f02751226d5152996850bad363"
+    },
+    {
+      "path": "src/assets/images/grads/5.png",
+      "sha1": "848fd3fc4d4ceab07109dedabff03538978d286b"
+    },
+    {
+      "path": "src/assets/images/grads/6.jpg",
+      "sha1": "584655b1fa83ceb995192979888dda885dbb8410"
+    },
+    {
+      "path": "src/assets/images/grads/7.jpg",
+      "sha1": "908dddf972d925d14f6323611cbe264b88feca9b"
+    },
+    {
+      "path": "src/assets/images/grads/8.jpg",
+      "sha1": "8dd9d641ba5dce7b283e15ee952a4aee4b2f3c84"
+    },
+    {
+      "path": "src/assets/images/icon.png",
+      "sha1": "1e2cdd3e0f95b61340f7af619395495d6e043716"
+    },
+    {
+      "path": "src/assets/images/screenshot.png",
+      "sha1": "f9ce06d5e590dbd614731afc2c07af715698cac8"
+    },
+    {
+      "path": "src/assets/images/splash.png",
+      "sha1": "e29da4d200edea5cee0293daeaa4f94418b1afca"
+    }
+  ]
+}
