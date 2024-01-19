@@ -6,12 +6,19 @@ import {Container} from 'components/_ui/custom';
 import {RgText, Text} from 'components/_ui/typography';
 
 import {useAccount, useBalance, useBlockNumber, useFeeData} from 'wagmi';
+import {useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 // import { W3mButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
 
 const Home = () => {
+  const navigation = useNavigation();
   const {address, isConnected} = useAccount();
   const {data: feeData} = useFeeData({formatUnits: 'ether'});
   const {data: balance} = useBalance({address, formatUnits: 'ether'});
+
+  useEffect(() => {
+    // navigation.navigate('pairModal');
+  }, []);
 
   // console.log(feeData);
 

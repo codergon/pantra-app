@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import {useCallback} from 'react';
 import {
   Platform,
   StyleProp,
@@ -13,17 +13,17 @@ import {
   ScrollView as DefaultScrollView,
   TouchableOpacity as DefaultTouchableOpacity,
   KeyboardAvoidingView as DefaultKeyboardAvoidingView,
-} from "react-native";
+} from 'react-native';
 import {
   SafeAreaViewProps,
   SafeAreaView as DefaultSafeAreaView,
-} from "react-native-safe-area-context";
-import Colors from "constants/appColors";
-import useColorScheme from "hooks/useColorScheme";
+} from 'react-native-safe-area-context';
+import Colors from 'utils/Theming';
+import useColorScheme from 'hooks/useColorScheme';
 
 export function useThemeColor(
-  props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  props: {light?: string; dark?: string},
+  colorName: keyof typeof Colors.light & keyof typeof Colors.dark,
 ) {
   const theme = useColorScheme();
   const colorFromProps = props[theme];
@@ -41,7 +41,7 @@ export type ThemeProps = {
   grey?: boolean;
 };
 
-export type TextProps = ThemeProps & DefaultText["props"];
+export type TextProps = ThemeProps & DefaultText['props'];
 export type CustomPressableProps = ThemeProps &
   PressableProps & {
     activeOpacity?: number;
@@ -51,28 +51,28 @@ export type CustomTouchableOpacityProps = ThemeProps &
     activeOpacity?: number;
   };
 export type ViewProps = ThemeProps &
-  DefaultView["props"] & {
+  DefaultView['props'] & {
     accent?: boolean;
     transparent?: boolean;
     ref?: React.Ref<DefaultView>;
   };
-export type InputProps = { color?: string } & DefaultInput["props"];
+export type InputProps = {color?: string} & DefaultInput['props'];
 
 export function NormalText(props: TextProps) {
-  const { style, lightColor, darkColor, grey, ...otherProps } = props;
+  const {style, lightColor, darkColor, grey, ...otherProps} = props;
   const color = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    grey ? "grey" : "text"
+    {light: lightColor, dark: darkColor},
+    grey ? 'grey' : 'text',
   );
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  return <DefaultText style={[{color}, style]} {...otherProps} />;
 }
 
 export function TextInput(props: InputProps) {
   const theme = useColorScheme();
-  const { style, color, placeholderTextColor, ...otherProps } = props;
+  const {style, color, placeholderTextColor, ...otherProps} = props;
 
-  const textColor = useThemeColor({ light: color, dark: color }, "text");
+  const textColor = useThemeColor({light: color, dark: color}, 'text');
   const placeholderColor = Colors[theme].grey;
 
   return (
@@ -99,8 +99,8 @@ export function View(props: ViewProps) {
     ...otherProps
   } = props;
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    accent ? "accent" : "background"
+    {light: lightColor, dark: darkColor},
+    accent ? 'accent' : 'background',
   );
 
   return (
@@ -108,7 +108,7 @@ export function View(props: ViewProps) {
       style={[
         {
           backgroundColor:
-            transparent && !accent ? "transparent" : backgroundColor,
+            transparent && !accent ? 'transparent' : backgroundColor,
         },
         style,
       ]}
@@ -127,14 +127,14 @@ export function TouchableOpacity(props: CustomTouchableOpacityProps) {
   } = props;
 
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
+    {light: lightColor, dark: darkColor},
+    'background',
   );
 
   return (
     <DefaultTouchableOpacity
       activeOpacity={activeOpacity}
-      style={[{ backgroundColor }, style]}
+      style={[{backgroundColor}, style]}
       {...otherProps}
     />
   );
@@ -149,20 +149,20 @@ export function Pressable(props: CustomPressableProps) {
     ...otherProps
   } = props;
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
+    {light: lightColor, dark: darkColor},
+    'background',
   );
 
   return (
     <DefaultPressable
       // @ts-ignore
       style={useCallback(
-        ({ pressed }: { pressed: boolean }) => [
-          { opacity: pressed ? activeOpacity : 1 },
-          { backgroundColor },
+        ({pressed}: {pressed: boolean}) => [
+          {opacity: pressed ? activeOpacity : 1},
+          {backgroundColor},
           style as StyleProp<PressableProps>,
         ],
-        [style, activeOpacity, backgroundColor]
+        [style, activeOpacity, backgroundColor],
       )}
       {...otherProps}
     />
@@ -170,42 +170,42 @@ export function Pressable(props: CustomPressableProps) {
 }
 
 export function SafeAreaView(props: SafeAreaViewProps & ThemeProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const {style, lightColor, darkColor, ...otherProps} = props;
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
+    {light: lightColor, dark: darkColor},
+    'background',
   );
 
   return (
-    <DefaultSafeAreaView style={[{ backgroundColor }, style]} {...otherProps} />
+    <DefaultSafeAreaView style={[{backgroundColor}, style]} {...otherProps} />
   );
 }
 
 export function ScrollView(props: ScrollViewProps & ThemeProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const {style, lightColor, darkColor, ...otherProps} = props;
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
+    {light: lightColor, dark: darkColor},
+    'background',
   );
 
   return (
-    <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />
+    <DefaultScrollView style={[{backgroundColor}, style]} {...otherProps} />
   );
 }
 
 export function KeyboardAvoidingView(
-  props: KeyboardAvoidingViewProps & ThemeProps
+  props: KeyboardAvoidingViewProps & ThemeProps,
 ) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const {style, lightColor, darkColor, ...otherProps} = props;
   const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
+    {light: lightColor, dark: darkColor},
+    'background',
   );
 
   return (
     <DefaultKeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={[{ backgroundColor }, style]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[{backgroundColor}, style]}
       {...otherProps}
     />
   );

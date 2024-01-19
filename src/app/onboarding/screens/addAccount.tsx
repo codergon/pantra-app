@@ -46,7 +46,9 @@ const AddAccount = ({navigation}: AppStackScreenProps<'addAccount'>) => {
             {
               title: 'Create Smart wallet',
               onPress: () => {
-                createSmartWallet();
+                createSmartWallet({
+                  type: 'new',
+                });
                 navigation.replace('Main');
               },
               icon: <Wallet weight="bold" size={18} color={'#fff'} />,

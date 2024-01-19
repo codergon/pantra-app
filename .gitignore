@@ -2,6 +2,14 @@
 #
 .DS_Store
 
+# macOS
+.DS_Store
+*.pem
+.vscode/
+
+# dependencies
+node_modules/
+
 # Xcode
 #
 build/

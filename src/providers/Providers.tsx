@@ -9,19 +9,14 @@ import SettingsProvider from './SettingsProvider';
 import AppToast from 'components/_common/appToast';
 import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {DarkTheme, ThemeProvider} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  ThemeProvider,
-} from '@react-navigation/native';
 
 import {WagmiConfig} from 'wagmi';
-import {mainnet, polygon, arbitrum, polygonMumbai} from 'wagmi/chains';
-
+import {WC_PROJECT_ID} from '@env';
 import {defaultWagmiConfig} from '@web3modal/wagmi-react-native';
+import {mainnet, polygon, arbitrum, polygonMumbai} from 'wagmi/chains';
 
 dayjs.extend(duration);
 const queryClient = new QueryClient();
@@ -30,8 +25,8 @@ const queryClient = new QueryClient();
 const chains = [mainnet, polygon, arbitrum, polygonMumbai];
 const wagmiConfig = defaultWagmiConfig({
   chains,
-  projectId: '',
   enableWalletConnect: false,
+  projectId: WC_PROJECT_ID,
 });
 
 const Providers = () => {
@@ -41,23 +36,19 @@ const Providers = () => {
     <SafeAreaProvider>
       <WagmiConfig config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider
-            value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <NavigationContainer
-              theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <SettingsProvider>
-                <AppContextProvider>
-                  <MenuProvider>
-                    <GestureHandlerRootView style={{flex: 1}}>
-                      <>
-                        <App />
-                        <AppToast />
-                      </>
-                    </GestureHandlerRootView>
-                  </MenuProvider>
-                </AppContextProvider>
-              </SettingsProvider>
-            </NavigationContainer>
+          <ThemeProvider value={DarkTheme}>
+            <SettingsProvider>
+              <AppContextProvider>
+                <MenuProvider>
+                  <GestureHandlerRootView style={{flex: 1}}>
+                    <>
+                      <App />
+                      <AppToast />
+                    </>
+                  </GestureHandlerRootView>
+                </MenuProvider>
+              </AppContextProvider>
+            </SettingsProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </WagmiConfig>

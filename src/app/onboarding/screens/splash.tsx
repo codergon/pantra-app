@@ -30,7 +30,7 @@ const Splash = () => {
 
       <View style={[styles.body]}>
         <View style={{gap: 4}}>
-          <Header style={{textAlign: 'center'}}>Best Smart Wallet</Header>
+          <Header style={{textAlign: 'center'}}>Pantra - Smart Wallet</Header>
           <RgText
             style={[
               {
@@ -39,8 +39,7 @@ const Splash = () => {
                 color: '#777',
               },
             ]}>
-            Non-custodial wallet with automated savings and transferable NFT
-            accumulation.
+            Non-custodial wallet with smart savings powered by LightLink.
           </RgText>
         </View>
 

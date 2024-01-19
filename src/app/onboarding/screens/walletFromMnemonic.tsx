@@ -1,6 +1,6 @@
 import styles from '../styles';
 import {useEffect, useState} from 'react';
-import {colors} from 'constants/appColors';
+import {colors} from 'utils/Theming';
 import {useApp} from 'providers/AppProvider';
 import {LockKey} from 'phosphor-react-native';
 import BackBtn from 'components/_common/backBtn';
@@ -24,7 +24,7 @@ const WalletFromMnemonic = ({
   const insets = useSafeAreaInsets();
   const isKeyboardVisible = useKeyboardVisible();
   const [mnemonic, setMnemonic] = useState<string>('');
-  const {isAddingWallet, recoverFromMnemonic, account} = useApp();
+  const {isAddingWallet, createSmartWallet, account} = useApp();
 
   useEffect(() => {
     if (account) navigation.replace('Main');
@@ -114,7 +114,10 @@ const WalletFromMnemonic = ({
               disabled={!mnemonic || isAddingWallet}
               onPress={() => {
                 Keyboard.dismiss();
-                recoverFromMnemonic(mnemonic);
+                createSmartWallet({
+                  mnemonic,
+                  type: 'mnemonic',
+                });
               }}
               style={[
                 styles.connectBtn,

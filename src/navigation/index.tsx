@@ -1,4 +1,4 @@
-import Colors from 'constants/appColors';
+import Colors, {colors} from 'utils/Theming';
 import useColorScheme from 'hooks/useColorScheme';
 import {RgText} from 'components/_ui/typography';
 import {ColorSchemeName, View} from 'react-native';
@@ -23,12 +23,16 @@ import {
 import Home from 'app/home';
 import More from 'app/more';
 import Vaults from 'app/vaults';
+import Loader from 'app/Loader';
 import Activity from 'app/activity';
 import Onboarding from 'app/onboarding';
-import Loader from 'components/_common/Loader';
 import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
 import CustomBackground from 'components/modals/custombackground';
+import {DarkTheme, NavigationContainer} from '@react-navigation/native';
+import PairModal from 'app/modals/pairModal';
+import SignTxnModal from 'app/modals/signTxn';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -108,16 +112,20 @@ function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
 export default function Navigation() {
   return (
     <>
-      <BottomSheetNavigator />
+      <NavigationContainer theme={DarkTheme}>
+        <BottomSheetNavigator />
+      </NavigationContainer>
     </>
   );
 }
 
 // Bottom Sheet Navigator
 const BottomSheetNavigator = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <BottomSheet.Navigator
-      initialRouteName="Root"
+      initialRouteName="pairModal"
       screenOptions={{
         backdropComponent: props => (
           <BottomSheetBackdrop
@@ -128,6 +136,8 @@ const BottomSheetNavigator = () => {
         ),
       }}>
       <BottomSheet.Screen name="Root" component={RootNavigator} />
+
+      {/* Acct Setup */}
       <BottomSheet.Screen
         name="selectAvatar"
         component={SelectAvatar}
@@ -149,7 +159,49 @@ const BottomSheetNavigator = () => {
           snapPoints: [226],
           enableOverDrag: true,
           overDragResistanceFactor: 3,
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
           backgroundComponent: props => <CustomBackground {...props} />,
+        }}
+      />
+
+      {/* Action modals */}
+      <BottomSheet.Screen
+        name="pairModal"
+        component={PairModal}
+        options={{
+          detached: true,
+          snapPoints: [330],
+          enableOverDrag: false,
+          handleComponent: null,
+          backdropComponent: null,
+          bottomInset: insets.bottom,
+          enableDismissOnClose: false,
+          enablePanDownToClose: false,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
+
+      <BottomSheet.Screen
+        name="signTxnModal"
+        component={SignTxnModal}
+        options={{
+          detached: true,
+          snapPoints: [330],
+          enableOverDrag: false,
+          handleComponent: null,
+          backdropComponent: null,
+          bottomInset: insets.bottom,
+          enableDismissOnClose: false,
+          enablePanDownToClose: false,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
         }}
       />
     </BottomSheet.Navigator>

@@ -1,6 +1,6 @@
 import {styles} from './styles';
 import Image from 'react-native-fast-image';
-import {colors} from 'constants/appColors';
+import {colors} from 'utils/Theming';
 import {TouchableOpacity} from 'react-native';
 
 interface AvatarProps {

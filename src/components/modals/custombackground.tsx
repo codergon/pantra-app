@@ -1,32 +1,20 @@
-import Animated, {
-  useAnimatedStyle,
-  interpolateColor,
-} from "react-native-reanimated";
-import React, { useMemo } from "react";
-import { BottomSheetBackgroundProps } from "@gorhom/bottom-sheet";
-import { colors } from "constants/appColors";
+import React, {useMemo} from 'react';
+import {colors} from 'utils/Theming';
+import Animated from 'react-native-reanimated';
+import {BottomSheetBackgroundProps} from '@gorhom/bottom-sheet';
 
 const CustomBackground: React.FC<
   BottomSheetBackgroundProps & {
     borderRadius?: number;
   }
-> = ({ style, borderRadius = 32, animatedIndex }) => {
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      animatedIndex.value,
-      [0, 1],
-      [colors.modalBackground, colors.modalBackground]
-    ),
-  }));
-  const containerStyle = useMemo(
-    () => [style, containerAnimatedStyle],
-    [style, containerAnimatedStyle]
-  );
+> = ({style, borderRadius = 32, animatedIndex}) => {
+  const containerStyle = useMemo(() => [style], [style]);
 
   return (
     <Animated.View
       pointerEvents="none"
       style={[
+        {backgroundColor: colors.modalBackground},
         containerStyle,
         {
           borderRadius: borderRadius,

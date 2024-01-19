@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
-import {View} from '../_ui/themed';
-import Icons from '../_common/Icons';
 import layout from 'constants/layout';
 import Image from 'react-native-fast-image';
 import {useApp} from 'providers/AppProvider';
+import {View} from '../components/_ui/themed';
 import {Text} from 'components/_ui/typography';
+import Icons from '../components/_common/Icons';
 import {useSettings} from 'providers/SettingsProvider';
 import {RootStackScreenProps} from 'typings/navigation';
 import {StatusBar, TouchableOpacity} from 'react-native';
@@ -19,14 +19,15 @@ const Loader = ({
   isComponent = false,
 }: RootStackScreenProps<'Loader'> & LoaderProps) => {
   const insets = useSafeAreaInsets();
-  const {account} = useApp();
+  const {account, initialized} = useApp();
   const {isAuthorized, isBiometricsSupported, biometricsAuth} = useSettings();
 
   useEffect(() => {
     if (isComponent) return;
+    if (!initialized) return;
     if (!isAuthorized) return;
     navigation.replace(account ? 'Main' : 'Onboarding');
-  }, [isAuthorized]);
+  }, [isAuthorized, initialized]);
 
   return (
     <View

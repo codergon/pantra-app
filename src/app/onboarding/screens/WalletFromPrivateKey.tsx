@@ -1,6 +1,6 @@
 import styles from '../styles';
 import {useEffect, useState} from 'react';
-import {colors} from 'constants/appColors';
+import {colors} from 'utils/Theming';
 import {useApp} from 'providers/AppProvider';
 import {LockKey} from 'phosphor-react-native';
 import BackBtn from 'components/_common/backBtn';
@@ -22,7 +22,7 @@ const WalletFromPrivateKey = ({
 }: AppStackScreenProps<'walletFromPrivateKey'>) => {
   const insets = useSafeAreaInsets();
   const [privateKey, setPrivateKey] = useState<string>('');
-  const {isAddingWallet, recoverFromPrivateKey, account} = useApp();
+  const {isAddingWallet, createSmartWallet, account} = useApp();
 
   useEffect(() => {
     if (account) navigation.replace('Main');
@@ -108,7 +108,10 @@ const WalletFromPrivateKey = ({
               disabled={!privateKey || isAddingWallet}
               onPress={() => {
                 Keyboard.dismiss();
-                recoverFromPrivateKey(privateKey);
+                createSmartWallet({
+                  type: 'privateKey',
+                  privateKey,
+                });
               }}
               style={[
                 styles.connectBtn,

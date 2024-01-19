@@ -21,8 +21,10 @@ export type RootTabParamList = {
   more: undefined;
   wallet: undefined;
   signIn: undefined;
-  selectAvatar: undefined;
 
+  pairModal: undefined;
+  signTxnModal: undefined;
+  selectAvatar: undefined;
   importWalletModal: undefined;
 };
 
@@ -36,6 +38,8 @@ export type OnboardingStackParamList = {
 export type BottomSheetParams = {
   selectAvatar: undefined;
   importWalletModal: undefined;
+  pairModal: undefined;
+  signTxnModal: undefined;
 
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;

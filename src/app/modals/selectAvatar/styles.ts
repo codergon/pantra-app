@@ -1,6 +1,6 @@
-import { colors } from "constants/appColors";
-import { padding } from "helpers/styles";
-import { StyleSheet } from "react-native";
+import {colors} from 'utils/Theming';
+import {padding} from 'helpers/styles';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -10,16 +10,16 @@ export const styles = StyleSheet.create({
   header: {
     paddingTop: 20,
     paddingBottom: 18,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderBottomWidth: 1,
     paddingHorizontal: 20,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     borderBottomColor: colors.border3,
   },
   headerTxtContainer: {
     gap: 2,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   headerTxt: {
     fontSize: 20,
@@ -30,9 +30,9 @@ export const styles = StyleSheet.create({
     aspectRatio: 1,
     borderWidth: 1,
     borderRadius: 50,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     borderColor: colors.border4,
     backgroundColor: colors.accent3,
   },
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 6,
   },
   avatarImage: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 });

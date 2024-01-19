@@ -1,8 +1,8 @@
-import React from "react";
-import { colors } from "constants/appColors";
-import { ArrowLeft } from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import {colors} from 'utils/Theming';
+import {ArrowLeft} from 'lucide-react-native';
+import {useNavigation} from '@react-navigation/native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
 const BackBtn = () => {
   const navigation = useNavigation();
@@ -13,9 +13,8 @@ const BackBtn = () => {
         onPress={() => {
           if (navigation.canGoBack()) navigation.goBack();
         }}
-        style={[styles.btn]}
-      >
-        <ArrowLeft size={24} color={"#fff"} />
+        style={[styles.btn]}>
+        <ArrowLeft size={24} color={'#fff'} />
       </TouchableOpacity>
     </>
   );
@@ -28,8 +27,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.accent1,
   },
 });
