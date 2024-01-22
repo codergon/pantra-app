@@ -1,3 +1,4 @@
+import {colors} from 'utils/Theming';
 import {DimensionValue, View} from 'react-native';
 
 interface IDividerProps {
@@ -13,9 +14,9 @@ const Divider = ({
   height = 1,
   opacity = 1,
   width = '100%',
-  color = '#444',
   marginVertical = 10,
   marginHorizontal = 0,
+  color = colors.accent4,
 }: IDividerProps) => {
   return (
     <View

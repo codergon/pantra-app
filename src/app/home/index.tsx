@@ -1,14 +1,12 @@
 import {styles} from './styles';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import {Text} from 'components/_ui/typography';
 import HomeHeader from 'components/home/header';
-import {ArrowUp} from 'phosphor-react-native';
 import {Container} from 'components/_ui/custom';
-import {RgText, Text} from 'components/_ui/typography';
 
-import {useAccount, useBalance, useBlockNumber, useFeeData} from 'wagmi';
 import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-// import { W3mButton, useWeb3Modal } from "@web3modal/wagmi-react-native";
+import {useAccount, useBalance, useFeeData} from 'wagmi';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -17,12 +15,8 @@ const Home = () => {
   const {data: balance} = useBalance({address, formatUnits: 'ether'});
 
   useEffect(() => {
-    // navigation.navigate('pairModal');
+    navigation.navigate('signTxnModal');
   }, []);
-
-  // console.log(feeData);
-
-  // const { open } = useWeb3Modal();
 
   return (
     <Container paddingTop={0} style={[styles.container]}>
@@ -30,9 +24,7 @@ const Home = () => {
 
       {isConnected ? (
         <TouchableOpacity
-          onPress={() => {
-            // open();
-          }}
+          onPress={() => {}}
           style={{
             marginVertical: 20,
             paddingHorizontal: 20,
@@ -46,8 +38,6 @@ const Home = () => {
       ) : (
         <></>
       )}
-
-      {/* <W3mButton accountStyle={{}} /> */}
     </Container>
   );
 };

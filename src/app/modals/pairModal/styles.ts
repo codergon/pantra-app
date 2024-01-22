@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 18,
     flex: 1,
     paddingTop: 20,
     paddingBottom: 6,

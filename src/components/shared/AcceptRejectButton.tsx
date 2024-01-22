@@ -3,6 +3,7 @@ import {colors} from 'utils/Theming';
 import {TouchableOpacity, StyleSheet, Text} from 'react-native';
 
 interface IAcceptRejectButtonProps {
+  flex?: number;
   title: string;
   accept: boolean;
   onPress: () => void;
@@ -12,6 +13,7 @@ export function AcceptRejectButton({
   title,
   accept,
   onPress,
+  flex = 1,
 }: IAcceptRejectButtonProps) {
   const btnColors = accept
     ? {
@@ -29,7 +31,7 @@ export function AcceptRejectButton({
       style={[
         styles.actionBtn,
         {
-          flex: 1,
+          flex,
           borderColor: btnColors.border,
           backgroundColor: btnColors.bg,
           borderWidth: btnColors.border ? 1 : 0,

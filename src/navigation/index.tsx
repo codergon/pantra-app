@@ -190,7 +190,8 @@ const BottomSheetNavigator = () => {
         component={SignTxnModal}
         options={{
           detached: true,
-          snapPoints: [630],
+          snapPoints: [640],
+          topInset: insets.top,
           enableOverDrag: false,
           handleComponent: null,
           backdropComponent: null,

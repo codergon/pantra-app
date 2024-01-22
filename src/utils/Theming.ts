@@ -7,7 +7,9 @@ export const colors = {
 
   accent: '#282828',
   accent1: '#111',
+  accent2: '#1d1d1d',
   accent3: '#333',
+  accent4: '#444',
 
   border: '#222',
   border1: '#111',
@@ -18,6 +20,7 @@ export const colors = {
   subText: '#777',
   subText2: '#aaa',
   subText3: '#ccc',
+  subText4: '#ccc',
   background: '#000',
 
   warning: '#FFD772',
