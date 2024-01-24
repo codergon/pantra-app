@@ -1,11 +1,11 @@
+import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {padding} from 'helpers/styles';
 import {OwnedToken} from 'alchemy-sdk';
-import {StyleSheet, View} from 'react-native';
 import {formatIpfsLink} from 'helpers/common';
-import FastImage from 'react-native-fast-image';
+import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
-import millify from 'millify';
+import FastImage from 'react-native-fast-image';
 
 interface TokenItemProps {
   token: OwnedToken & {usdBalance?: number};
@@ -66,7 +66,7 @@ const TokenItem = ({token}: TokenItemProps) => {
               ? '$' +
                 (Number(token?.usdBalance) > 1000
                   ? millify(Number(token?.usdBalance), {precision: 2})
-                  : (Number(token?.usdBalance) ?? 0).toFixed(2))
+                  : Number(token?.usdBalance).toFixed(2))
               : ''}
           </Text>
         </View>

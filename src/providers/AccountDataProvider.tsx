@@ -1,16 +1,18 @@
 import axios from 'axios';
-import React, {useEffect, useMemo, useState} from 'react';
+import {Address, useBalance} from 'wagmi';
 import {useWallet} from './WalletProvider';
+import React, {useEffect, useState} from 'react';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {INFURA_API_KEY, ALCHEMY_API_KEY, INFURA_API_KEY_SECRET} from '@env';
 import {
   Network,
   Alchemy,
+  OwnedToken,
+  OwnedNftsResponse,
   AssetTransfersCategory,
   GetTokensForOwnerResponse,
-  OwnedToken,
+  AssetTransfersWithMetadataResponse,
 } from 'alchemy-sdk';
-import {Address, useBalance} from 'wagmi';
 
 const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
@@ -21,6 +23,7 @@ const Auth = btoa(INFURA_API_KEY + ':' + INFURA_API_KEY_SECRET);
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
+  const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [usdBalance, setUsdBalance] = useState<IUsdBalance>({
     total: 0,
     tokens: 0,
@@ -39,7 +42,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   });
 
   const tokens = useQuery<GetTokensForOwnerResponse>(
-    ['acctNfts', account?.address],
+    ['acctTokens', account?.address],
     async () => {
       return await alchemy.core.getTokensForOwner('alphaglitch.eth');
     },
@@ -50,10 +53,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
-  const acctNfts = useQuery(
+  const acctNfts = useQuery<OwnedNftsResponse>(
     ['acctNfts', account?.address],
     async () => {
-      return {};
       return await alchemy.nft.getNftsForOwner('alphaglitch.eth');
     },
     {
@@ -63,10 +65,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
-  const acctTxns = useQuery(
+  const acctTxns = useQuery<AssetTransfersWithMetadataResponse>(
     ['acctTxns', account?.address],
     async () => {
-      return {};
       return await alchemy.core.getAssetTransfers({
         fromBlock: '0x0',
         withMetadata: true,
@@ -87,6 +88,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
+  // Fetch USD prices for tokens
   useEffect(() => {
     const fetchUsdPrices = async () => {
       if (!tokens.data?.tokens) return;
@@ -122,6 +124,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
           0,
         );
 
+        setEthUsdPrice(ethUsdPrice);
         setUsdBalance({
           tokens: totalTokensInUsd,
           total: totalTokensInUsd + Number(ethBalance?.formatted) * ethUsdPrice,
@@ -145,6 +148,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         acctTxns,
         acctTokens,
         usdBalance,
+        ethUsdPrice,
       }}>
       {props.children}
     </AccountDataContext.Provider>
@@ -157,12 +161,13 @@ interface IUsdBalance {
 }
 
 interface AccountDataContext {
-  acctNfts: any;
-  acctTxns: any;
+  ethUsdPrice: number;
   usdBalance: IUsdBalance;
   acctTokens: (OwnedToken & {
     usdBalance?: number;
   })[];
+  acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
+  acctTxns: UseQueryResult<AssetTransfersWithMetadataResponse, unknown>;
 }
 
 const AccountDataContext = React.createContext({} as AccountDataContext);

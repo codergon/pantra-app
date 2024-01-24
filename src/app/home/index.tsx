@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
+import NFTs from 'components/home/NfFTs';
 import {truncate} from 'utils/HelperUtils';
 import Tokens from 'components/home/Tokens';
 import HomeHeader from 'components/home/header';
@@ -14,7 +15,7 @@ import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
 
 const renderScene = SceneMap({
   tokens: Tokens,
-  nfts: Tokens,
+  nfts: NFTs,
 });
 
 const Home = () => {
@@ -80,13 +81,7 @@ const Home = () => {
         </View>
       </View>
 
-      <View
-        style={[
-          {
-            flex: 1,
-            // paddingHorizontal: 18,
-          },
-        ]}>
+      <View style={[{flex: 1}]}>
         <TabView
           renderTabBar={props => (
             <TabBar
@@ -95,7 +90,8 @@ const Home = () => {
               style={{
                 height: 46,
                 marginHorizontal: 18,
-                borderColor: colors.border3,
+                // borderBottomWidth: 1,
+                borderColor: colors.border1,
                 backgroundColor: 'transparent',
               }}
               renderLabel={({route, focused, color}) => (

@@ -1,7 +1,7 @@
+import {View} from 'react-native';
 import Colors, {colors} from 'utils/Theming';
-import useColorScheme from 'hooks/useColorScheme';
 import {RgText} from 'components/_ui/typography';
-import {ColorSchemeName, View} from 'react-native';
+import useColorScheme from 'hooks/useColorScheme';
 import {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -26,13 +26,14 @@ import Vaults from 'app/vaults';
 import Loader from 'app/Loader';
 import Activity from 'app/activity';
 import Onboarding from 'app/onboarding';
-import SelectAvatar from 'app/modals/selectAvatar';
-import ImportWalletModal from 'app/modals/importWallet';
-import CustomBackground from 'components/modals/custombackground';
-import {DarkTheme, NavigationContainer} from '@react-navigation/native';
+import NFTPreview from 'app/NFTPreview';
 import PairModal from 'app/modals/pairModal';
 import SignTxnModal from 'app/modals/signTxn';
+import SelectAvatar from 'app/modals/selectAvatar';
+import ImportWalletModal from 'app/modals/importWallet';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomBackground from 'components/modals/custombackground';
+import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -218,6 +219,7 @@ function RootNavigator() {
         headerShown: false,
       }}>
       <Stack.Screen name="Loader" component={Loader} />
+      <Stack.Screen name="NFTpreview" component={NFTPreview} />
 
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Main" component={BottomTabNavigator} />

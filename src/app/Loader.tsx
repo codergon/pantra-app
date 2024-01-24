@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 import layout from 'constants/layout';
 import Image from 'react-native-fast-image';
-import {useWallet} from 'providers/WalletProvider';
 import {View} from '../components/_ui/themed';
 import {Text} from 'components/_ui/typography';
 import Icons from '../components/_common/Icons';
+import {useWallet} from 'providers/WalletProvider';
 import {useSettings} from 'providers/SettingsProvider';
 import {RootStackScreenProps} from 'typings/navigation';
 import {StatusBar, TouchableOpacity} from 'react-native';

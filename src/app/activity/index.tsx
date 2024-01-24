@@ -1,10 +1,15 @@
-import {Text, View} from 'react-native';
+import {styles} from './styles';
+import {View} from 'react-native';
+import {Text} from 'components/_ui/typography';
+import {Container} from 'components/_ui/custom';
 
 const Activity = () => {
   return (
-    <View>
-      <Text>Activity</Text>
-    </View>
+    <Container paddingTop={6} style={[styles.container]}>
+      <View style={styles.header}>
+        <Text>Transaction History</Text>
+      </View>
+    </Container>
   );
 };
 

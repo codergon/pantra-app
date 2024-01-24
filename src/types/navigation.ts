@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {OwnedNft} from 'alchemy-sdk';
 
 declare global {
   namespace ReactNavigation {
@@ -21,6 +22,8 @@ export type RootTabParamList = {
   more: undefined;
   wallet: undefined;
   signIn: undefined;
+
+  NFTpreview: OwnedNft;
 
   pairModal: undefined;
   signTxnModal: undefined;
@@ -47,6 +50,7 @@ export type BottomSheetParams = {
 
 export type RootStackParamList = {
   Loader: undefined;
+  NFTpreview: OwnedNft;
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;
 };

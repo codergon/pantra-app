@@ -1,1 +1,0 @@
-const ETHEREUM_ADDRESS = '0X';

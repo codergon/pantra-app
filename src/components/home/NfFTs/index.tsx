@@ -1,18 +1,18 @@
-import TokenItem from './TokenItem';
+import NFTItem from './NFTItem';
 import {colors} from 'utils/Theming';
-import {Wallet} from 'phosphor-react-native';
+import {Ghost} from 'phosphor-react-native';
 import {Text} from 'components/_ui/typography';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
 
-const Tokens = () => {
-  const {acctTokens, usdBalance} = useAccountData();
-  const balance = Number(usdBalance?.total).toFixed(2).split('.');
+const NFTs = () => {
+  const {acctNfts} = useAccountData();
 
   return (
-    <View style={{flex: 1, paddingHorizontal: 18}}>
+    <View style={{flex: 1, paddingHorizontal: 10}}>
       <FlatList
-        data={acctTokens}
+        numColumns={2}
+        data={acctNfts?.data?.ownedNfts}
         ListHeaderComponent={() => {
           return (
             <View style={styles.header}>
@@ -21,30 +21,26 @@ const Tokens = () => {
                   styles.headerIcon,
                   {backgroundColor: colors.secondary},
                 ]}>
-                <Wallet color="#fff" size={20} />
+                <Ghost color="#fff" size={20} />
               </View>
 
               <Text style={{fontSize: 18}}>
-                Wallet • ${balance[0]}
-                {'.'}
-                <Text style={{color: colors.subText2}}>
-                  {balance[1] ? balance[1] : '00'}
-                </Text>
+                Collections • {acctNfts?.data?.totalCount}
               </Text>
             </View>
           );
         }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <TokenItem token={item} />}
-        ItemSeparatorComponent={() => <View style={{height: 8}} />}
+        renderItem={({item}) => <NFTItem nft={item} />}
+        ItemSeparatorComponent={() => <View style={{height: 16}} />}
         contentContainerStyle={{paddingTop: 16, paddingBottom: 46}}
       />
     </View>
   );
 };
 
-export default Tokens;
+export default NFTs;
 
 const styles = StyleSheet.create({
   header: {
@@ -53,7 +49,7 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
   headerIcon: {
     width: 32,
