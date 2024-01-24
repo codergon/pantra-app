@@ -1,5 +1,5 @@
 import styles from '../styles';
-import {useApp} from 'providers/AppProvider';
+import {useWallet} from 'providers/WalletProvider';
 import {Container} from 'components/_ui/custom';
 import {TouchableOpacity, View} from 'react-native';
 import {ArrowDown, Wallet} from 'phosphor-react-native';
@@ -9,7 +9,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const AddAccount = ({navigation}: AppStackScreenProps<'addAccount'>) => {
   const insets = useSafeAreaInsets();
-  const {createSmartWallet} = useApp();
+  const {createSmartWallet} = useWallet();
 
   return (
     <Container

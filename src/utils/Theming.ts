@@ -1,9 +1,13 @@
 export const colors = {
   grey: '#999',
+  neutral: '#ccc',
+
   invert: '#fff',
   // primary: "#8FF0B3",
   // primary: '#FD9264',
   primary: '#D4FF5C',
+
+  white: '#fff',
 
   accent: '#282828',
   accent1: '#111',
@@ -26,7 +30,7 @@ export const colors = {
   warning: '#FFD772',
 
   modalHandle: '#333',
-  modalBackground: '#f00',
+  modalBackground: '#161616',
 
   // TabBar
   tint: '#fff',

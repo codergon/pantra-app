@@ -3,7 +3,7 @@ import {View} from '../_ui/themed';
 import Icons from '../_common/Icons';
 import layout from 'constants/layout';
 import Image from 'react-native-fast-image';
-import {useApp} from 'providers/AppProvider';
+import {useWallet} from 'providers/WalletProvider';
 import {Text} from 'components/_ui/typography';
 import {useSettings} from 'providers/SettingsProvider';
 import {RootStackScreenProps} from 'typings/navigation';
@@ -19,7 +19,7 @@ const Loader = ({
   isComponent = false,
 }: RootStackScreenProps<'Loader'> & LoaderProps) => {
   const insets = useSafeAreaInsets();
-  const {account} = useApp();
+  const {account} = useWallet();
   const {isAuthorized, isBiometricsSupported, biometricsAuth} = useSettings();
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-import {colors} from 'utils/Theming';
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({

@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import layout from 'constants/layout';
 import Image from 'react-native-fast-image';
-import {useApp} from 'providers/AppProvider';
+import {useWallet} from 'providers/WalletProvider';
 import {View} from '../components/_ui/themed';
 import {Text} from 'components/_ui/typography';
 import Icons from '../components/_common/Icons';
@@ -19,7 +19,7 @@ const Loader = ({
   isComponent = false,
 }: RootStackScreenProps<'Loader'> & LoaderProps) => {
   const insets = useSafeAreaInsets();
-  const {account, initialized} = useApp();
+  const {account, initialized} = useWallet();
   const {isAuthorized, isBiometricsSupported, biometricsAuth} = useSettings();
 
   useEffect(() => {

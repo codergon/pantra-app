@@ -12,16 +12,16 @@ import {EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
 
-export default function AppProvider(props: AppProviderProps) {
+export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
   const [account, setAccount] = useSecureStorage<Wallet>('account');
 
-  const initialized = useInitialization();
+  // const initialized = useInitialization();
 
-  useEffect(() => {
-    console.log('Web3WalletSDK initialized:', initialized);
-  }, [initialized]);
+  // useEffect(() => {
+  //   console.log('Web3WalletSDK initialized:', initialized);
+  // }, [initialized]);
 
   // Create a new wallet
   const createSmartWallet = ({
@@ -202,7 +202,7 @@ export default function AppProvider(props: AppProviderProps) {
   ]);
 
   return (
-    <AppContext.Provider
+    <WalletContext.Provider
       value={{
         account,
         updateAvatar,
@@ -211,10 +211,10 @@ export default function AppProvider(props: AppProviderProps) {
         isAddingWallet,
         createSmartWallet,
 
-        initialized: true || initialized,
+        initialized: true,
       }}>
       {props.children}
-    </AppContext.Provider>
+    </WalletContext.Provider>
   );
 }
 
@@ -224,7 +224,7 @@ interface CreateWalletProps {
   privateKey?: string;
 }
 
-interface AppContext {
+interface WalletContext {
   initialized: boolean;
   account: Wallet | null;
 
@@ -235,17 +235,17 @@ interface AppContext {
   createSmartWallet: ({type, mnemonic, privateKey}: CreateWalletProps) => void;
 }
 
-const AppContext = React.createContext({} as AppContext);
+const WalletContext = React.createContext({} as WalletContext);
 
-type AppProviderProps = {
+type WalletProviderProps = {
   children: React.ReactNode;
 };
 
-export function useApp() {
-  const value = React.useContext(AppContext);
+export function useWallet() {
+  const value = React.useContext(WalletContext);
   if (process.env.NODE_ENV !== 'production') {
     if (!value) {
-      throw new Error('useApp must be wrapped in a <AppProvider />');
+      throw new Error('useWallet must be wrapped in a <WalletProvider />');
     }
   }
   return value;
