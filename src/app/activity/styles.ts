@@ -21,13 +21,11 @@ export const styles = StyleSheet.create({
 
   filters: {
     gap: 10,
-    paddingTop: 10,
-    paddingBottom: 14,
+    paddingTop: 2,
+    paddingBottom: 10,
     alignItems: 'center',
     flexDirection: 'row',
-    borderBottomWidth: 1,
     paddingHorizontal: 18,
-    justifyContent: 'center',
     borderBottomColor: colors.border,
   },
 

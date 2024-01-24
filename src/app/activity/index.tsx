@@ -1,19 +1,40 @@
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
+import {padding} from 'helpers/styles';
 import {Text} from 'components/_ui/typography';
 import {Container} from 'components/_ui/custom';
+import Searchbar from 'components/_common/Searchbar';
 import {useAccountData} from 'providers/AccountDataProvider';
-import {FlatList, TouchableOpacity, View} from 'react-native';
-import {ArrowUp, ClockCounterClockwise, ArrowDown} from 'phosphor-react-native';
 import TransactionItem from 'components/activity/transactionItem';
+import {FlatList, Keyboard, TouchableOpacity, View} from 'react-native';
+import {ArrowUp, ArrowDown, ClockCounterClockwise} from 'phosphor-react-native';
 
 const Activity = () => {
-  const {acctTxns, txnFilter} = useAccountData();
+  const {txnSearch, txnFilter, filteredTxns, setTxnFilter, setTxnSearch} =
+    useAccountData();
 
   return (
     <Container paddingTop={4} style={[styles.container]}>
       <View style={[styles.header]}>
         <Text style={{fontSize: 15}}>Transaction History</Text>
+      </View>
+
+      <View
+        style={[
+          {
+            gap: 4,
+            flexDirection: 'row',
+            alignItems: 'center',
+            ...padding(4, 18, 10),
+            justifyContent: 'space-between',
+          },
+        ]}>
+        <Searchbar
+          value={txnSearch}
+          onFocus={() => {}}
+          onChangeText={setTxnSearch}
+          placeholder="Search an address"
+        />
       </View>
 
       <View style={styles.filters}>
@@ -53,7 +74,13 @@ const Activity = () => {
         ].map((item, index) => {
           return (
             <TouchableOpacity
+              activeOpacity={0.6}
               key={item.label}
+              onPress={() => {
+                setTxnSearch('');
+                Keyboard.dismiss();
+                setTxnFilter(item.label as typeof txnFilter);
+              }}
               style={[
                 styles.filter,
                 {
@@ -85,7 +112,7 @@ const Activity = () => {
       </View>
 
       <FlatList
-        data={acctTxns?.data?.transfers}
+        data={filteredTxns}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => <TransactionItem txn={item} />}

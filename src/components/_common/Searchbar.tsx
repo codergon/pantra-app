@@ -2,12 +2,12 @@ import {Pressable} from '../_ui/themed';
 import {padding} from 'helpers/styles';
 import {InputRg} from '../_ui/typography';
 import {View, StyleSheet} from 'react-native';
-import useColorScheme from 'hooks/useColorScheme';
 import {MagnifyingGlass, X} from 'phosphor-react-native';
+import {colors} from 'utils/Theming';
+import {Search} from 'lucide-react-native';
 
 type SearchbarProps = {
   value: string;
-  showMargin?: boolean;
   placeholder?: string;
   onFocus?: () => void;
   onChangeText: (text: string) => void;
@@ -18,40 +18,29 @@ const Searchbar = ({
   onFocus,
   placeholder,
   onChangeText,
-  showMargin = true,
 }: SearchbarProps) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const iconColor = isDark ? '#ddd' : '#666';
-  const textColor = isDark ? '#fff' : '#000';
-  const darken = isDark ? '#282828' : '#f2f2f2';
-
   return (
     <View
       style={[
         styles.searchbar,
         {
-          backgroundColor: '#191919',
+          borderWidth: 1,
+          borderColor: colors.border3,
         },
       ]}>
       <View style={styles.searchbar__icon__cover}>
-        <MagnifyingGlass
-          size={16}
-          weight="bold"
-          color={iconColor}
-          style={styles.searchbar__icon}
-        />
+        <Search size={16} color={'#999'} style={styles.searchbar__icon} />
       </View>
 
       <InputRg
         value={value}
         onFocus={onFocus}
-        color={textColor}
+        color={'#fff'}
         returnKeyType="search"
         returnKeyLabel="Search"
         onChangeText={onChangeText}
         style={styles.searchbar__input}
-        placeholderTextColor={iconColor}
+        placeholderTextColor={'#999'}
         // onSubmitEditing={() => handleSearch(value)}
         placeholder={placeholder ?? 'Search for something...'}
       />
@@ -68,9 +57,9 @@ const Searchbar = ({
           }}
           style={{
             ...styles.close__icon__cover,
-            backgroundColor: isDark ? '#555' : '#d8d8d8',
+            backgroundColor: '#333',
           }}>
-          <X size={13} weight="bold" color={iconColor} />
+          <X size={13} weight="bold" color={'#ddd'} />
         </Pressable>
       )}
     </View>
@@ -82,18 +71,18 @@ export default Searchbar;
 const styles = StyleSheet.create({
   searchbar: {
     flex: 1,
-    borderRadius: 40,
+    borderRadius: 16,
     ...padding(4, 14),
     overflow: 'hidden',
     alignItems: 'center',
     flexDirection: 'row',
   },
   searchbar__icon__cover: {
-    marginRight: 12,
+    marginRight: 10,
     backgroundColor: 'transparent',
   },
   close__icon__cover: {
-    width: 24,
+    width: 22,
     marginLeft: 10,
     marginRight: 0,
     aspectRatio: 1,
@@ -101,7 +90,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  searchbar__icon: {width: 19, height: 19},
+  searchbar__icon: {
+    width: 19,
+    height: 19,
+  },
   searchbar__input: {
     flex: 1,
     height: 34,

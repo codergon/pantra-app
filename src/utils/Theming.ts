@@ -17,6 +17,7 @@ export const colors = {
   accent18: '#181818',
   accent2: '#1d1d1d',
   accent21: '#212121',
+  accent22: '#282828',
   accent3: '#333',
   accent4: '#444',
 

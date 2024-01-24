@@ -2,10 +2,12 @@ import dayjs from 'dayjs';
 import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
-import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
-import {ArrowUpRight} from 'phosphor-react-native';
+import {ArrowDown, ArrowUp} from 'lucide-react-native';
+import {testAddress} from 'providers/AccountDataProvider';
 import {AssetTransfersWithMetadataResult} from 'alchemy-sdk';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FileMinus, LockKeyOpen} from 'phosphor-react-native';
 
 interface TransactionItemProps {
   txn: AssetTransfersWithMetadataResult;
@@ -13,14 +15,27 @@ interface TransactionItemProps {
 
 const TransactionItem = ({txn}: TransactionItemProps) => {
   return (
-    <View style={[styles.container]}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log(JSON.stringify(txn, null, 2));
+      }}
+      activeOpacity={0.6}
+      style={[styles.container]}>
       <View style={styles.icon}>
-        <ArrowUpRight size={20} weight="bold" color={colors.primary} />
+        {txn.value === null || txn.value === 0 ? (
+          <FileMinus size={20} color={colors.warning} />
+        ) : txn.from.toLowerCase() == testAddress.toLowerCase() ? (
+          <ArrowDown size={20} color={colors.primary} />
+        ) : (
+          <ArrowUp size={20} color={colors.primary} />
+        )}
       </View>
 
       <View style={[styles.details]}>
         <View style={[styles.info]}>
-          <Text>{truncate(txn.to!, 15)?.toUpperCase()}</Text>
+          <Text numberOfLines={1} style={{flex: 1}}>
+            {truncate(txn.to!, 15)?.toUpperCase()}
+          </Text>
           <Text style={[{fontSize: 12, color: colors.subText1}]}>
             {dayjs(txn.metadata.blockTimestamp!).format(
               'hh:mm a,  DD MMM YYYY',
@@ -42,7 +57,7 @@ const TransactionItem = ({txn}: TransactionItemProps) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -74,13 +89,13 @@ const styles = StyleSheet.create({
   },
   info: {
     gap: 2,
-    flex: 1,
     overflow: 'hidden',
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
   stats: {
     gap: 2,
+    flex: 1,
     alignItems: 'flex-end',
     flexDirection: 'column',
   },

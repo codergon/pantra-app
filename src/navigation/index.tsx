@@ -233,7 +233,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="activity"
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

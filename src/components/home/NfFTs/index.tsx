@@ -1,41 +1,38 @@
-import NFTItem from './NFTItem';
 import {colors} from 'utils/Theming';
+import Collection from './Collection';
 import {Ghost} from 'phosphor-react-native';
 import {Text} from 'components/_ui/typography';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
 
 const NFTs = () => {
-  const {acctNfts} = useAccountData();
+  const {nftsCollections} = useAccountData();
 
   return (
-    <View style={{flex: 1, paddingHorizontal: 10}}>
-      <FlatList
-        numColumns={2}
-        data={acctNfts?.data?.ownedNfts}
-        ListHeaderComponent={() => {
-          return (
-            <View style={styles.header}>
-              <View
-                style={[
-                  styles.headerIcon,
-                  {backgroundColor: colors.secondary},
-                ]}>
-                <Ghost color="#fff" size={20} />
-              </View>
-
-              <Text style={{fontSize: 18}}>
-                Collections • {acctNfts?.data?.totalCount}
-              </Text>
-            </View>
-          );
+    <View style={{flex: 1, paddingHorizontal: 12}}>
+      <ScrollView
+        contentContainerStyle={{
+          gap: 10,
+          paddingTop: 16,
+          paddingBottom: 46,
         }}
         showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <NFTItem nft={item} />}
-        ItemSeparatorComponent={() => <View style={{height: 16}} />}
-        contentContainerStyle={{paddingTop: 16, paddingBottom: 46}}
-      />
+        showsHorizontalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View
+            style={[styles.headerIcon, {backgroundColor: colors.secondary}]}>
+            <Ghost color="#fff" size={20} />
+          </View>
+
+          <Text style={{fontSize: 18}}>
+            Collections • {nftsCollections?.length}
+          </Text>
+        </View>
+
+        {nftsCollections?.map((collection, index) => {
+          return <Collection key={index} collection={collection} />;
+        })}
+      </ScrollView>
     </View>
   );
 };
@@ -45,11 +42,11 @@ export default NFTs;
 const styles = StyleSheet.create({
   header: {
     gap: 10,
-    paddingTop: 2,
+    paddingTop: 18,
     paddingBottom: 18,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
   },
   headerIcon: {
     width: 32,

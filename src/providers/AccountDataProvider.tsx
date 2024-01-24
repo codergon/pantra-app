@@ -1,17 +1,21 @@
 import axios from 'axios';
+import dayjs from 'dayjs';
+import {ALCHEMY_API_KEY} from '@env';
 import {Address, useBalance} from 'wagmi';
 import {useWallet} from './WalletProvider';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {INFURA_API_KEY, ALCHEMY_API_KEY, INFURA_API_KEY_SECRET} from '@env';
 import {
   Network,
   Alchemy,
   OwnedToken,
+  SortingOrder,
   OwnedNftsResponse,
   AssetTransfersCategory,
   GetTokensForOwnerResponse,
   AssetTransfersWithMetadataResponse,
+  OwnedNft,
+  NftContractForNft,
 } from 'alchemy-sdk';
 
 const alchemy = new Alchemy({
@@ -19,10 +23,11 @@ const alchemy = new Alchemy({
   network: Network.ETH_MAINNET,
 });
 
-const Auth = btoa(INFURA_API_KEY + ':' + INFURA_API_KEY_SECRET);
+export const testAddress = '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93';
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
+  const [txnSearch, setTxnSearch] = useState('');
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
   const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
   const [usdBalance, setUsdBalance] = useState<IUsdBalance>({
@@ -37,9 +42,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
 
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
-    address:
-      '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93' ??
-      (account?.address as Address),
+    address: testAddress ?? (account?.address as Address),
   });
 
   const tokens = useQuery<GetTokensForOwnerResponse>(
@@ -69,10 +72,12 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const acctTxns = useQuery<AssetTransfersWithMetadataResponse>(
     ['acctTxns', account?.address],
     async () => {
-      return await alchemy.core.getAssetTransfers({
+      const fromTxns = await alchemy.core.getAssetTransfers({
         fromBlock: '0x0',
         withMetadata: true,
-        fromAddress: '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93',
+        excludeZeroValue: false,
+        fromAddress: testAddress,
+        order: SortingOrder.DESCENDING,
         category: [
           AssetTransfersCategory.ERC20,
           AssetTransfersCategory.ERC721,
@@ -81,6 +86,34 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
           AssetTransfersCategory.EXTERNAL,
         ],
       });
+
+      const toTxns = await alchemy.core.getAssetTransfers({
+        fromBlock: '0x0',
+        withMetadata: true,
+        toAddress: testAddress,
+        excludeZeroValue: false,
+        order: SortingOrder.DESCENDING,
+        category: [
+          AssetTransfersCategory.ERC20,
+          AssetTransfersCategory.ERC721,
+          AssetTransfersCategory.ERC1155,
+          AssetTransfersCategory.INTERNAL,
+          AssetTransfersCategory.EXTERNAL,
+        ],
+      });
+
+      const sortedTxns = [...fromTxns.transfers, ...toTxns.transfers].sort(
+        (a, b) => {
+          return (
+            dayjs(b?.metadata?.blockTimestamp).valueOf() -
+            dayjs(a?.metadata?.blockTimestamp).valueOf()
+          );
+        },
+      );
+
+      return {
+        transfers: sortedTxns,
+      };
     },
     {
       refetchOnReconnect: false,
@@ -88,6 +121,40 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       enabled: !!account?.address,
     },
   );
+
+  const nftsCollections = useMemo(() => {
+    if (!acctNfts.data?.ownedNfts) return [];
+
+    const grouped = acctNfts.data?.ownedNfts.reduce((acc, nft) => {
+      const key = nft.contract?.address.toLowerCase();
+      if (!acc[key]) {
+        acc[key] = {
+          contract: nft.contract.openSeaMetadata,
+          nfts: [],
+        };
+      }
+      acc[key].nfts.push(nft);
+      return acc;
+    }, {} as {[key: string]: {contract: NftContractForNft['openSeaMetadata']; nfts: OwnedNftsResponse['ownedNfts']}});
+
+    return Object.values(grouped);
+  }, [acctNfts.data?.ownedNfts]);
+
+  // Filter txns based on search and filter
+  const filteredTxns = useMemo(() => {
+    if (!acctTxns.data?.transfers) return [];
+
+    return acctTxns.data?.transfers.filter(
+      txn =>
+        (txnFilter === 'all' ||
+          (txnFilter === 'sent' && txn.from === testAddress.toLowerCase()) ||
+          (txnFilter === 'received' && txn.to === testAddress.toLowerCase())) &&
+        (txnSearch === '' ||
+          txn.from?.toLowerCase().includes(txnSearch.toLowerCase()) ||
+          txn.to?.toLowerCase().includes(txnSearch.toLowerCase()) ||
+          txn.hash?.toLowerCase().includes(txnSearch.toLowerCase())),
+    );
+  }, [acctTxns.data?.transfers, txnFilter, txnSearch]);
 
   // Fetch USD prices for tokens
   useEffect(() => {
@@ -148,9 +215,14 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         acctNfts,
         acctTxns,
         txnFilter,
+        txnSearch,
         acctTokens,
         usdBalance,
         ethUsdPrice,
+        setTxnSearch,
+        setTxnFilter,
+        filteredTxns,
+        nftsCollections,
       }}>
       {props.children}
     </AccountDataContext.Provider>
@@ -162,12 +234,22 @@ interface IUsdBalance {
   tokens: number;
 }
 
+export interface ICollection {
+  contract: NftContractForNft['openSeaMetadata'];
+  nfts: OwnedNftsResponse['ownedNfts'];
+}
+
 export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
 
 interface AccountDataContext {
+  txnSearch: string;
   ethUsdPrice: number;
   txnFilter: ITxnFilter;
   usdBalance: IUsdBalance;
+  nftsCollections: ICollection[];
+  setTxnSearch: React.Dispatch<React.SetStateAction<string>>;
+  filteredTxns: AssetTransfersWithMetadataResponse['transfers'];
+  setTxnFilter: React.Dispatch<React.SetStateAction<ITxnFilter>>;
   acctTokens: (OwnedToken & {
     usdBalance?: number;
   })[];

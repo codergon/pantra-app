@@ -5,11 +5,13 @@ import layout from 'constants/layout';
 import NFTs from 'components/home/NfFTs';
 import {truncate} from 'utils/HelperUtils';
 import Tokens from 'components/home/Tokens';
+import useClipboard from 'hooks/useClipboard';
 import HomeHeader from 'components/home/header';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity, View} from 'react-native';
 import {RgText, Text} from 'components/_ui/typography';
+import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
 
@@ -24,6 +26,8 @@ const Home = () => {
     {key: 'tokens', title: 'Tokens'},
     {key: 'nfts', title: 'NFTs'},
   ]);
+
+  const [copied, CopyToClipboard] = useClipboard();
 
   return (
     <Container paddingTop={0} style={[styles.container]}>
@@ -41,7 +45,7 @@ const Home = () => {
         <View style={styles.acctNameAddr}>
           <Text style={{fontSize: 20}}>alphaglitch.eth</Text>
           <RgText style={{color: colors.subText2}}>
-            {truncate('0x5c43B1eD97e52d009611D89b74fA829FE4ac56b1', 15)}
+            {truncate(testAddress, 15)}
           </RgText>
         </View>
 
@@ -50,7 +54,7 @@ const Home = () => {
             {
               label: 'Copy',
               icon: <Copy size={20} weight="regular" color={'#fff'} />,
-              onPress: () => console.log('share'),
+              onPress: () => CopyToClipboard(testAddress),
             },
             {
               label: 'Share',
