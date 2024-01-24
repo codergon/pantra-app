@@ -1,38 +1,27 @@
 import millify from 'millify';
-import TxnData from './TxnData';
 import {colors} from 'utils/Theming';
-import {truncate} from 'utils/HelperUtils';
-import {Note} from 'phosphor-react-native';
+import {View, StyleSheet} from 'react-native';
 import {Text} from 'components/_ui/typography';
+import {TransactionReceipt} from 'alchemy-sdk';
 import FastImage from 'react-native-fast-image';
 import Divider from 'components/_common/Divider';
 import makeBlockie from 'ethereum-blockies-base64';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {useAccountData} from 'providers/AccountDataProvider';
+import {convertHexToUtf8, truncate} from 'utils/HelperUtils';
 
 interface TxnDetailsProps {
-  showTxnData?: boolean;
-  txnData: {
-    [key: string]: any;
-  };
-  txnDataKeys: string[];
+  txnData: TransactionReceipt;
 }
 
-const TxnDetails = ({
-  txnData,
-  showTxnData = true,
-  txnDataKeys,
-}: TxnDetailsProps) => {
+const TxnReceipt = ({txnData}: TxnDetailsProps) => {
+  const {ethUsdPrice} = useAccountData();
+  const gasUsed = parseInt(txnData['gasUsed'].toHexString(), 16);
+  const gasPrice = parseInt(txnData['effectiveGasPrice'].toHexString(), 16);
+
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={true}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={[styles.txnDetails]}>
+    <View style={[styles.txnDetails]}>
       <View style={[styles.txn_block]}>
-        {(
-          Object.keys(txnData).filter(i =>
-            txnDataKeys.includes(i),
-          ) as (keyof typeof txnData)[]
-        ).map((key, i) => {
+        {['from', 'to', 'nonce', 'block no'].map((key, i) => {
           return (
             <View key={i} style={[styles.txn_row]}>
               <Text style={[styles.txn_row_label]}>{key}</Text>
@@ -52,49 +41,50 @@ const TxnDetails = ({
 
                 <Text style={[]}>
                   {key === 'from' || key === 'to'
-                    ? truncate(txnData[key], 12)
-                    : key === 'amount'
-                    ? millify(Number(txnData[key]), {
-                        precision: 5,
-                      }) +
-                      ' ' +
-                      txnData.symbol
-                    : txnData[key]}
+                    ? truncate(txnData[key], 13)
+                    : key === 'nonce'
+                    ? '#' + convertHexToUtf8(txnData['transactionIndex'] + '')
+                    : txnData['blockNumber']}
                 </Text>
               </View>
             </View>
           );
         })}
 
+        <View style={[styles.txn_row]}>
+          <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
+            Status
+          </Text>
+          <Text
+            style={[
+              styles.txn_row_value,
+              {
+                color: txnData['status'] === 1 ? colors.success : colors.error,
+              },
+            ]}>
+            {txnData['status'] === 1 ? 'Success' : 'Failed'}
+          </Text>
+        </View>
+
         <Divider marginVertical={6} />
 
         <View style={[styles.txn_row]}>
           <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
-            Estimated Fee
+            Transaction Fee
           </Text>
           <Text style={[styles.txn_row_value]}>
-            {txnData.fee} {txnData.feeSymbol}
-          </Text>
-        </View>
-        <View style={[styles.txn_row]}>
-          <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
-            Total Value
-          </Text>
-          <Text style={[styles.txn_row_value]}>
-            {millify(Number(txnData.amount) + Number(txnData.fee), {
-              space: true,
-              precision: 5,
-            })}
+            $
+            {millify(((gasPrice * gasUsed) / 1e18) * ethUsdPrice, {
+              precision: 2,
+            })}{' '}
           </Text>
         </View>
       </View>
-
-      {showTxnData && <TxnData txnData={txnData} />}
-    </ScrollView>
+    </View>
   );
 };
 
-export default TxnDetails;
+export default TxnReceipt;
 
 const styles = StyleSheet.create({
   txnDetails: {

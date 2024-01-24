@@ -35,6 +35,8 @@ export const colors = {
   subText4: '#ccc',
   background: '#000',
 
+  error: '#FE5C4C',
+  success: '#7AF88E',
   warning: '#FFD772',
 
   modalHandle: '#333',

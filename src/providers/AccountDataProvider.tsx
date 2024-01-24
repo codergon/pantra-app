@@ -18,7 +18,7 @@ import {
   NftContractForNft,
 } from 'alchemy-sdk';
 
-const alchemy = new Alchemy({
+export const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
   network: Network.ETH_MAINNET,
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import {colors} from 'utils/Theming';
-import {TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {Text} from 'components/_ui/typography';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 
 interface IAcceptRejectButtonProps {
   flex?: number;

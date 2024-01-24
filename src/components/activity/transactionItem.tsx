@@ -3,21 +3,24 @@ import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
 import {Text} from 'components/_ui/typography';
+import {FileMinus} from 'phosphor-react-native';
 import {ArrowDown, ArrowUp} from 'lucide-react-native';
+import {useNavigation} from '@react-navigation/native';
 import {testAddress} from 'providers/AccountDataProvider';
 import {AssetTransfersWithMetadataResult} from 'alchemy-sdk';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {FileMinus, LockKeyOpen} from 'phosphor-react-native';
 
 interface TransactionItemProps {
   txn: AssetTransfersWithMetadataResult;
 }
 
 const TransactionItem = ({txn}: TransactionItemProps) => {
+  const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(JSON.stringify(txn, null, 2));
+        navigation.navigate('txnDetails', {txnHash: txn.hash});
       }}
       activeOpacity={0.6}
       style={[styles.container]}>

@@ -31,6 +31,7 @@ import PairModal from 'app/modals/pairModal';
 import SignTxnModal from 'app/modals/signTxn';
 import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
+import TxnDetailsModal from 'app/modals/txnDetailsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/custombackground';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
@@ -165,7 +166,25 @@ const BottomSheetNavigator = () => {
         }}
       />
 
-      {/* Action modals */}
+      <BottomSheet.Screen
+        name="txnDetails"
+        component={TxnDetailsModal}
+        options={{
+          detached: true,
+          snapPoints: [420],
+          enableOverDrag: false,
+          bottomInset: insets.bottom,
+          enableDismissOnClose: false,
+          enablePanDownToClose: false,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
+
+      {/* Wallet Action modals */}
       <BottomSheet.Screen
         name="pairModal"
         component={PairModal}
@@ -233,7 +252,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="home"
+      initialRouteName="activity"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

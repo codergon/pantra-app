@@ -29,6 +29,7 @@ export type RootTabParamList = {
   signTxnModal: undefined;
   selectAvatar: undefined;
   importWalletModal: undefined;
+  txnDetails: {txnHash: string};
 };
 
 export type OnboardingStackParamList = {
@@ -39,10 +40,11 @@ export type OnboardingStackParamList = {
 };
 
 export type BottomSheetParams = {
-  selectAvatar: undefined;
-  importWalletModal: undefined;
   pairModal: undefined;
+  selectAvatar: undefined;
   signTxnModal: undefined;
+  importWalletModal: undefined;
+  txnDetails: {txnHash: string};
 
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;
