@@ -24,6 +24,7 @@ const Auth = btoa(INFURA_API_KEY + ':' + INFURA_API_KEY_SECRET);
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
   const [ethUsdPrice, setEthUsdPrice] = useState(0);
+  const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
   const [usdBalance, setUsdBalance] = useState<IUsdBalance>({
     total: 0,
     tokens: 0,
@@ -146,6 +147,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       value={{
         acctNfts,
         acctTxns,
+        txnFilter,
         acctTokens,
         usdBalance,
         ethUsdPrice,
@@ -160,8 +162,11 @@ interface IUsdBalance {
   tokens: number;
 }
 
+export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
+
 interface AccountDataContext {
   ethUsdPrice: number;
+  txnFilter: ITxnFilter;
   usdBalance: IUsdBalance;
   acctTokens: (OwnedToken & {
     usdBalance?: number;

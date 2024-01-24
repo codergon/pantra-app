@@ -9,6 +9,7 @@ export const colors = {
   secondary: '#2658D9',
 
   white: '#fff',
+  black: '#000',
 
   accent: '#282828',
   accent0: '#070707',
@@ -27,6 +28,7 @@ export const colors = {
 
   text: '#fff',
   subText: '#777',
+  subText1: '#888',
   subText2: '#aaa',
   subText3: '#ccc',
   subText4: '#ccc',

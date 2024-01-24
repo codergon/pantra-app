@@ -19,40 +19,26 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  listHeader: {
+  filters: {
     gap: 10,
-    display: 'none',
-    paddingBottom: 18,
-    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 14,
     alignItems: 'center',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
     paddingHorizontal: 18,
     justifyContent: 'center',
+    borderBottomColor: colors.border,
   },
-  headerIcon: {
-    width: 32,
+
+  filter: {
+    gap: 6,
     height: 32,
+    minWidth: 72,
     borderRadius: 34,
     alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 14,
     justifyContent: 'center',
-  },
-
-  content: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    flexDirection: 'column',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-
-  actionBtn: {
-    width: 50,
-    height: 50,
-    borderRadius: 68,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.accent,
   },
 });

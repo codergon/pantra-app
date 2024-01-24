@@ -1,0 +1,87 @@
+import dayjs from 'dayjs';
+import millify from 'millify';
+import {colors} from 'utils/Theming';
+import {truncate} from 'utils/HelperUtils';
+import {StyleSheet, View} from 'react-native';
+import {Text} from 'components/_ui/typography';
+import {ArrowUpRight} from 'phosphor-react-native';
+import {AssetTransfersWithMetadataResult} from 'alchemy-sdk';
+
+interface TransactionItemProps {
+  txn: AssetTransfersWithMetadataResult;
+}
+
+const TransactionItem = ({txn}: TransactionItemProps) => {
+  return (
+    <View style={[styles.container]}>
+      <View style={styles.icon}>
+        <ArrowUpRight size={20} weight="bold" color={colors.primary} />
+      </View>
+
+      <View style={[styles.details]}>
+        <View style={[styles.info]}>
+          <Text>{truncate(txn.to!, 15)?.toUpperCase()}</Text>
+          <Text style={[{fontSize: 12, color: colors.subText1}]}>
+            {dayjs(txn.metadata.blockTimestamp!).format(
+              'hh:mm a,  DD MMM YYYY',
+            )}
+          </Text>
+        </View>
+
+        <View style={[styles.stats]}>
+          <Text numberOfLines={1} style={[{fontSize: 15}]}>
+            {millify(Number(txn?.value), {
+              precision: 2,
+            })}{' '}
+            {txn?.asset}
+          </Text>
+          <Text style={[{fontSize: 13, color: colors.subText}]}>
+            {!isNaN(Number(txn?.value))
+              ? '$' + millify(Number(txn?.value), {precision: 2})
+              : ''}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default TransactionItem;
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 12,
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 18,
+    alignItems: 'center',
+  },
+  icon: {
+    width: 44,
+    height: 44,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent2,
+  },
+
+  details: {
+    flex: 1,
+    overflow: 'hidden',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  info: {
+    gap: 2,
+    flex: 1,
+    overflow: 'hidden',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  stats: {
+    gap: 2,
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+  },
+});
