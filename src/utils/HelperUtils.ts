@@ -4,7 +4,10 @@ import {utils} from 'ethers';
 /**
  * Truncates string (in the middle) via given lenght value
  */
-export function truncate(value: string, length: number) {
+export function truncate(value?: string, length = 10) {
+  if (!value) {
+    return value;
+  }
   if (value?.length <= length) {
     return value;
   }

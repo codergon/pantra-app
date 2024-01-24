@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 4,
     flex: 1,
   },
   header: {
@@ -16,6 +16,23 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     flexDirection: 'column',
+    justifyContent: 'center',
+  },
+
+  listHeader: {
+    gap: 10,
+    display: 'none',
+    paddingBottom: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    justifyContent: 'center',
+  },
+  headerIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 34,
+    alignItems: 'center',
     justifyContent: 'center',
   },
 

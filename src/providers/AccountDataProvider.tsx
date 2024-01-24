@@ -71,7 +71,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       return await alchemy.core.getAssetTransfers({
         fromBlock: '0x0',
         withMetadata: true,
-        fromAddress: '0x5c43B1eD97e52d009611D89b74fA829FE4ac56b1',
+        fromAddress: '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93',
         category: [
           AssetTransfersCategory.ERC20,
           AssetTransfersCategory.ERC721,
