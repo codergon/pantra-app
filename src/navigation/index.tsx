@@ -36,7 +36,6 @@ import ImportWalletModal from 'app/modals/importWallet';
 import TxnDetailsModal from 'app/modals/txnDetailsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/custombackground';
-import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -116,9 +115,7 @@ function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
 export default function Navigation() {
   return (
     <>
-      <NavigationContainer theme={DarkTheme}>
-        <BottomSheetNavigator />
-      </NavigationContainer>
+      <BottomSheetNavigator />
     </>
   );
 }

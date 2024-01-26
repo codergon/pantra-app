@@ -9,9 +9,13 @@ import AppToast from 'components/_common/appToast';
 import {MenuProvider} from 'react-native-popup-menu';
 import AccountDataProvider from './AccountDataProvider';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {DarkTheme, ThemeProvider} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {
+  DarkTheme,
+  NavigationContainer,
+  ThemeProvider,
+} from '@react-navigation/native';
 
 import {WagmiConfig} from 'wagmi';
 import {WC_PROJECT_ID} from '@env';
@@ -35,20 +39,22 @@ const Providers = () => {
       <WagmiConfig config={wagmiConfig as any}>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider value={DarkTheme}>
-            <SettingsProvider>
-              <WalletProvider>
-                <AccountDataProvider>
-                  <MenuProvider>
-                    <GestureHandlerRootView style={{flex: 1}}>
-                      <>
-                        <App />
-                        <AppToast />
-                      </>
-                    </GestureHandlerRootView>
-                  </MenuProvider>
-                </AccountDataProvider>
-              </WalletProvider>
-            </SettingsProvider>
+            <NavigationContainer theme={DarkTheme}>
+              <SettingsProvider>
+                <WalletProvider>
+                  <AccountDataProvider>
+                    <MenuProvider>
+                      <GestureHandlerRootView style={{flex: 1}}>
+                        <>
+                          <App />
+                          <AppToast />
+                        </>
+                      </GestureHandlerRootView>
+                    </MenuProvider>
+                  </AccountDataProvider>
+                </WalletProvider>
+              </SettingsProvider>
+            </NavigationContainer>
           </ThemeProvider>
         </QueryClientProvider>
       </WagmiConfig>

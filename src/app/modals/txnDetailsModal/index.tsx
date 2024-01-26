@@ -30,9 +30,9 @@ const TxnReceiptModal = ({
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
-        <Text style={[{fontSize: 16}]}>Transaction Details</Text>
+        <Text style={[{fontSize: 18}]}>Transaction Details</Text>
         <TouchableOpacity style={[styles.closeBtn]}>
-          <X size={20} color={colors.white} />
+          <X size={16} color={colors.white} />
         </TouchableOpacity>
       </View>
 

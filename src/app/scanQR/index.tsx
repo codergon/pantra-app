@@ -1,5 +1,6 @@
+import {useEffect, useState} from 'react';
+import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
-import {useWallet} from 'providers/WalletProvider';
 import {CameraOff, Scan, X} from 'lucide-react-native';
 import {RgText, Text} from 'components/_ui/typography';
 import {useNavigation} from '@react-navigation/native';
@@ -7,44 +8,43 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   Camera,
+  useCodeScanner,
   useCameraDevice,
   useCameraPermission,
-  useCodeScanner,
 } from 'react-native-vision-camera';
 
 const ScanQR = () => {
-  const {account} = useWallet();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-
   const device = useCameraDevice('back');
+  const [isActive, setIsActive] = useState(true);
   const {hasPermission, requestPermission} = useCameraPermission();
+
+  useEffect(() => {
+    requestPermission();
+  }, []);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: codes => {
-      console.log(`Scanned ${codes.length} codes!`);
+      // check if the value of any of the codes is a wallet connect uri
+      const wcUri = codes.find(code => code.value?.includes('wc:'));
+
+      if (wcUri) {
+        setIsActive(false);
+        console.log(JSON.stringify(wcUri?.value, null, 2));
+
+        // navigation.navigate('connectWallet', {uri: wcUri?.value});
+      }
     },
   });
-
-  const handleBarCodeScanned = ({type, data}: any) => {
-    if (data?.length < 44) return;
-
-    // if (validateAlgorandAddress(data)) {
-    //   if (userData?.address === data) {
-    //     router.push(`/(tabs)/(account)/account`);
-    //   } else {
-    //     router.push(`/(tabs)/(home)/${data as any}`);
-    //   }
-    // }
-  };
 
   const renderCamera = () => {
     return (
       <View style={styles.cameraContainer}>
         <Camera
-          isActive={true}
           device={device!}
+          isActive={isActive}
           codeScanner={codeScanner}
           style={StyleSheet.absoluteFill}
         />
@@ -58,7 +58,7 @@ const ScanQR = () => {
               maxWidth: '90%',
               textAlign: 'center',
             }}>
-            Scan a user's QR code to view their profile
+            Scanning
           </RgText>
         </View>
       </View>
@@ -66,18 +66,12 @@ const ScanQR = () => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          justifyContent: 'flex-end',
-        },
-      ]}>
+    <View style={[styles.container, {justifyContent: 'flex-end'}]}>
       <View
         style={[
           styles.container,
           {
-            backgroundColor: '#fff',
+            backgroundColor: colors.accent0A,
             maxHeight: layout.height - insets.top,
           },
         ]}>
@@ -88,16 +82,16 @@ const ScanQR = () => {
               overflow: 'hidden',
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
-              backgroundColor: '#e8e8e8',
+              backgroundColor: colors.accent21,
             },
           ]}>
           <TouchableOpacity
             activeOpacity={1}
             style={[styles.cancelBtn]}
             onPress={() => navigation.goBack()}>
-            <X size={22} color={'#000'} strokeWidth={2.1} />
+            <X size={22} color={colors.white} strokeWidth={2.1} />
           </TouchableOpacity>
-          <Text style={[styles.headerText]}>Share your profile</Text>
+          <Text style={[styles.headerText]}>Scan QR Code</Text>
         </View>
 
         {hasPermission === null ? (
@@ -111,16 +105,17 @@ const ScanQR = () => {
                 backgroundColor: 'transparent',
               },
             ]}>
-            <View
+            <TouchableOpacity
+              onPress={() => requestPermission()}
               style={[
                 styles.flexView,
                 {gap: 12, alignItems: 'center', justifyContent: 'center'},
               ]}>
-              <CameraOff size={32} color="#444" strokeWidth={1.6} />
-              <RgText style={{fontSize: 16, color: '#000'}}>
+              <CameraOff size={32} color="#888" strokeWidth={1.6} />
+              <RgText style={{fontSize: 16}}>
                 Camera permission not granted
               </RgText>
-            </View>
+            </TouchableOpacity>
           </View>
         ) : (
           <>{renderCamera()}</>
@@ -154,7 +149,7 @@ const styles = StyleSheet.create({
   },
   cancelBtn: {
     top: 0,
-    left: 10,
+    right: 10,
     width: 48,
     height: 48,
     alignItems: 'center',

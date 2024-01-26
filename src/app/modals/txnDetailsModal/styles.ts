@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
 import {colors} from 'utils/Theming';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,15 +12,15 @@ export const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    paddingRight: 4,
     paddingBottom: 6,
     alignItems: 'center',
     flexDirection: 'row',
+    paddingHorizontal: 4,
     justifyContent: 'space-between',
   },
   closeBtn: {
-    width: 28,
-    height: 28,
+    width: 25,
+    height: 25,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',

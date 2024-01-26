@@ -15,14 +15,14 @@ import {useNavigation} from '@react-navigation/native';
 import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
+import {RootStackScreenProps} from 'typings/navigation';
 
 const renderScene = SceneMap({
   tokens: Tokens,
   nfts: NFTs,
 });
 
-const Home = () => {
-  const navigation = useNavigation();
+const Home = ({navigation}: RootStackScreenProps<'shareQR'>) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'tokens', title: 'Tokens'},
@@ -33,7 +33,7 @@ const Home = () => {
 
   return (
     <Container paddingTop={0} style={[styles.container]}>
-      <HomeHeader />
+      <HomeHeader navigation={navigation} />
 
       <View style={[styles.acctDetails]}>
         <View style={[styles.acctDetails__image]}>

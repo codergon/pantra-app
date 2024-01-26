@@ -6,14 +6,28 @@ import {Text} from 'components/_ui/typography';
 import {ChevronDown} from 'lucide-react-native';
 import {Barcode, GasPump} from 'phosphor-react-native';
 import {TouchableOpacity} from 'components/_ui/themed';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from 'typings/navigation';
 
-const HomeHeader = () => {
+interface HomeHeaderProps {
+  navigation: NativeStackNavigationProp<
+    RootStackParamList,
+    'shareQR',
+    undefined
+  >;
+}
+
+const HomeHeader = ({navigation}: HomeHeaderProps) => {
   const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
   return (
     <View style={[styles.header]}>
       <View style={[styles.row]}>
-        <TouchableOpacity style={[styles.actionBtn]} onPress={() => {}}>
+        <TouchableOpacity
+          style={[styles.actionBtn]}
+          onPress={() => {
+            navigation.navigate('scanQR');
+          }}>
           <Barcode size={18} color="#fff" />
         </TouchableOpacity>
 
