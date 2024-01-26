@@ -11,6 +11,7 @@ import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity, View} from 'react-native';
 import {RgText, Text} from 'components/_ui/typography';
+import {useNavigation} from '@react-navigation/native';
 import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
@@ -21,6 +22,7 @@ const renderScene = SceneMap({
 });
 
 const Home = () => {
+  const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'tokens', title: 'Tokens'},
@@ -64,7 +66,7 @@ const Home = () => {
             {
               label: 'QR Code',
               icon: <QrCode weight="regular" size={20} color={'#fff'} />,
-              onPress: () => console.log('share'),
+              onPress: () => navigation.navigate('shareQR'),
             },
             {
               label: 'More',
@@ -74,7 +76,9 @@ const Home = () => {
           ].map((btn, i) => {
             return (
               <View key={i} style={styles.actionBtn_container}>
-                <TouchableOpacity style={[styles.actionBtn]}>
+                <TouchableOpacity
+                  onPress={btn.onPress}
+                  style={[styles.actionBtn]}>
                   {btn.icon}
                 </TouchableOpacity>
 

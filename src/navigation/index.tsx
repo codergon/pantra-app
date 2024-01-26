@@ -22,8 +22,10 @@ import {
 // Screens
 import Home from 'app/home';
 import More from 'app/more';
+import ScanQR from 'app/scanQR';
 import Vaults from 'app/vaults';
 import Loader from 'app/Loader';
+import ShareQR from 'app/shareQR';
 import Activity from 'app/activity';
 import Onboarding from 'app/onboarding';
 import NFTPreview from 'app/NFTPreview';
@@ -242,6 +244,17 @@ function RootNavigator() {
 
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Main" component={BottomTabNavigator} />
+
+      <Stack.Screen
+        name="shareQR"
+        component={ShareQR}
+        options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+      />
+      <Stack.Screen
+        name="scanQR"
+        component={ScanQR}
+        options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+      />
     </Stack.Navigator>
   );
 }
@@ -252,7 +265,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="activity"
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

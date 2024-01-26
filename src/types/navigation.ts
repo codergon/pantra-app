@@ -23,6 +23,8 @@ export type RootTabParamList = {
   wallet: undefined;
   signIn: undefined;
 
+  scanQR: undefined;
+  shareQR: undefined;
   NFTpreview: OwnedNft;
 
   pairModal: undefined;
@@ -47,11 +49,12 @@ export type BottomSheetParams = {
   txnDetails: {txnHash: string};
 
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
-  Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;
 };
 
 export type RootStackParamList = {
   Loader: undefined;
+  scanQR: undefined;
+  shareQR: undefined;
   NFTpreview: OwnedNft;
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;

@@ -1,12 +1,19 @@
 import React from 'react';
 import {RgText} from 'components/_ui/typography';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 interface FullBtnProps {
-  onPress: () => void;
+  gap?: number;
   title: string;
+  onPress: () => void;
+  children?: React.ReactNode;
+  style?: TouchableOpacityProps['style'];
 }
-const FullBtn = ({onPress, title}: FullBtnProps) => {
+const FullBtn = ({gap, onPress, title, children}: FullBtnProps) => {
   return (
     <>
       <TouchableOpacity
@@ -14,7 +21,7 @@ const FullBtn = ({onPress, title}: FullBtnProps) => {
         onPress={() => {
           onPress();
         }}
-        style={[styles.btn]}>
+        style={[styles.btn, {gap: gap || 12}]}>
         <RgText
           style={[
             {
@@ -24,6 +31,7 @@ const FullBtn = ({onPress, title}: FullBtnProps) => {
           ]}>
           {title}
         </RgText>
+        {children}
       </TouchableOpacity>
     </>
   );
