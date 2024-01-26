@@ -19,60 +19,47 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
   const {account} = useWallet();
   const insets = useSafeAreaInsets();
   const viewShotRef = useRef<ViewShot | any>();
+  const [copied, copyToClipboard] = useClipboard();
   const qrCodeWidth = Math.max(layout.width * 0.52, 220);
-  const [copied = false, copyToClipboard] = useClipboard();
 
   const handleShare = async () => {
-    try {
-      viewShotRef?.current?.capture().then(async (uri: string) => {
-        const message = `Pantra Wallet\n${account?.address}`;
+    viewShotRef?.current?.capture().then(async (uri: string) => {
+      try {
+        const message = `Pantra Wallet\n${truncate(account?.address, 13)}`;
 
         await Share.open({
-          message,
           url: uri,
-          type: 'image/png',
+          type: 'image/jpeg',
           title: 'Pantra wallet',
           subject: 'Pantra wallet',
           activityItemSources: [
             {
-              placeholderItem: {
-                type: 'url',
-                content: uri,
-              },
-              item: {
-                default: {
-                  type: 'text',
-                  content: `${message} ${'https://flicksapp.vercel.app/'}`,
-                },
-              },
+              item: {},
               linkMetadata: {
-                title: message,
                 icon: uri,
+                title: message,
+              },
+              placeholderItem: {
+                type: 'text',
+                content: uri,
               },
             },
           ],
         });
 
         navigation.goBack();
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (e) {}
+    });
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          justifyContent: 'flex-end',
-        },
-      ]}>
+    <View style={[styles.container, {justifyContent: 'flex-end'}]}>
       <View
         style={[
           styles.container,
           {
-            backgroundColor: colors.background,
+            paddingBottom: 20,
+            backgroundColor: colors.accent0A,
             maxHeight: layout.height - insets.top,
           },
         ]}>
@@ -195,7 +182,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
                   backgroundColor: colors.primary,
                 },
               ]}>
-              <RgText style={{fontSize: 15, color: '#000'}}>
+              <RgText style={{fontSize: 14, color: '#000'}}>
                 Share QR Code
               </RgText>
             </TouchableOpacity>
