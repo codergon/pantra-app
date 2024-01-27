@@ -6,8 +6,8 @@ import {FlatList, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
 
 const Tokens = () => {
-  const {acctTokens, usdBalance} = useAccountData();
-  const balance = Number(usdBalance?.total).toFixed(2).split('.');
+  const {acctTokens, activeCurrency, acctBalance} = useAccountData();
+  const balance = Number(acctBalance?.total).toFixed(2).split('.');
 
   return (
     <View style={{flex: 1, paddingHorizontal: 18}}>
@@ -25,7 +25,8 @@ const Tokens = () => {
               </View>
 
               <Text style={{fontSize: 18}}>
-                Wallet • ${balance[0]}
+                Wallet • {activeCurrency?.symbol}
+                {balance[0]}
                 {'.'}
                 <Text style={{color: colors.subText2}}>
                   {balance[1] ? balance[1] : '00'}

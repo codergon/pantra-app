@@ -14,7 +14,8 @@ interface TxnDetailsProps {
 }
 
 const TxnReceipt = ({txnData}: TxnDetailsProps) => {
-  const {ethUsdPrice} = useAccountData();
+  const {ethPrices, activeCurrency} = useAccountData();
+
   const gasUsed = parseInt(txnData['gasUsed'].toHexString(), 16);
   const gasPrice = parseInt(txnData['effectiveGasPrice'].toHexString(), 16);
 
@@ -74,9 +75,12 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
           </Text>
           <Text style={[styles.txn_row_value]}>
             $
-            {millify(((gasPrice * gasUsed) / 1e18) * ethUsdPrice, {
-              precision: 2,
-            })}{' '}
+            {millify(
+              ((gasPrice * gasUsed) / 1e18) * ethPrices[activeCurrency?.slug],
+              {
+                precision: 2,
+              },
+            )}{' '}
           </Text>
         </View>
       </View>

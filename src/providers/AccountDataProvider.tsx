@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import {ALCHEMY_API_KEY} from '@env';
 import {Address, useBalance} from 'wagmi';
 import {useWallet} from './WalletProvider';
+import currencies from 'constants/currencies';
+import {useSettings} from './SettingsProvider';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {
@@ -26,25 +28,19 @@ export const testAddress = '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93';
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
-  const [txnSearch, setTxnSearch] = useState('');
-  const [ethUsdPrice, setEthUsdPrice] = useState(0);
-  const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
-  const [usdBalance, setUsdBalance] = useState<IUsdBalance>({
-    total: 0,
-    tokens: 0,
-  });
-  const [acctTokens, setAcctTokens] = useState<
-    (OwnedToken & {
-      usdBalance?: number;
-    })[]
-  >([]);
+  const {activeCurrency} = useSettings();
 
+  const [txnSearch, setTxnSearch] = useState('');
+  const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
+
+  const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
+  const [tokensBalances, setTokensBalances] = useState<ITokensBalances>({});
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
     address: testAddress ?? (account?.address as Address),
   });
 
-  const tokens = useQuery<GetTokensForOwnerResponse>(
+  const acctTokens = useQuery<GetTokensForOwnerResponse>(
     ['acctTokens', account?.address],
     async () => {
       return await alchemy.core.getTokensForOwner('alphaglitch.eth');
@@ -155,58 +151,63 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     );
   }, [acctTxns.data?.transfers, txnFilter, txnSearch]);
 
-  // Fetch USD prices for tokens
+  // Fetch prices for tokens in ACTIVE CURRENCY
   useEffect(() => {
-    const fetchUsdPrices = async () => {
-      if (!tokens.data?.tokens) return;
-      const tokenAddresses = tokens.data.tokens
+    const fetchPrices = async () => {
+      if (!acctTokens.data?.tokens) return;
+      const tokenAddresses = acctTokens.data.tokens
         .map(token => token.contractAddress)
         .join('%2C');
 
       try {
-        const tokensUsdBalance = await axios
+        // comma separated currency slugs
+        const currencySlugs = currencies.reduce((acc, curr) => {
+          return acc + curr.slug + '%2C';
+        }, '');
+
+        const ethPrices = await axios
           .get(
-            `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddresses}&vs_currencies=usd`,
+            `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=${currencySlugs}`,
+          )
+          .then(res => res.data.ethereum);
+
+        setEthPrices(ethPrices);
+
+        // fetch token prices
+        const tokensBalances = await axios
+          .get(
+            `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddresses}&vs_currencies=${currencySlugs}`,
           )
           .then(res => res.data);
 
-        const ethUsdPrice = await axios
-          .get(
-            `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`,
-          )
-          .then(res => res.data.ethereum.usd);
-
-        const newTokens = tokens.data.tokens.map(token => {
-          return {
-            ...token,
-            usdBalance:
-              tokensUsdBalance[token.contractAddress]?.usd *
-              Number(token.balance),
-          };
-        });
-
-        const totalTokensInUsd = newTokens.reduce(
-          (acc, token) =>
-            acc + (!isNaN(token.usdBalance) ? token.usdBalance : 0),
-          0,
-        );
-
-        setEthUsdPrice(ethUsdPrice);
-        setUsdBalance({
-          tokens: totalTokensInUsd,
-          total: totalTokensInUsd + Number(ethBalance?.formatted) * ethUsdPrice,
-        });
-
-        setAcctTokens(newTokens);
-      } catch (error) {
-        if (tokens.data?.tokens) {
-          setAcctTokens(tokens.data?.tokens);
-        }
-      }
+        setTokensBalances(tokensBalances);
+      } catch (error) {}
     };
 
-    fetchUsdPrices();
-  }, [tokens.data?.tokens]);
+    fetchPrices();
+  }, [acctTokens?.data?.tokens]);
+
+  const acctBalance = useMemo(() => {
+    if (!acctTokens.data?.tokens) return {total: 0, tokens: 0};
+
+    const totalTokensBalance = acctTokens?.data?.tokens?.reduce(
+      (acc, token) => {
+        const price =
+          tokensBalances[token.contractAddress]?.[activeCurrency?.slug] || 0;
+        return acc + (token.balance ? price * Number(token.balance) : 0);
+      },
+      0,
+    );
+
+    const totalEthBalance =
+      totalTokensBalance +
+      Number(ethBalance?.formatted) * ethPrices[activeCurrency?.slug];
+
+    return {
+      total: isNaN(totalEthBalance) ? 0 : totalEthBalance,
+      tokens: isNaN(totalTokensBalance) ? 0 : totalTokensBalance,
+    };
+  }, [ethPrices, tokensBalances, acctTokens?.data, activeCurrency]);
 
   return (
     <AccountDataContext.Provider
@@ -215,23 +216,34 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         acctTxns,
         txnFilter,
         txnSearch,
-        acctTokens,
-        usdBalance,
-        ethUsdPrice,
+        acctBalance,
         setTxnSearch,
         setTxnFilter,
         filteredTxns,
         nftsCollections,
+
+        ethPrices,
+        activeCurrency,
+        tokensBalances,
+        acctTokens: acctTokens?.data?.tokens!,
       }}>
       {props.children}
     </AccountDataContext.Provider>
   );
 }
 
-interface IUsdBalance {
+interface IAcctBalance {
   total: number;
   tokens: number;
 }
+
+type ITokenBalance = {
+  [token: string]: number;
+};
+
+type ITokensBalances = {
+  [address: string]: ITokenBalance;
+};
 
 export interface ICollection {
   contract: NftContractForNft['openSeaMetadata'];
@@ -241,17 +253,18 @@ export interface ICollection {
 export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
 
 interface AccountDataContext {
+  tokensBalances: ITokensBalances;
+  ethPrices: Record<string, number>;
+  activeCurrency: (typeof currencies)[number];
+
   txnSearch: string;
-  ethUsdPrice: number;
   txnFilter: ITxnFilter;
-  usdBalance: IUsdBalance;
+  acctBalance: IAcctBalance;
   nftsCollections: ICollection[];
   setTxnSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredTxns: AssetTransfersWithMetadataResponse['transfers'];
   setTxnFilter: React.Dispatch<React.SetStateAction<ITxnFilter>>;
-  acctTokens: (OwnedToken & {
-    usdBalance?: number;
-  })[];
+  acctTokens: OwnedToken[];
   acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
   acctTxns: UseQueryResult<AssetTransfersWithMetadataResponse, unknown>;
 }

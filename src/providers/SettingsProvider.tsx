@@ -1,4 +1,5 @@
 import {useStorage} from 'hooks/useStorage';
+import currencies from 'constants/currencies';
 import ReactNativeBiometrics from 'react-native-biometrics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createContext, useContext, useEffect, useState} from 'react';
@@ -11,8 +12,12 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
   const [settings, setSettings] = useStorage<ISettings>('settings', {
     privacy: 'off',
-    currency: 'Native',
+    activeCurrency: currencies[0],
   });
+
+  const setActiveCurrency = async (currency: (typeof currencies)[number]) => {
+    setSettings({...settings!, activeCurrency: currency});
+  };
 
   const updateSettings = async (
     key: keyof ISettings,
@@ -47,6 +52,9 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   return (
     <SettingsContext.Provider
       value={{
+        activeCurrency: settings?.activeCurrency!,
+        setActiveCurrency,
+
         isAuthorized,
         biometricsAuth,
         isBiometricsSupported,
@@ -62,10 +70,13 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
 export type ISettings = {
   privacy: 'on' | 'off';
-  currency: 'Native' | 'Fiat';
+  activeCurrency: (typeof currencies)[number];
 };
 
 interface SettingsContext {
+  activeCurrency: (typeof currencies)[number];
+  setActiveCurrency: (currency: (typeof currencies)[number]) => void;
+
   isAuthorized: boolean;
   isBiometricsSupported: boolean;
   biometricsAuth: () => Promise<void>;

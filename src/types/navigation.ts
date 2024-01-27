@@ -14,13 +14,22 @@ declare global {
   }
 }
 
+export type SettingsStackParamList = {
+  wallets: undefined;
+  security: undefined;
+  sessions: undefined;
+  currencies: undefined;
+  appSettings: undefined;
+};
+
 export type RootTabParamList = {
   home: undefined;
   vaults: undefined;
   activity: undefined;
-  settings: undefined;
   wallet: undefined;
   signIn: undefined;
+
+  settings: NavigatorScreenParams<SettingsStackParamList> | undefined;
 
   scanQR: undefined;
   shareQR: undefined;
@@ -59,15 +68,23 @@ export type RootStackParamList = {
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;
 };
 
+export type SettingsStackScreenProps<
+  Screen extends keyof SettingsStackParamList,
+> = NativeStackScreenProps<SettingsStackParamList, Screen>;
+
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
 export type AppStackScreenProps<
   Screen extends keyof (RootStackParamList &
     OnboardingStackParamList &
-    RootTabParamList),
+    RootTabParamList &
+    SettingsStackParamList),
 > = NativeStackScreenProps<
-  RootStackParamList & OnboardingStackParamList & RootTabParamList,
+  RootStackParamList &
+    OnboardingStackParamList &
+    RootTabParamList &
+    SettingsStackParamList,
   Screen
 >;
 

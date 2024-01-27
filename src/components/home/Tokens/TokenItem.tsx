@@ -6,12 +6,19 @@ import {formatIpfsLink} from 'helpers/common';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
 import FastImage from 'react-native-fast-image';
+import {useAccountData} from 'providers/AccountDataProvider';
 
 interface TokenItemProps {
-  token: OwnedToken & {usdBalance?: number};
+  token: OwnedToken;
 }
 
 const TokenItem = ({token}: TokenItemProps) => {
+  const {tokensBalances, activeCurrency} = useAccountData();
+
+  const tokenBalance =
+    tokensBalances[token.contractAddress]?.[activeCurrency?.slug] *
+    Number(token.balance);
+
   return (
     <View
       style={[
@@ -62,11 +69,11 @@ const TokenItem = ({token}: TokenItemProps) => {
             {token?.symbol}
           </Text>
           <Text style={[styles.token_balance, {color: colors.subText}]}>
-            {!isNaN(Number(token?.usdBalance))
-              ? '$' +
-                (Number(token?.usdBalance) > 1000
-                  ? millify(Number(token?.usdBalance), {precision: 2})
-                  : Number(token?.usdBalance).toFixed(2))
+            {!isNaN(Number(tokenBalance))
+              ? activeCurrency?.symbol +
+                (Number(tokenBalance) > 1000
+                  ? millify(Number(tokenBalance), {precision: 2})
+                  : Number(tokenBalance).toFixed(2))
               : ''}
           </Text>
         </View>

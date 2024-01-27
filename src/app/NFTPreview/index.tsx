@@ -13,7 +13,7 @@ import {useAccountData} from 'providers/AccountDataProvider';
 
 const NFTpreview = ({route}: RootStackScreenProps<'NFTpreview'>) => {
   const nftData = route.params;
-  const {ethUsdPrice} = useAccountData();
+  const {ethPrices, activeCurrency} = useAccountData();
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
@@ -113,7 +113,7 @@ const NFTpreview = ({route}: RootStackScreenProps<'NFTpreview'>) => {
               ($
               {millify(
                 Number(nftData?.contract?.openSeaMetadata?.floorPrice) *
-                  ethUsdPrice,
+                  ethPrices[activeCurrency?.slug],
                 {precision: 2},
               )}
               )

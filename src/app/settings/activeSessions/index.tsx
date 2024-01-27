@@ -1,14 +1,15 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Text} from 'components/_ui/typography';
+import {SettingsStackScreenProps} from 'typings/navigation';
 
-const Sessions = () => {
+const ActiveSessions = ({navigation}: SettingsStackScreenProps<'sessions'>) => {
   return (
     <View>
-      <Text>Sessions</Text>
+      <Text>ActiveSessions</Text>
     </View>
   );
 };
 
-export default Sessions;
+export default ActiveSessions;
 
 const styles = StyleSheet.create({});
