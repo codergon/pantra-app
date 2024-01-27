@@ -1,8 +1,8 @@
 import {colors} from 'utils/Theming';
+import Jazzicon from 'react-native-jazzicon';
 import {StyleSheet, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
-import makeBlockie from 'ethereum-blockies-base64';
 import {RgText, Text} from 'components/_ui/typography';
+import {testAddress} from 'providers/AccountDataProvider';
 
 const AcctInfoBlock = () => {
   return (
@@ -14,13 +14,7 @@ const AcctInfoBlock = () => {
             backgroundColor: colors.warning + '20',
           },
         ]}>
-        <FastImage
-          resizeMode="cover"
-          style={[styles.image]}
-          source={{
-            uri: makeBlockie('0xfe83aa8439a8699a25ca47d81e9be430f5476f93'),
-          }}
-        />
+        <Jazzicon size={44} address={testAddress} />
       </View>
 
       <View

@@ -22,7 +22,7 @@ const AppSettings = ({navigation}: SettingsStackScreenProps<'appSettings'>) => {
     {
       title: 'Connections',
       onPress: () => navigation.navigate('sessions'),
-      description: 'Active sessions and connected apps',
+      description: 'List of active Wallet Connect sessions',
       icon: <Satellite size={20} color={colors.white} />,
     },
     {
@@ -61,7 +61,10 @@ const AppSettings = ({navigation}: SettingsStackScreenProps<'appSettings'>) => {
 
           <Divider color={colors.accent22} />
 
-          <SettingsItem title="Legal" />
+          <SettingsItem
+            title="Legal"
+            link={'https://pantra.vercel.app/legal'}
+          />
           <SettingsItem
             title="Version"
             rightIcon={

@@ -1,11 +1,10 @@
 import millify from 'millify';
 import {colors} from 'utils/Theming';
+import Jazzicon from 'react-native-jazzicon';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'components/_ui/typography';
 import {TransactionReceipt} from 'alchemy-sdk';
-import FastImage from 'react-native-fast-image';
 import Divider from 'components/_common/Divider';
-import makeBlockie from 'ethereum-blockies-base64';
 import {useAccountData} from 'providers/AccountDataProvider';
 import {convertHexToUtf8, truncate} from 'utils/HelperUtils';
 
@@ -29,15 +28,7 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
 
               <View style={[styles.txn_row_value]}>
                 {(key === 'from' || key === 'to') && (
-                  <View style={[styles.txn_row_value_blockies]}>
-                    <FastImage
-                      resizeMode="cover"
-                      style={[styles.image]}
-                      source={{
-                        uri: makeBlockie(txnData[key]),
-                      }}
-                    />
-                  </View>
+                  <Jazzicon size={16} address={txnData[key]} />
                 )}
 
                 <Text style={[]}>
@@ -120,12 +111,6 @@ const styles = StyleSheet.create({
     gap: 6,
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  txn_row_value_blockies: {
-    width: 16,
-    height: 16,
-    borderRadius: 20,
-    overflow: 'hidden',
   },
   image: {
     width: '100%',

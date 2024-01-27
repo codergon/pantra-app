@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Sessions = () => {
+const Security = () => {
   return (
     <View>
-      <Text>Sessions</Text>
+      <Text>Security</Text>
     </View>
   );
 };
 
-export default Sessions;
+export default Security;
 
 const styles = StyleSheet.create({});
