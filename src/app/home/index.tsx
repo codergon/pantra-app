@@ -10,19 +10,18 @@ import HomeHeader from 'components/home/header';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity, View} from 'react-native';
+import {RootTabScreenProps} from 'typings/navigation';
 import {RgText, Text} from 'components/_ui/typography';
-import {useNavigation} from '@react-navigation/native';
 import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
-import {RootStackScreenProps} from 'typings/navigation';
 
 const renderScene = SceneMap({
   tokens: Tokens,
   nfts: NFTs,
 });
 
-const Home = ({navigation}: RootStackScreenProps<'shareQR'>) => {
+const Home = ({navigation}: RootTabScreenProps<'home'>) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'tokens', title: 'Tokens'},
@@ -54,12 +53,18 @@ const Home = ({navigation}: RootStackScreenProps<'shareQR'>) => {
         <View style={styles.actionBtns}>
           {[
             {
-              label: 'Copy',
-              icon: <Copy size={20} weight="regular" color={'#fff'} />,
+              label: copied ? 'Copied' : 'Copy',
+              icon: (
+                <Copy
+                  size={20}
+                  weight={copied ? 'fill' : 'regular'}
+                  color={colors[copied ? 'primary' : 'white']}
+                />
+              ),
               onPress: () => CopyToClipboard(testAddress),
             },
             {
-              label: 'Share',
+              label: 'Edit',
               icon: <ShareNetwork weight="regular" size={20} color={'#fff'} />,
               onPress: () => console.log('share'),
             },

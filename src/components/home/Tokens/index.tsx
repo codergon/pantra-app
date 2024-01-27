@@ -49,7 +49,7 @@ export default Tokens;
 const styles = StyleSheet.create({
   header: {
     gap: 10,
-    paddingTop: 2,
+    paddingTop: 4,
     paddingBottom: 18,
     flexDirection: 'row',
     alignItems: 'center',

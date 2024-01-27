@@ -8,12 +8,12 @@ import {
 
 interface FullBtnProps {
   gap?: number;
-  title: string;
+  title?: string;
   onPress: () => void;
   children?: React.ReactNode;
   style?: TouchableOpacityProps['style'];
 }
-const FullBtn = ({gap, onPress, title, children}: FullBtnProps) => {
+const FullBtn = ({gap, style, onPress, title, children}: FullBtnProps) => {
   return (
     <>
       <TouchableOpacity
@@ -21,16 +21,18 @@ const FullBtn = ({gap, onPress, title, children}: FullBtnProps) => {
         onPress={() => {
           onPress();
         }}
-        style={[styles.btn, {gap: gap || 12}]}>
-        <RgText
-          style={[
-            {
-              fontSize: 14,
-              color: '#000',
-            },
-          ]}>
-          {title}
-        </RgText>
+        style={[styles.btn, {gap: gap || 12}, style]}>
+        {title && (
+          <RgText
+            style={[
+              {
+                fontSize: 14,
+                color: '#000',
+              },
+            ]}>
+            {title}
+          </RgText>
+        )}
         {children}
       </TouchableOpacity>
     </>

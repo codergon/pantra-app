@@ -42,8 +42,8 @@ export default NFTs;
 const styles = StyleSheet.create({
   header: {
     gap: 10,
-    paddingTop: 18,
-    paddingBottom: 18,
+    paddingTop: 4,
+    paddingBottom: 14,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,

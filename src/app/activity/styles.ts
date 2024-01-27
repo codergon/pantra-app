@@ -10,13 +10,12 @@ export const styles = StyleSheet.create({
     gap: 20,
     paddingTop: 4,
     marginBottom: 6,
-    paddingLeft: 10,
-    paddingRight: 20,
     paddingBottom: 4,
     alignItems: 'center',
     position: 'relative',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 18,
+    justifyContent: 'space-between',
   },
 
   filters: {

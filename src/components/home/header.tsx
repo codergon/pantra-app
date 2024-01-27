@@ -4,17 +4,12 @@ import Image from 'react-native-fast-image';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
 import {ChevronDown} from 'lucide-react-native';
-import {Barcode, GasPump} from 'phosphor-react-native';
+import {RootTabScreenProps} from 'typings/navigation';
 import {TouchableOpacity} from 'components/_ui/themed';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from 'typings/navigation';
+import {Barcode, GasPump} from 'phosphor-react-native';
 
 interface HomeHeaderProps {
-  navigation: NativeStackNavigationProp<
-    RootStackParamList,
-    'shareQR',
-    undefined
-  >;
+  navigation: RootTabScreenProps<'home'>['navigation'];
 }
 
 const HomeHeader = ({navigation}: HomeHeaderProps) => {

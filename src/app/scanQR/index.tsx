@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
+import {useEffect, useState} from 'react';
 import {CameraOff, Scan, X} from 'lucide-react-native';
 import {RgText, Text} from 'components/_ui/typography';
 import {useNavigation} from '@react-navigation/native';

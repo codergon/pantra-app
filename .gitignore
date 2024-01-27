@@ -5,7 +5,8 @@
 # macOS
 .DS_Store
 *.pem
-.vscode/
+.vscode
+.bundle
 
 # dependencies
 node_modules/

@@ -10,12 +10,11 @@ import {
   Alchemy,
   OwnedToken,
   SortingOrder,
+  NftContractForNft,
   OwnedNftsResponse,
   AssetTransfersCategory,
   GetTokensForOwnerResponse,
   AssetTransfersWithMetadataResponse,
-  OwnedNft,
-  NftContractForNft,
 } from 'alchemy-sdk';
 
 export const alchemy = new Alchemy({

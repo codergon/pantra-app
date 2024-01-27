@@ -14,9 +14,12 @@ const Activity = () => {
     useAccountData();
 
   return (
-    <Container paddingTop={4} style={[styles.container]}>
+    <Container paddingTop={6} style={[styles.container]}>
       <View style={[styles.header]}>
-        <Text style={{fontSize: 15}}>Transaction History</Text>
+        <Text style={{fontSize: 22}}>Transactions</Text>
+        <Text style={{fontSize: 15, color: colors.subText2}}>
+          {filteredTxns?.length}
+        </Text>
       </View>
 
       <View

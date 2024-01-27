@@ -21,12 +21,12 @@ import {
 
 // Screens
 import Home from 'app/home';
-import More from 'app/more';
 import ScanQR from 'app/scanQR';
 import Vaults from 'app/vaults';
 import Loader from 'app/Loader';
 import ShareQR from 'app/shareQR';
 import Activity from 'app/activity';
+import Settings from 'app/settings';
 import Onboarding from 'app/onboarding';
 import NFTPreview from 'app/NFTPreview';
 import PairModal from 'app/modals/pairModal';
@@ -76,7 +76,7 @@ function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
           size={iconSize}
           color={props?.color}
         />
-      ) : props.label === 'more' ? (
+      ) : props.label === 'settings' ? (
         <SlidersHorizontal
           weight={props?.focused ? 'fill' : 'regular'}
           size={iconSize}
@@ -262,7 +262,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="home"
+      initialRouteName="settings"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -317,11 +317,11 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="more"
-        component={More}
+        name="settings"
+        component={Settings}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon label="more" color={color} focused={focused} />
+            <TabBarIcon label="settings" color={color} focused={focused} />
           ),
         })}
       />

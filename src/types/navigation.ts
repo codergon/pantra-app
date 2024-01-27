@@ -1,11 +1,10 @@
 import {
-  NavigationProp,
-  NavigatorScreenParams,
   CompositeScreenProps,
+  NavigatorScreenParams,
 } from '@react-navigation/native';
+import {OwnedNft} from 'alchemy-sdk';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {OwnedNft} from 'alchemy-sdk';
 
 declare global {
   namespace ReactNavigation {
@@ -19,7 +18,7 @@ export type RootTabParamList = {
   home: undefined;
   vaults: undefined;
   activity: undefined;
-  more: undefined;
+  settings: undefined;
   wallet: undefined;
   signIn: undefined;
 
