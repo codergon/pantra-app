@@ -40,34 +40,26 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 
-  input: {
-    padding: 8,
-    fontSize: 16,
-    marginTop: 8,
-    lineHeight: 20,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 10,
-    paddingVertical: 12,
-    color: colors.white,
-    borderColor: colors.border6,
-  },
-
-  selectIconType: {
-    gap: 16,
+  passphrase: {
+    padding: 16,
     width: '100%',
+    borderRadius: 12,
+    flexDirection: 'row',
+    backgroundColor: colors.accent22,
+  },
+  group: {
+    gap: 16,
+    flex: 1,
+    flexDirection: 'column',
+  },
+  word: {
+    gap: 12,
     alignItems: 'center',
     flexDirection: 'row',
   },
-  iconType: {
-    padding: 2,
-    borderWidth: 1,
-    borderRadius: 40,
-    borderColor: colors.primary,
-  },
-  iconTypeContainer: {
-    gap: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
+  numbering: {
+    width: 22,
+    alignItems: 'flex-end',
+    flexDirection: 'column',
   },
 });

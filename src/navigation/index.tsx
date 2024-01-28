@@ -147,7 +147,8 @@ const BottomSheetNavigator = () => {
         component={PassphraseModal}
         options={{
           detached: true,
-          snapPoints: [330],
+          snapPoints: [420],
+          topInset: insets.top,
           enableOverDrag: false,
           handleComponent: null,
           bottomInset: insets.bottom,

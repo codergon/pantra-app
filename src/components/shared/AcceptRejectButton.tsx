@@ -5,10 +5,16 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 
 interface IAcceptRejectButtonProps {
   flex?: number;
-  title: string;
+  title?: string;
   accept: boolean;
   disabled?: boolean;
+  children?: React.ReactNode;
   onPress: () => void;
+  btnColors?: {
+    text: string;
+    border?: string;
+    bg: string;
+  };
 }
 
 export function AcceptRejectButton({
@@ -17,17 +23,21 @@ export function AcceptRejectButton({
   onPress,
   flex = 1,
   disabled,
+  children,
+  btnColors: _btnColors,
 }: IAcceptRejectButtonProps) {
-  const btnColors = accept
-    ? {
-        text: '#000',
-        bg: colors.primary,
-      }
-    : {
-        text: '#fff',
-        border: '#444',
-        bg: '#33333340',
-      };
+  const btnColors =
+    _btnColors ||
+    (accept
+      ? {
+          text: '#000',
+          bg: colors.primary,
+        }
+      : {
+          text: '#fff',
+          border: '#444',
+          bg: '#33333340',
+        });
 
   return (
     <TouchableOpacity
@@ -43,12 +53,16 @@ export function AcceptRejectButton({
         },
       ]}
       onPress={onPress}>
-      <Text
-        style={{
-          color: btnColors.text,
-        }}>
-        {title}
-      </Text>
+      {title && (
+        <Text
+          style={{
+            color: btnColors.text,
+          }}>
+          {title}
+        </Text>
+      )}
+
+      {children}
     </TouchableOpacity>
   );
 }

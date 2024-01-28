@@ -1,16 +1,13 @@
 import {styles} from './styles';
-import {useState} from 'react';
 import {colors} from 'utils/Theming';
-import {X} from 'phosphor-react-native';
+import {Copy, X} from 'phosphor-react-native';
 import {truncate} from 'utils/HelperUtils';
+import useClipboard from 'hooks/useClipboard';
 import {Text} from 'components/_ui/typography';
-import {useWallet} from 'providers/WalletProvider';
+import {useBottomSheet} from '@gorhom/bottom-sheet';
+import {TouchableOpacity, View} from 'react-native';
 import {BottomSheetParams} from 'typings/navigation';
-import WalletIcon from 'components/shared/WalletIcon';
-import {useSettings} from 'providers/SettingsProvider';
-import {Keyboard, TouchableOpacity, View} from 'react-native';
 import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
-import {BottomSheetTextInput, useBottomSheet} from '@gorhom/bottom-sheet';
 import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 
 const PassphraseModal = ({
@@ -18,20 +15,22 @@ const PassphraseModal = ({
 }: BottomSheetScreenProps<BottomSheetParams, 'viewPassphrase'>) => {
   const {wallet} = route.params;
   const {close} = useBottomSheet();
-  const {updateAccount} = useWallet();
-  const {useJazzicons, updateSettings} = useSettings();
-  const [walletName, setWalletName] = useState(wallet.name);
-  const [selectedIconType, setSelectedIconType] = useState(
-    useJazzicons ? 0 : 1,
-  );
+  const [copied, CopyToClipboard] = useClipboard();
+
+  const words = wallet?.mnemonic?.phrase?.split(' ');
+  const wordsGroup1 = words?.slice(0, 6);
+  const wordsGroup2 = words?.slice(6, 12);
 
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
         <View style={{flexDirection: 'column', gap: 2}}>
-          <Text style={[{fontSize: 18}]}>{wallet?.name || 'Wallet'}</Text>
+          <Text style={[{fontSize: 18}]}>
+            {/*  */}
+            Passphrase
+          </Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
-            {truncate(wallet.address, 14)}
+            {wallet?.name || truncate(wallet?.address, 12)}
           </Text>
         </View>
 
@@ -41,67 +40,54 @@ const PassphraseModal = ({
       </View>
 
       <View style={{gap: 17, flex: 1}}>
-        <BottomSheetTextInput
-          value={walletName}
-          style={styles.input}
-          placeholder="Wallet Name"
-          onChangeText={setWalletName}
-          placeholderTextColor={colors.subText}
-        />
+        <View style={[styles.passphrase]}>
+          <View style={[styles.group]}>
+            {wordsGroup1.map((word, index) => {
+              return (
+                <View key={index} style={styles.word}>
+                  <View style={styles.numbering}>
+                    <Text style={{fontSize: 16}}>{index + 1}</Text>
+                  </View>
 
-        <View style={styles.selectIconType}>
-          {[
-            {
-              label: 'Jazzicons',
-              onPress: () => {},
-            },
-            {
-              label: 'Blockies',
-              onPress: () => {},
-            },
-          ].map((btn, i) => {
-            return (
-              <View key={i} style={styles.iconTypeContainer}>
-                <TouchableOpacity
-                  onPress={() => setSelectedIconType(i)}
-                  style={[
-                    styles.iconType,
-                    {
-                      borderColor:
-                        selectedIconType === i ? colors.primary : 'transparent',
-                    },
-                  ]}>
-                  <WalletIcon
-                    size={38}
-                    jazzicon={i === 0}
-                    addres={wallet.address}
-                  />
-                </TouchableOpacity>
+                  <Text style={[{fontSize: 16, color: colors.white}]}>
+                    {word}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
 
-                <Text style={{fontSize: 17}}>{btn.label}</Text>
-              </View>
-            );
-          })}
+          <View style={[styles.group]}>
+            {wordsGroup2.map((word, index) => {
+              return (
+                <View key={index} style={styles.word}>
+                  <View style={styles.numbering}>
+                    <Text style={{fontSize: 16}}>{index + 7}</Text>
+                  </View>
+
+                  <Text style={[{fontSize: 16, color: colors.white}]}>
+                    {word}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
       </View>
 
       <View style={[styles.actionBtns]}>
         <AcceptRejectButton
           accept={true}
-          title={'Update Wallet'}
-          disabled={
-            walletName === wallet.name &&
-            (selectedIconType === 0) === useJazzicons
-          }
+          title={'Copy Passphrase'}
           onPress={() => {
-            Keyboard.dismiss();
-            if ((selectedIconType === 0) !== useJazzicons) {
-              updateSettings('useJazzicons', selectedIconType === 0);
-            }
-            if (walletName?.trim()) updateAccount('name', walletName?.trim());
-            close();
-          }}
-        />
+            CopyToClipboard(wallet?.mnemonic?.phrase);
+          }}>
+          <Copy
+            size={16}
+            weight={copied ? 'fill' : 'regular'}
+            color={colors[copied ? 'black' : 'black']}
+          />
+        </AcceptRejectButton>
       </View>
     </View>
   );
