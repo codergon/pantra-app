@@ -6,9 +6,12 @@ import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
 import {useSettings} from 'providers/SettingsProvider';
 import {Header, RgText} from 'components/_ui/typography';
+import {EyeClosed, ShieldCheck} from 'phosphor-react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const SecuritySettings = () => {
-  const {settings, updateSettings} = useSettings();
+  const navigation = useNavigation();
+  const {settings, passcode, updateSettings} = useSettings();
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
@@ -25,22 +28,22 @@ const SecuritySettings = () => {
 
       <ScrollView contentContainerStyle={[styles.settings]}>
         {[
-          // {
-          //   key: 'privacy',
-          //   label: 'Lock method',
-          // },
           {
             key: 'privacy',
             label: 'Hide balance',
+            icon: <EyeClosed size={18} weight="bold" color={colors.white} />,
             onSwitch: () => {
               updateSettings('privacy', !settings?.privacy);
             },
           },
           {
-            key: 'unlockToSign',
-            label: 'Require unlock to sign transactions',
+            key: 'passcode',
+            label: 'Enable pin code',
+            icon: <ShieldCheck size={18} weight="bold" color={colors.white} />,
             onSwitch: () => {
-              updateSettings('unlockToSign', !settings?.unlockToSign);
+              navigation.navigate('createPasscode');
+
+              // updateSettings('unlockToSign', !settings?.unlockToSign);
             },
           },
         ].map((config, i) => {

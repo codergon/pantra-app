@@ -9,12 +9,19 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isBiometricsSupported, setIsBiometricsSupported] = useState(false);
 
+  const [passcode, setPasscode] = useStorage<string>('passcode');
+
   const [settings, setSettings] = useStorage<ISettings>('settings', {
     privacy: false,
+    passcode: false,
+    biometrics: false,
+
     useJazzicons: true,
-    unlockToSign: false,
     activeCurrency: currencies[0],
   });
+
+  // setPasscode();
+  // setSettings();
 
   const updateSettings = async (
     key: keyof ISettings,
@@ -45,12 +52,15 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   return (
     <SettingsContext.Provider
       value={{
-        activeCurrency: settings?.activeCurrency!,
+        passcode,
+        setPasscode,
 
         isAuthorized,
         biometricsAuth,
         isBiometricsSupported,
+
         useJazzicons: settings?.useJazzicons!,
+        activeCurrency: settings?.activeCurrency!,
 
         settings,
         setSettings,
@@ -63,18 +73,22 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
 export type ISettings = {
   privacy: boolean;
+  passcode: boolean;
+  biometrics: boolean;
   useJazzicons: boolean;
-  unlockToSign: boolean;
   activeCurrency: (typeof currencies)[number];
 };
 
 interface SettingsContext {
-  useJazzicons: boolean;
-  activeCurrency: (typeof currencies)[number];
+  passcode: string | null;
+  setPasscode: (value?: string | undefined) => void;
 
   isAuthorized: boolean;
   isBiometricsSupported: boolean;
   biometricsAuth: () => Promise<void>;
+
+  useJazzicons: boolean;
+  activeCurrency: (typeof currencies)[number];
 
   settings: ISettings | null;
   updateSettings: (

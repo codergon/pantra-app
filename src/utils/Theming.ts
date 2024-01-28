@@ -11,6 +11,8 @@ export const colors = {
   white: '#fff',
   black: '#000',
 
+  switchBg: '#3e3e3e',
+
   accent: '#282828',
   accent0: '#070707',
   accent0A: '#0d0d0d',

@@ -1,27 +1,25 @@
 import React from 'react';
 import {colors} from 'utils/Theming';
 import {RgText} from 'components/_ui/typography';
+import {StyleSheet, Switch, View} from 'react-native';
 import {ISettings, useSettings} from 'providers/SettingsProvider';
-import {StyleSheet, Switch, TouchableOpacity, View} from 'react-native';
 
 interface ConfigProps {
   config: {
     key: string;
     label: string;
     onSwitch?: () => void;
+    icon?: React.ReactNode;
   };
 }
 
 const Config = ({config}: ConfigProps) => {
-  const {settings, updateSettings} = useSettings();
+  const {settings, passcode} = useSettings();
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        // updateSettings('activeConfig', Config);
-      }}
-      activeOpacity={0.7}
-      style={[styles.container]}>
+    <View style={[styles.container]}>
+      <View style={[styles.icon]}>{config?.icon}</View>
+
       <View style={[styles.details]}>
         <RgText style={{fontSize: 16}}>{config?.label}</RgText>
       </View>
@@ -30,12 +28,15 @@ const Config = ({config}: ConfigProps) => {
         onValueChange={() => {
           config?.onSwitch!();
         }}
-        ios_backgroundColor="#3e3e3e"
-        thumbColor={true ? '#fff' : '#fff'}
-        value={!!settings?.[config.key as keyof ISettings]}
-        trackColor={{false: '#3e3e3e', true: colors.secondary}}
+        thumbColor={'#fff'}
+        ios_backgroundColor={colors.switchBg}
+        value={
+          (config?.key === 'passcode' && !!passcode) ||
+          !!settings?.[config.key as keyof ISettings]
+        }
+        trackColor={{false: colors.switchBg, true: colors.secondary}}
       />
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -43,11 +44,16 @@ export default Config;
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 14,
     minHeight: 34,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 18,
+  },
+  icon: {
+    borderRadius: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   details: {
     gap: 3,

@@ -6,7 +6,6 @@ import currencies from 'constants/currencies';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
 import {Header, RgText} from 'components/_ui/typography';
-import {SettingsStackScreenProps} from 'typings/navigation';
 import {useAccountData} from 'providers/AccountDataProvider';
 
 const Currencies = () => {

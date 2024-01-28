@@ -35,14 +35,18 @@ import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
 import TxnDetailsModal from 'app/modals/txnDetailsModal';
 import EditWalletModal from 'app/modals/editWalletModal';
+import PassphraseModal from 'app/modals/passphraseModal';
 import WalletOptionsModal from 'app/modals/walletOptionsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/customBackground';
-import PassphraseModal from 'app/modals/passphraseModal';
+
 import Wallets from 'app/settings/wallets';
 import Currencies from 'app/settings/currencies';
-import ActiveSessions from 'app/settings/activeSessions';
 import SecuritySettings from 'app/settings/security';
+import EnterPasscode from 'app/passcode/enterPasscode';
+import ActiveSessions from 'app/settings/activeSessions';
+import CreatePasscode from 'app/passcode/createPasscode';
+import ConfirmPasscode from 'app/passcode/confirmPasscode';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -295,27 +299,37 @@ function RootNavigator() {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Group>
+        <Stack.Screen name="enterPasscode" component={EnterPasscode} />
+        <Stack.Screen name="createPasscode" component={CreatePasscode} />
+        <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
+      </Stack.Group>
+
+      <Stack.Group>
+        <Stack.Screen name="wallets" component={Wallets} />
+        <Stack.Screen name="currencies" component={Currencies} />
+        <Stack.Screen name="sessions" component={ActiveSessions} />
+        <Stack.Screen name="security" component={SecuritySettings} />
+      </Stack.Group>
+
+      <Stack.Group>
+        <Stack.Screen
+          name="shareQR"
+          component={ShareQR}
+          options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+        />
+        <Stack.Screen
+          name="scanQR"
+          component={ScanQR}
+          options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+        />
+      </Stack.Group>
+
       <Stack.Screen name="Loader" component={Loader} />
       <Stack.Screen name="NFTpreview" component={NFTPreview} />
 
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Main" component={BottomTabNavigator} />
-
-      <Stack.Screen name="wallets" component={Wallets} />
-      <Stack.Screen name="currencies" component={Currencies} />
-      <Stack.Screen name="sessions" component={ActiveSessions} />
-      <Stack.Screen name="security" component={SecuritySettings} />
-
-      <Stack.Screen
-        name="shareQR"
-        component={ShareQR}
-        options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-      />
-      <Stack.Screen
-        name="scanQR"
-        component={ScanQR}
-        options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-      />
     </Stack.Navigator>
   );
 }
@@ -362,7 +376,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="wallet"
-        component={Settings}
+        component={Vaults}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
             <TabBarIcon label="wallet" color={color} focused={focused} />
