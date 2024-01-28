@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   filters: {
     gap: 10,
     paddingTop: 2,
-    paddingBottom: 10,
+    paddingBottom: 14,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 18,

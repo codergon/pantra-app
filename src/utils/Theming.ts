@@ -27,6 +27,7 @@ export const colors = {
   border2: '#181818',
   border3: '#333',
   border4: '#444',
+  border6: '#666',
 
   text: '#fff',
   subText: '#777',

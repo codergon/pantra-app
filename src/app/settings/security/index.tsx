@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Security = () => {
+const SecuritySettings = () => {
   return (
     <View>
-      <Text>Security</Text>
+      <Text>SecuritySettings</Text>
     </View>
   );
 };
 
-export default Security;
+export default SecuritySettings;
 
 const styles = StyleSheet.create({});

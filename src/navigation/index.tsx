@@ -34,8 +34,11 @@ import SignTxnModal from 'app/modals/signTxn';
 import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
 import TxnDetailsModal from 'app/modals/txnDetailsModal';
+import EditWalletModal from 'app/modals/editWalletModal';
+import CustomBackdrop from 'components/modals/customBackdrop';
+import WalletOptionsModal from 'app/modals/walletOptionsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CustomBackground from 'components/modals/custombackground';
+import CustomBackground from 'components/modals/customBackground';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -137,6 +140,39 @@ const BottomSheetNavigator = () => {
         ),
       }}>
       <BottomSheet.Screen name="Root" component={RootNavigator} />
+
+      {/* Edit Wallet */}
+      <BottomSheet.Screen
+        name="walletOptions"
+        component={WalletOptionsModal}
+        options={{
+          detached: true,
+          snapPoints: [350],
+          enableOverDrag: false,
+          bottomInset: insets.bottom,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
+      <BottomSheet.Screen
+        name="editWallet"
+        component={EditWalletModal}
+        options={{
+          detached: true,
+          snapPoints: [330],
+          enableOverDrag: false,
+          handleComponent: null,
+          bottomInset: insets.bottom,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
 
       {/* Acct Setup */}
       <BottomSheet.Screen
@@ -298,7 +334,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="wallet"
-        component={Home}
+        component={Settings}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
             <TabBarIcon label="wallet" color={color} focused={focused} />

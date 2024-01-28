@@ -1,7 +1,6 @@
 import {useStorage} from 'hooks/useStorage';
 import currencies from 'constants/currencies';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createContext, useContext, useEffect, useState} from 'react';
 
 const appBiometrics = new ReactNativeBiometrics();
@@ -12,22 +11,15 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
   const [settings, setSettings] = useStorage<ISettings>('settings', {
     privacy: 'off',
+    useJazzicons: true,
     activeCurrency: currencies[0],
   });
-
-  const setActiveCurrency = async (currency: (typeof currencies)[number]) => {
-    setSettings({...settings!, activeCurrency: currency});
-  };
 
   const updateSettings = async (
     key: keyof ISettings,
     value: ISettings[keyof ISettings],
   ) => {
     setSettings({...settings!, [key]: value});
-    await AsyncStorage.setItem(
-      'settings',
-      JSON.stringify({...settings, [key]: value}),
-    );
   };
 
   useEffect(() => {
@@ -53,11 +45,11 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
     <SettingsContext.Provider
       value={{
         activeCurrency: settings?.activeCurrency!,
-        setActiveCurrency,
 
         isAuthorized,
         biometricsAuth,
         isBiometricsSupported,
+        useJazzicons: settings?.useJazzicons!,
 
         settings,
         setSettings,
@@ -70,12 +62,13 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
 export type ISettings = {
   privacy: 'on' | 'off';
+  useJazzicons: boolean;
   activeCurrency: (typeof currencies)[number];
 };
 
 interface SettingsContext {
+  useJazzicons: boolean;
   activeCurrency: (typeof currencies)[number];
-  setActiveCurrency: (currency: (typeof currencies)[number]) => void;
 
   isAuthorized: boolean;
   isBiometricsSupported: boolean;

@@ -1,6 +1,6 @@
 import millify from 'millify';
 import {colors} from 'utils/Theming';
-import Jazzicon from 'react-native-jazzicon';
+import WalletIcon from './WalletIcon';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'components/_ui/typography';
 import {TransactionReceipt} from 'alchemy-sdk';
@@ -28,7 +28,7 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
 
               <View style={[styles.txn_row_value]}>
                 {(key === 'from' || key === 'to') && (
-                  <Jazzicon size={16} address={txnData[key]} />
+                  <WalletIcon addres={txnData[key]} size={16} />
                 )}
 
                 <Text style={[]}>

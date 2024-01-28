@@ -1,5 +1,5 @@
 import {colors} from 'utils/Theming';
-import Jazzicon from 'react-native-jazzicon';
+import WalletIcon from './WalletIcon';
 import {StyleSheet, View} from 'react-native';
 import {RgText, Text} from 'components/_ui/typography';
 import {testAddress} from 'providers/AccountDataProvider';
@@ -7,15 +7,7 @@ import {testAddress} from 'providers/AccountDataProvider';
 const AcctInfoBlock = () => {
   return (
     <View style={[styles.info_block]}>
-      <View
-        style={[
-          styles.infoIcon,
-          {
-            backgroundColor: colors.warning + '20',
-          },
-        ]}>
-        <Jazzicon size={44} address={testAddress} />
-      </View>
+      <WalletIcon addres={testAddress} size={44} />
 
       <View
         style={{

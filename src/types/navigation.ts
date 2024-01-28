@@ -2,6 +2,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
+import {IWallet} from './common';
 import {OwnedNft} from 'alchemy-sdk';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -22,25 +23,31 @@ export type SettingsStackParamList = {
   appSettings: undefined;
 };
 
+type modalScreens = {
+  pairModal: undefined;
+  selectAvatar: undefined;
+  signTxnModal: undefined;
+  importWalletModal: undefined;
+  txnDetails: {txnHash: string};
+  editWallet: {wallet: IWallet};
+  walletOptions: {wallet: IWallet};
+};
+
 export type RootTabParamList = {
   home: undefined;
   vaults: undefined;
-  activity: undefined;
   wallet: undefined;
   signIn: undefined;
+  activity: undefined;
 
   settings: NavigatorScreenParams<SettingsStackParamList> | undefined;
 
   scanQR: undefined;
-  shareQR: undefined;
+  shareQR: {
+    address: string;
+  };
   NFTpreview: OwnedNft;
-
-  pairModal: undefined;
-  signTxnModal: undefined;
-  selectAvatar: undefined;
-  importWalletModal: undefined;
-  txnDetails: {txnHash: string};
-};
+} & modalScreens;
 
 export type OnboardingStackParamList = {
   splash: undefined;
@@ -50,19 +57,15 @@ export type OnboardingStackParamList = {
 };
 
 export type BottomSheetParams = {
-  pairModal: undefined;
-  selectAvatar: undefined;
-  signTxnModal: undefined;
-  importWalletModal: undefined;
-  txnDetails: {txnHash: string};
-
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
-};
+} & modalScreens;
 
 export type RootStackParamList = {
   Loader: undefined;
   scanQR: undefined;
-  shareQR: undefined;
+  shareQR: {
+    address: string;
+  };
   NFTpreview: OwnedNft;
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;

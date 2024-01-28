@@ -1,8 +1,8 @@
 import millify from 'millify';
 import TxnData from './TxnData';
 import {colors} from 'utils/Theming';
+import WalletIcon from './WalletIcon';
 import {truncate} from 'utils/HelperUtils';
-import Jazzicon from 'react-native-jazzicon';
 import {Text} from 'components/_ui/typography';
 import Divider from 'components/_common/Divider';
 import {View, StyleSheet, ScrollView} from 'react-native';
@@ -37,7 +37,7 @@ const TxnDetails = ({
 
               <View style={[styles.txn_row_value]}>
                 {(key === 'from' || key === 'to') && (
-                  <Jazzicon size={16} address={txnData[key]} />
+                  <WalletIcon addres={txnData[key]} size={16} />
                 )}
 
                 <Text style={[]}>

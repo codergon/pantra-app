@@ -9,14 +9,13 @@ import QRCode from 'react-native-qrcode-svg';
 import useClipboard from 'hooks/useClipboard';
 import ViewShot from 'react-native-view-shot';
 import FullBtn from 'components/shared/fullBtn';
-import {useWallet} from 'providers/WalletProvider';
 import {RgText, Text} from 'components/_ui/typography';
 import {RootStackScreenProps} from 'typings/navigation';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
-  const {account} = useWallet();
+const ShareQR = ({route, navigation}: RootStackScreenProps<'shareQR'>) => {
+  const address = route?.params?.address;
   const insets = useSafeAreaInsets();
   const viewShotRef = useRef<ViewShot | any>();
   const [copied, copyToClipboard] = useClipboard();
@@ -25,7 +24,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
   const handleShare = async () => {
     viewShotRef?.current?.capture().then(async (uri: string) => {
       try {
-        const message = `Pantra Wallet\n${truncate(account?.address, 13)}`;
+        const message = `Pantra Wallet\n${truncate(address, 13)}`;
 
         await Share.open({
           url: uri,
@@ -94,7 +93,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
               options={{
                 quality: 0.9,
                 format: 'jpg',
-                fileName: 'pantra-wallet_' + account?.address,
+                fileName: 'pantra-wallet_' + address,
               }}
               style={{
                 borderWidth: 1,
@@ -113,7 +112,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
                 quietZone={15}
                 size={qrCodeWidth}
                 logoBorderRadius={10}
-                value={account?.address}
+                value={address}
                 logoBackgroundColor="#fff"
                 backgroundColor="transparent"
                 logo={require('assets/images/icon.png')}
@@ -133,7 +132,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
                   textAlign: 'center',
                   textTransform: 'uppercase',
                 }}>
-                Pantra - {truncate(account?.address, 13)}
+                Pantra - {truncate(address, 13)}
               </Text>
               <RgText
                 style={{
@@ -154,7 +153,7 @@ const ShareQR = ({navigation}: RootStackScreenProps<'shareQR'>) => {
               gap={8}
               title="Copy Address"
               onPress={() => {
-                if (account?.address) copyToClipboard(account?.address);
+                if (address) copyToClipboard(address);
               }}>
               {copied ? (
                 <View

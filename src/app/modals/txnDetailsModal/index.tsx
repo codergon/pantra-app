@@ -3,6 +3,7 @@ import {colors} from 'utils/Theming';
 import {X} from 'lucide-react-native';
 import {useQuery} from '@tanstack/react-query';
 import {Text} from 'components/_ui/typography';
+import {useBottomSheet} from '@gorhom/bottom-sheet';
 import {BottomSheetParams} from 'typings/navigation';
 import {alchemy} from 'providers/AccountDataProvider';
 import TxnReceipt from 'components/shared/TxnReceipt';
@@ -14,6 +15,7 @@ const TxnReceiptModal = ({
   route,
 }: BottomSheetScreenProps<BottomSheetParams, 'txnDetails'>) => {
   const {txnHash} = route.params;
+  const {close} = useBottomSheet();
 
   const {data} = useQuery(
     ['txn-receipt', txnHash],
@@ -31,7 +33,7 @@ const TxnReceiptModal = ({
     <View style={[styles.container]}>
       <View style={[styles.header]}>
         <Text style={[{fontSize: 18}]}>Transaction Details</Text>
-        <TouchableOpacity style={[styles.closeBtn]}>
+        <TouchableOpacity onPress={() => close()} style={[styles.closeBtn]}>
           <X size={16} color={colors.white} />
         </TouchableOpacity>
       </View>

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   header: {
     gap: 20,
     paddingTop: 4,
-    marginBottom: 6,
+    marginBottom: 14,
     paddingBottom: 4,
     alignItems: 'center',
     position: 'relative',

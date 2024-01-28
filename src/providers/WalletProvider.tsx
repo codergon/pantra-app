@@ -11,11 +11,12 @@ import {SignClientTypes} from '@walletconnect/types';
 import {EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
+import {IWallet} from 'typings/common';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
-  const [account, setAccount] = useSecureStorage<Wallet>('account');
+  const [account, setAccount] = useSecureStorage<IWallet>('account');
 
   // const initialized = useInitialization();
 
@@ -75,6 +76,13 @@ export default function WalletProvider(props: WalletProviderProps) {
 
   const [requestEventData, setRequestEventData] = useState();
   const [requestSession, setRequestSession] = useState();
+
+  const updateAccount = async (
+    key: keyof IWallet,
+    value: IWallet[keyof IWallet],
+  ) => {
+    setAccount({...account, [key]: value} as IWallet);
+  };
 
   async function pair(uri: string) {
     const pairing = await _pair({uri});
@@ -205,13 +213,13 @@ export default function WalletProvider(props: WalletProviderProps) {
     <WalletContext.Provider
       value={{
         account,
-        updateAvatar,
+        isAddingWallet,
+        initialized: true,
         avatar: avatar || '',
 
-        isAddingWallet,
+        updateAvatar,
+        updateAccount,
         createSmartWallet,
-
-        initialized: true,
       }}>
       {props.children}
     </WalletContext.Provider>
@@ -225,13 +233,12 @@ interface CreateWalletProps {
 }
 
 interface WalletContext {
-  initialized: boolean;
-  account: Wallet | null;
-
   avatar: string;
-  updateAvatar: (avatar: string) => void;
-
+  initialized: boolean;
+  account: IWallet | null;
   isAddingWallet: boolean;
+  updateAvatar: (avatar: string) => void;
+  updateAccount: (key: keyof IWallet, value: IWallet[keyof IWallet]) => void;
   createSmartWallet: ({type, mnemonic, privateKey}: CreateWalletProps) => void;
 }
 

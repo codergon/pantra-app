@@ -1,64 +1,61 @@
-import React from 'react';
 import {colors} from 'utils/Theming';
-import {Trash} from 'phosphor-react-native';
-import {StyleSheet, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {IWallet} from 'typings/common';
+import {truncate} from 'utils/HelperUtils';
+import WalletIcon from 'components/shared/WalletIcon';
 import {RgText, Text} from 'components/_ui/typography';
+import {useNavigation} from '@react-navigation/native';
+import {DotsThreeVertical} from 'phosphor-react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
-interface SessionProps {
-  session: {
-    icon: any;
-    desc: any;
-    url: string;
-    name: string;
-  };
+interface WalletItemProps {
+  wallet: IWallet;
 }
 
-const Session = ({session}: SessionProps) => {
+const WalletItem = ({wallet}: WalletItemProps) => {
+  const navigation = useNavigation();
+
   return (
     <>
       <View style={styles.platformDetails}>
         <View style={[styles.imageContainer]}>
-          <FastImage
-            resizeMode="cover"
-            source={session?.icon}
-            style={[styles.platformImage]}
-          />
+          <WalletIcon addres={wallet.address} size={42} />
         </View>
 
         <View style={[styles.platformInfo]}>
-          <Text style={{fontSize: 16}}>{session?.name}</Text>
+          <Text style={{fontSize: 16}}>{wallet?.name || `Wallet`}</Text>
 
           <View style={[styles.platformInfo_desc]}>
             <RgText style={{color: colors.subText, fontSize: 14}}>
-              {session?.desc}
-            </RgText>
-            <RgText style={{color: colors.subText, fontSize: 13}}>
-              {session?.url}
+              {truncate(wallet?.address, 14)}
             </RgText>
           </View>
         </View>
 
-        <View style={[styles.icon]}>
-          <Trash size={20} weight="regular" color={colors.warning} />
-        </View>
+        <TouchableOpacity
+          style={[styles.icon]}
+          onPress={() => {
+            navigation.navigate('walletOptions', {wallet});
+          }}>
+          <DotsThreeVertical size={20} weight="regular" color={colors.white} />
+        </TouchableOpacity>
       </View>
     </>
   );
 };
 
-export default Session;
+export default WalletItem;
 
 const styles = StyleSheet.create({
   platformDetails: {
     gap: 18,
+    paddingLeft: 18,
+    paddingRight: 12,
     flexDirection: 'row',
-    paddingHorizontal: 18,
   },
   imageContainer: {
     width: 42,
     height: 42,
-    borderRadius: 14,
+    borderRadius: 42,
     overflow: 'hidden',
     backgroundColor: colors?.accent,
   },
@@ -74,7 +71,6 @@ const styles = StyleSheet.create({
     gap: 2,
     flexDirection: 'column',
   },
-
   icon: {
     width: 42,
     height: 42,

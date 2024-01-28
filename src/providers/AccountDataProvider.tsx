@@ -28,7 +28,7 @@ export const testAddress = '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93';
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
-  const {activeCurrency} = useSettings();
+  const {activeCurrency, useJazzicons} = useSettings();
 
   const [txnSearch, setTxnSearch] = useState('');
   const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
@@ -223,6 +223,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         nftsCollections,
 
         ethPrices,
+        useJazzicons,
         activeCurrency,
         tokensBalances,
         acctTokens: acctTokens?.data?.tokens!,
@@ -253,6 +254,7 @@ export interface ICollection {
 export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
 
 interface AccountDataContext {
+  useJazzicons: boolean;
   tokensBalances: ITokensBalances;
   ethPrices: Record<string, number>;
   activeCurrency: (typeof currencies)[number];

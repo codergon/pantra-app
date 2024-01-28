@@ -40,7 +40,7 @@ const ActiveSessions = () => {
         </View>
       ) : (
         <ScrollView contentContainerStyle={[styles.settings]}>
-          {[1, 2, 3]?.map((currency, i) => {
+          {[1, 2, 3]?.map((session, i) => {
             return (
               <Session
                 key={i}

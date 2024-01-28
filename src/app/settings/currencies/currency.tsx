@@ -11,12 +11,12 @@ interface CurrencyProps {
 }
 
 const Currency = ({currency}: CurrencyProps) => {
-  const {activeCurrency, setActiveCurrency} = useSettings();
+  const {activeCurrency, updateSettings} = useSettings();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        setActiveCurrency(currency);
+        updateSettings('activeCurrency', currency);
       }}
       activeOpacity={0.7}
       style={[styles.container]}>

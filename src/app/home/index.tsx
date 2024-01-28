@@ -71,7 +71,8 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
             {
               label: 'QR Code',
               icon: <QrCode weight="regular" size={20} color={'#fff'} />,
-              onPress: () => navigation.navigate('shareQR'),
+              onPress: () =>
+                navigation.navigate('shareQR', {address: testAddress}),
             },
             {
               label: 'More',

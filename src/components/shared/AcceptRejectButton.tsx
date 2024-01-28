@@ -7,6 +7,7 @@ interface IAcceptRejectButtonProps {
   flex?: number;
   title: string;
   accept: boolean;
+  disabled?: boolean;
   onPress: () => void;
 }
 
@@ -15,6 +16,7 @@ export function AcceptRejectButton({
   accept,
   onPress,
   flex = 1,
+  disabled,
 }: IAcceptRejectButtonProps) {
   const btnColors = accept
     ? {
@@ -29,10 +31,12 @@ export function AcceptRejectButton({
 
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[
         styles.actionBtn,
         {
           flex,
+          opacity: disabled ? 0.5 : 1,
           borderColor: btnColors.border,
           backgroundColor: btnColors.bg,
           borderWidth: btnColors.border ? 1 : 0,

@@ -15,7 +15,7 @@ const AppSettings = ({navigation}: SettingsStackScreenProps<'appSettings'>) => {
   const settings = [
     {
       title: 'All Wallets',
-      onPress: () => navigation.navigate('currencies'),
+      onPress: () => navigation.navigate('wallets'),
       description: 'Manage wallets, accounts, and addresses',
       icon: <Wallet size={20} weight={'bold'} color={colors.white} />,
     },
@@ -28,7 +28,7 @@ const AppSettings = ({navigation}: SettingsStackScreenProps<'appSettings'>) => {
     {
       title: 'Security and Privacy',
       description: 'Passcode, Face ID, backup',
-      onPress: () => navigation.navigate('currencies'),
+      onPress: () => navigation.navigate('security'),
       icon: <Lock size={20} weight={'bold'} color={colors.white} />,
     },
     {
