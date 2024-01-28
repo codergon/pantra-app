@@ -31,6 +31,7 @@ type modalScreens = {
   txnDetails: {txnHash: string};
   editWallet: {wallet: IWallet};
   walletOptions: {wallet: IWallet};
+  viewPassphrase: {wallet: IWallet};
 };
 
 export type RootTabParamList = {

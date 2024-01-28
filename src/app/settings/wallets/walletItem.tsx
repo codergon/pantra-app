@@ -16,7 +16,12 @@ const WalletItem = ({wallet}: WalletItemProps) => {
 
   return (
     <>
-      <View style={styles.platformDetails}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.platformDetails}
+        onPress={() => {
+          navigation.navigate('walletOptions', {wallet});
+        }}>
         <View style={[styles.imageContainer]}>
           <WalletIcon addres={wallet.address} size={42} />
         </View>
@@ -31,14 +36,10 @@ const WalletItem = ({wallet}: WalletItemProps) => {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[styles.icon]}
-          onPress={() => {
-            navigation.navigate('walletOptions', {wallet});
-          }}>
+        <View style={[styles.icon]}>
           <DotsThreeVertical size={20} weight="regular" color={colors.white} />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </>
   );
 };

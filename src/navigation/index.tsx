@@ -35,10 +35,10 @@ import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
 import TxnDetailsModal from 'app/modals/txnDetailsModal';
 import EditWalletModal from 'app/modals/editWalletModal';
-import CustomBackdrop from 'components/modals/customBackdrop';
 import WalletOptionsModal from 'app/modals/walletOptionsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/customBackground';
+import PassphraseModal from 'app/modals/passphraseModal';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -140,6 +140,24 @@ const BottomSheetNavigator = () => {
         ),
       }}>
       <BottomSheet.Screen name="Root" component={RootNavigator} />
+
+      {/* View Passphrase */}
+      <BottomSheet.Screen
+        name="viewPassphrase"
+        component={PassphraseModal}
+        options={{
+          detached: true,
+          snapPoints: [330],
+          enableOverDrag: false,
+          handleComponent: null,
+          bottomInset: insets.bottom,
+          style: {marginHorizontal: 16},
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
 
       {/* Edit Wallet */}
       <BottomSheet.Screen

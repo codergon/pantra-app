@@ -5,13 +5,13 @@ import {useStorage, useSecureStorage} from 'hooks';
 import useInitialization from 'hooks/useInitialization';
 
 // =========================
+import {IWallet} from 'typings/common';
 import {getSdkError} from '@walletconnect/utils';
 import {SessionTypes} from '@walletconnect/types';
 import {SignClientTypes} from '@walletconnect/types';
 import {EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
-import {IWallet} from 'typings/common';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');

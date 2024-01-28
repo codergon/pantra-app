@@ -34,8 +34,8 @@ const WalletOptionsModal = ({
         },
         {
           label: 'Edit',
-          icon: <PencilSimple weight="regular" size={20} color={'#fff'} />,
           onPress: () => navigation.replace('editWallet', {wallet}),
+          icon: <PencilSimple weight="regular" size={20} color={'#fff'} />,
         },
         {
           label: 'Show Address',
@@ -45,14 +45,14 @@ const WalletOptionsModal = ({
         },
         {
           label: 'View Passphrase',
+          onPress: () => navigation.replace('viewPassphrase', {wallet}),
           icon: <Password weight="regular" size={18} color={colors.white} />,
-          onPress: () => console.log('share'),
         },
         {
           color: colors.error,
           label: 'Remove Account',
+          onPress: () => console.log('Remove Account'),
           icon: <Unlink size={15} strokeWidth={2.6} color={colors.error} />,
-          onPress: () => console.log('share'),
         },
       ].map((option, i) => {
         return <WalletOption key={i} option={option} />;
