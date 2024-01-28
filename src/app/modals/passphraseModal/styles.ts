@@ -62,4 +62,32 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end',
     flexDirection: 'column',
   },
+
+  info_block: {
+    gap: 16,
+    width: '100%',
+    paddingTop: 16,
+    borderRadius: 18,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    backgroundColor: colors.accent22,
+  },
+  actionBtn__Icon: {
+    width: 42,
+    height: 42,
+    borderRadius: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent3,
+  },
+  actionBtn__Text: {
+    fontSize: 16,
+  },
+  actionBtn__Text__Description: {
+    fontSize: 13,
+    lineHeight: 16,
+    color: colors.subText2,
+  },
 });

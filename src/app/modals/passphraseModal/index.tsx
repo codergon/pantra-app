@@ -1,9 +1,9 @@
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
-import {Copy, X} from 'phosphor-react-native';
+import {Copy, LockKey, X} from 'phosphor-react-native';
 import {truncate} from 'utils/HelperUtils';
 import useClipboard from 'hooks/useClipboard';
-import {Text} from 'components/_ui/typography';
+import {RgText, Text} from 'components/_ui/typography';
 import {useBottomSheet} from '@gorhom/bottom-sheet';
 import {TouchableOpacity, View} from 'react-native';
 import {BottomSheetParams} from 'typings/navigation';
@@ -26,8 +26,7 @@ const PassphraseModal = ({
       <View style={[styles.header]}>
         <View style={{flexDirection: 'column', gap: 2}}>
           <Text style={[{fontSize: 18}]}>
-            {/*  */}
-            Passphrase
+            {wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'}
           </Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
             {wallet?.name || truncate(wallet?.address, 12)}
@@ -41,44 +40,82 @@ const PassphraseModal = ({
 
       <View style={{gap: 17, flex: 1}}>
         <View style={[styles.passphrase]}>
-          <View style={[styles.group]}>
-            {wordsGroup1.map((word, index) => {
-              return (
-                <View key={index} style={styles.word}>
-                  <View style={styles.numbering}>
-                    <Text style={{fontSize: 16}}>{index + 1}</Text>
-                  </View>
+          {wallet?.mnemonic?.phrase ? (
+            <>
+              <View style={[styles.group]}>
+                {wordsGroup1.map((word, index) => {
+                  return (
+                    <View key={index} style={styles.word}>
+                      <View style={styles.numbering}>
+                        <Text style={{fontSize: 16}}>{index + 1}</Text>
+                      </View>
 
-                  <Text style={[{fontSize: 16, color: colors.white}]}>
-                    {word}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
+                      <Text style={[{fontSize: 16, color: colors.white}]}>
+                        {word}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
 
-          <View style={[styles.group]}>
-            {wordsGroup2.map((word, index) => {
-              return (
-                <View key={index} style={styles.word}>
-                  <View style={styles.numbering}>
-                    <Text style={{fontSize: 16}}>{index + 7}</Text>
-                  </View>
+              <View style={[styles.group]}>
+                {wordsGroup2.map((word, index) => {
+                  return (
+                    <View key={index} style={styles.word}>
+                      <View style={styles.numbering}>
+                        <Text style={{fontSize: 16}}>{index + 7}</Text>
+                      </View>
 
-                  <Text style={[{fontSize: 16, color: colors.white}]}>
-                    {word}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
+                      <Text style={[{fontSize: 16, color: colors.white}]}>
+                        {word}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </>
+          ) : (
+            <>
+              <Text style={[{fontSize: 16, color: colors.white}]}>
+                {wallet?.privateKey}
+              </Text>
+            </>
+          )}
         </View>
+
+        {wallet?.privateKey && (
+          <View style={[styles.info_block]}>
+            <View
+              style={{
+                gap: 4,
+                flex: 1,
+                flexDirection: 'column',
+              }}>
+              <RgText style={[styles.actionBtn__Text__Description]}>
+                Warning: Never disclose this key. Anyone with your private keys
+                can steal any assets held in your account.
+              </RgText>
+            </View>
+
+            <View
+              style={[
+                styles.actionBtn__Icon,
+                {
+                  backgroundColor: colors.warning + '20',
+                },
+              ]}>
+              <LockKey weight="fill" size={16} color={colors.warning} />
+            </View>
+          </View>
+        )}
       </View>
 
       <View style={[styles.actionBtns]}>
         <AcceptRejectButton
           accept={true}
-          title={'Copy Passphrase'}
+          title={`Copy ${
+            wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'
+          }`}
           onPress={() => {
             CopyToClipboard(wallet?.mnemonic?.phrase);
           }}>
