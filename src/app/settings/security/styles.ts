@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {colors} from 'utils/Theming';
 
 export const styles = StyleSheet.create({
   container: {
@@ -21,21 +20,5 @@ export const styles = StyleSheet.create({
     gap: 24,
     width: '100%',
     flexDirection: 'column',
-  },
-  no_sessions: {
-    flex: 1,
-    paddingBottom: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  no_sessions_btn: {
-    height: 42,
-    marginTop: 20,
-    borderRadius: 6,
-    alignItems: 'center',
-    paddingHorizontal: 22,
-    justifyContent: 'center',
-    backgroundColor: colors.warning,
   },
 });

@@ -10,8 +10,9 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   const [isBiometricsSupported, setIsBiometricsSupported] = useState(false);
 
   const [settings, setSettings] = useStorage<ISettings>('settings', {
-    privacy: 'off',
+    privacy: false,
     useJazzicons: true,
+    unlockToSign: false,
     activeCurrency: currencies[0],
   });
 
@@ -61,8 +62,9 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 }
 
 export type ISettings = {
-  privacy: 'on' | 'off';
+  privacy: boolean;
   useJazzicons: boolean;
+  unlockToSign: boolean;
   activeCurrency: (typeof currencies)[number];
 };
 
