@@ -62,6 +62,12 @@ export type BottomSheetParams = {
 } & modalScreens;
 
 export type RootStackParamList = {
+  // Settings screeens
+  wallets: undefined;
+  security: undefined;
+  sessions: undefined;
+  currencies: undefined;
+
   Loader: undefined;
   scanQR: undefined;
   shareQR: {

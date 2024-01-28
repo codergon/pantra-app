@@ -39,6 +39,10 @@ import WalletOptionsModal from 'app/modals/walletOptionsModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/customBackground';
 import PassphraseModal from 'app/modals/passphraseModal';
+import Wallets from 'app/settings/wallets';
+import Currencies from 'app/settings/currencies';
+import ActiveSessions from 'app/settings/activeSessions';
+import SecuritySettings from 'app/settings/security';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -296,6 +300,11 @@ function RootNavigator() {
 
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Main" component={BottomTabNavigator} />
+
+      <Stack.Screen name="wallets" component={Wallets} />
+      <Stack.Screen name="currencies" component={Currencies} />
+      <Stack.Screen name="sessions" component={ActiveSessions} />
+      <Stack.Screen name="security" component={SecuritySettings} />
 
       <Stack.Screen
         name="shareQR"

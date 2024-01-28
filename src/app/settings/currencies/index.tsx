@@ -9,7 +9,7 @@ import {Header, RgText} from 'components/_ui/typography';
 import {SettingsStackScreenProps} from 'typings/navigation';
 import {useAccountData} from 'providers/AccountDataProvider';
 
-const Currencies = ({}: SettingsStackScreenProps<'currencies'>) => {
+const Currencies = () => {
   const {activeCurrency} = useAccountData();
 
   return (
