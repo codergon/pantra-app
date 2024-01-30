@@ -18,7 +18,7 @@ import {
 const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
   const settings = [
     {
-      title: 'All Wallets',
+      title: 'Wallets',
       onPress: () => navigation.navigate('wallets'),
       description: 'Manage wallets, accounts, and addresses',
       icon: <Wallet size={20} weight={'bold'} color={colors.white} />,
@@ -69,7 +69,7 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
             return <SettingsItem key={i} {...config} />;
           })}
 
-          <Divider color={colors.accent22} />
+          <Divider color={colors.accent1} />
 
           <SettingsItem
             title="Legal"
@@ -83,20 +83,6 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
               </Text>
             }
           />
-
-          <View style={{width: '100%', paddingHorizontal: 18}}>
-            <FullBtn
-              onPress={() => console.log('disconnect')}
-              style={{
-                marginTop: 20,
-                paddingVertical: 12,
-                backgroundColor: colors.accent2,
-              }}>
-              <Text style={{color: colors.white}}>
-                Remove All Accounts and Logout
-              </Text>
-            </FullBtn>
-          </View>
         </ScrollView>
       </Container>
     </>

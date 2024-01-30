@@ -1,13 +1,12 @@
 import Config from './config';
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
+import {Vibrate} from 'lucide-react-native';
 import {ScrollView, View} from 'react-native';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
 import {useSettings} from 'providers/SettingsProvider';
-import {FingerprintSimple} from 'phosphor-react-native';
 import {Header, RgText} from 'components/_ui/typography';
-import {Vibrate} from 'lucide-react-native';
 
 const Preferences = () => {
   const {settings, updateSettings} = useSettings();
