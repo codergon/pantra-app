@@ -7,8 +7,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomSheetNavigator} from '@th3rdwave/react-navigation-bottom-sheet';
 import {
-  BottomSheetParams,
   RootTabParamList,
+  BottomSheetParams,
   RootStackParamList,
 } from 'typings/navigation';
 import {
@@ -42,6 +42,7 @@ import CustomBackground from 'components/modals/customBackground';
 
 import Wallets from 'app/settings/wallets';
 import Currencies from 'app/settings/currencies';
+import Preferences from 'app/settings/preferences';
 import SecuritySettings from 'app/settings/security';
 import EnterPasscode from 'app/passcode/enterPasscode';
 import ActiveSessions from 'app/settings/activeSessions';
@@ -308,6 +309,7 @@ function RootNavigator() {
       <Stack.Group>
         <Stack.Screen name="wallets" component={Wallets} />
         <Stack.Screen name="currencies" component={Currencies} />
+        <Stack.Screen name="preferences" component={Preferences} />
         <Stack.Screen name="sessions" component={ActiveSessions} />
         <Stack.Screen name="security" component={SecuritySettings} />
       </Stack.Group>

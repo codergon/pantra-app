@@ -70,6 +70,7 @@ export type RootStackParamList = {
   security: undefined;
   sessions: undefined;
   currencies: undefined;
+  preferences: undefined;
 
   // Passcode
   enterPasscode:

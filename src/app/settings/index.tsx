@@ -8,7 +8,12 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {getReadableVersion} from 'react-native-device-info';
 import SettingsItem from 'components/settings/SettingsItem';
 import {MessageSquareHeart, Satellite} from 'lucide-react-native';
-import {CurrencyCircleDollar, Lock, Wallet} from 'phosphor-react-native';
+import {
+  CurrencyCircleDollar,
+  Lock,
+  UserGear,
+  Wallet,
+} from 'phosphor-react-native';
 
 const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
   const settings = [
@@ -29,6 +34,12 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
       description: 'Passcode, Face ID, backup',
       onPress: () => navigation.navigate('security'),
       icon: <Lock size={20} weight={'bold'} color={colors.white} />,
+    },
+    {
+      title: 'Preferences',
+      description: 'Configure your preferences',
+      onPress: () => navigation.navigate('preferences'),
+      icon: <UserGear size={20} weight={'bold'} color={colors.white} />,
     },
     {
       title: 'Currency',
