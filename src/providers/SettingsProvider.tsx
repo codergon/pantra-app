@@ -16,6 +16,7 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
     passcode: false,
     biometrics: false,
 
+    haptics: true,
     useJazzicons: true,
     activeCurrency: currencies[0],
   });
@@ -75,6 +76,7 @@ export type ISettings = {
   privacy: boolean;
   passcode: boolean;
   biometrics: boolean;
+  haptics: boolean;
   useJazzicons: boolean;
   activeCurrency: (typeof currencies)[number];
 };

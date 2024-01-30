@@ -5,9 +5,9 @@ import {ScrollView, View} from 'react-native';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
 import {useSettings} from 'providers/SettingsProvider';
-import {Header, RgText} from 'components/_ui/typography';
-import {EyeClosed, ShieldCheck} from 'phosphor-react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Header, RgText} from 'components/_ui/typography';
+import {EyeClosed, ShieldCheck, FingerprintSimple} from 'phosphor-react-native';
 
 const SecuritySettings = () => {
   const navigation = useNavigation();
@@ -41,14 +41,35 @@ const SecuritySettings = () => {
             label: 'Enable pin code',
             icon: <ShieldCheck size={18} weight="bold" color={colors.white} />,
             onSwitch: () => {
-              navigation.navigate('createPasscode');
-
-              // updateSettings('unlockToSign', !settings?.unlockToSign);
+              if (passcode) {
+                navigation.navigate('enterPasscode', {isReset: true});
+              } else {
+                navigation.navigate('createPasscode');
+              }
             },
           },
         ].map((config, i) => {
           return <Config key={i} config={config} />;
         })}
+
+        {passcode && (
+          <Config
+            config={{
+              key: 'biometrics',
+              label: 'Use Face ID/Touch ID',
+              icon: (
+                <FingerprintSimple
+                  size={18}
+                  weight="bold"
+                  color={colors.white}
+                />
+              ),
+              onSwitch: () => {
+                updateSettings('biometrics', !settings?.biometrics);
+              },
+            }}
+          />
+        )}
       </ScrollView>
     </Container>
   );

@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import {styles} from './styles';
-import {View} from 'react-native';
 import {colors} from 'utils/Theming';
+import useHaptics from 'hooks/useHaptics';
+import {Vibration, View} from 'react-native';
 import DialpadKeypad from 'components/Dialpad';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
@@ -14,19 +15,38 @@ const EnterPasscode = ({
   route,
   navigation,
 }: RootStackScreenProps<'enterPasscode'>) => {
+  const isReset = route.params?.isReset;
+
+  const hapticFeedback = useHaptics();
+
   const [code, setCode] = useState<number[]>([]);
-  const {updateSettings, passcode} = useSettings();
+  const [isIncorrect, setIsIncorrect] = useState(false);
+  const {passcode, setPasscode, settings, setSettings} = useSettings();
 
   const onComplete = (newCodes: number[]) => {
+    setIsIncorrect(false);
     if (newCodes?.join('') === passcode) {
-      // navigation.pop(2);
+      if (isReset) {
+        setPasscode();
+        setSettings({...settings!, passcode: false, biometrics: false});
+        navigation.pop(1);
+      }
+    } else {
+      hapticFeedback('notificationError');
+      Vibration.vibrate(2000);
+      setIsIncorrect(true);
+
+      setTimeout(() => {
+        setIsIncorrect(false);
+        setCode([]);
+      }, 700);
     }
   };
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
-      <View style={[styles.header, {paddingTop: 40}]}>
-        {!true && <BackBtn />}
+      <View style={[styles.header, !isReset && {paddingTop: 40}]}>
+        {!!isReset && <BackBtn />}
 
         <View style={{gap: 6}}>
           <Header>Enter Passcode</Header>
@@ -37,7 +57,7 @@ const EnterPasscode = ({
       </View>
 
       <View style={[styles.content]}>
-        <DialpadPin code={code} />
+        <DialpadPin code={code} isIncorrect={isIncorrect} />
       </View>
 
       <DialpadKeypad code={code} setCode={setCode} onComplete={onComplete} />

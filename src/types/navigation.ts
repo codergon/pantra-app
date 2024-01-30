@@ -42,7 +42,11 @@ export type RootTabParamList = {
   NFTpreview: OwnedNft;
 
   // Passcode
-  enterPasscode: undefined;
+  enterPasscode:
+    | {
+        isReset?: boolean;
+      }
+    | undefined;
   createPasscode: undefined;
   confirmPasscode: {
     codes: number[];
@@ -68,7 +72,11 @@ export type RootStackParamList = {
   currencies: undefined;
 
   // Passcode
-  enterPasscode: undefined;
+  enterPasscode:
+    | {
+        isReset?: boolean;
+      }
+    | undefined;
   createPasscode: undefined;
   confirmPasscode: {
     codes: number[];

@@ -8,13 +8,14 @@ import Tokens from 'components/home/Tokens';
 import useClipboard from 'hooks/useClipboard';
 import HomeHeader from 'components/home/header';
 import {Container} from 'components/_ui/custom';
-import FastImage from 'react-native-fast-image';
 import {TouchableOpacity, View} from 'react-native';
+import {useWallet} from 'providers/WalletProvider';
+import WalletIcon from 'components/shared/WalletIcon';
 import {RootTabScreenProps} from 'typings/navigation';
 import {RgText, Text} from 'components/_ui/typography';
 import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import {Copy, Notches, QrCode, ShareNetwork} from 'phosphor-react-native';
+import {Copy, Notches, QrCode, PencilSimple} from 'phosphor-react-native';
 
 const renderScene = SceneMap({
   tokens: Tokens,
@@ -28,6 +29,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
     {key: 'nfts', title: 'NFTs'},
   ]);
 
+  const {account} = useWallet();
   const [copied, CopyToClipboard] = useClipboard();
 
   return (
@@ -35,13 +37,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
       <HomeHeader navigation={navigation} />
 
       <View style={[styles.acctDetails]}>
-        <View style={[styles.acctDetails__image]}>
-          <FastImage
-            resizeMode="cover"
-            style={[styles.image]}
-            source={require('assets/images/masks/mask-6.png')}
-          />
-        </View>
+        <WalletIcon size={68} addres={testAddress} />
 
         <View style={styles.acctNameAddr}>
           <Text style={{fontSize: 20}}>alphaglitch.eth</Text>
@@ -65,8 +61,9 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
             },
             {
               label: 'Edit',
-              icon: <ShareNetwork weight="regular" size={20} color={'#fff'} />,
-              onPress: () => console.log('share'),
+              icon: <PencilSimple weight="regular" size={20} color={'#fff'} />,
+              onPress: () =>
+                navigation.navigate('editWallet', {wallet: account!}),
             },
             {
               label: 'QR Code',
@@ -77,7 +74,8 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
             {
               label: 'More',
               icon: <Notches weight="bold" size={18} color={colors.primary} />,
-              onPress: () => console.log('share'),
+              onPress: () =>
+                navigation.navigate('walletOptions', {wallet: account!}),
             },
           ].map((btn, i) => {
             return (

@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import {styles} from './styles';
-import {View} from 'react-native';
 import {colors} from 'utils/Theming';
+import useHaptics from 'hooks/useHaptics';
+import {Vibration, View} from 'react-native';
 import DialpadKeypad from 'components/Dialpad';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
@@ -16,14 +17,26 @@ const ConfirmPasscode = ({
 }: RootStackScreenProps<'confirmPasscode'>) => {
   const codes = route.params.codes;
 
+  const hapticFeedback = useHaptics();
+
   const [code, setCode] = useState<number[]>([]);
   const {updateSettings, setPasscode} = useSettings();
+  const [isIncorrect, setIsIncorrect] = useState(false);
 
   const onComplete = (newCodes: number[]) => {
     if (newCodes?.join('') === codes?.join('')) {
       setPasscode(newCodes?.join('')?.trim());
       updateSettings('passcode', true);
       navigation.pop(2);
+    } else {
+      hapticFeedback('notificationError');
+      Vibration.vibrate(2000);
+      setIsIncorrect(true);
+
+      setTimeout(() => {
+        setIsIncorrect(false);
+        setCode([]);
+      }, 700);
     }
   };
 
@@ -41,7 +54,7 @@ const ConfirmPasscode = ({
       </View>
 
       <View style={[styles.content]}>
-        <DialpadPin code={code} />
+        <DialpadPin code={code} isIncorrect={isIncorrect} />
       </View>
 
       <DialpadKeypad code={code} setCode={setCode} onComplete={onComplete} />
