@@ -28,10 +28,10 @@ type modalScreens = {
 
 export type RootTabParamList = {
   home: undefined;
-  vaults: undefined;
-  wallet: undefined;
+  smartSave: undefined;
+  tabBtn: undefined;
   signIn: undefined;
-  activity: undefined;
+  transactions: undefined;
 
   settings: undefined;
 

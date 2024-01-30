@@ -24,7 +24,7 @@ const Splash = () => {
         <Image
           resizeMode={Image.resizeMode.contain}
           style={{width: '90%', height: '90%'}}
-          source={require('assets/images/grads/2.png')}
+          source={require('assets/images/grads/1.png')}
         />
       </View>
 

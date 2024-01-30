@@ -24,7 +24,7 @@ const TokenItem = ({token}: TokenItemProps) => {
       style={[
         styles.container,
         {
-          borderColor: colors.border3,
+          borderColor: colors.border,
         },
       ]}>
       <View style={[styles.token_image]}>

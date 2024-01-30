@@ -1,6 +1,7 @@
+import TabIcon from './tabIcons';
 import {View} from 'react-native';
 import Colors, {colors} from 'utils/Theming';
-import {RgText} from 'components/_ui/typography';
+import {Text} from 'components/_ui/typography';
 import useColorScheme from 'hooks/useColorScheme';
 import {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -11,22 +12,14 @@ import {
   BottomSheetParams,
   RootStackParamList,
 } from 'typings/navigation';
-import {
-  House,
-  Users,
-  CirclesThreePlus,
-  SlidersHorizontal,
-  ClockCounterClockwise,
-} from 'phosphor-react-native';
 
 // Screens
 import Home from 'app/home';
 import ScanQR from 'app/scanQR';
-import Vaults from 'app/vaults';
 import Loader from 'app/Loader';
 import ShareQR from 'app/shareQR';
-import Activity from 'app/activity';
 import Settings from 'app/settings';
+import SmartSave from 'app/smartSave';
 import Onboarding from 'app/onboarding';
 import NFTPreview from 'app/NFTPreview';
 import PairModal from 'app/modals/pairModal';
@@ -41,6 +34,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBackground from 'components/modals/customBackground';
 
 import Wallets from 'app/settings/wallets';
+import Transactions from 'app/transactions';
 import Currencies from 'app/settings/currencies';
 import Preferences from 'app/settings/preferences';
 import SecuritySettings from 'app/settings/security';
@@ -56,69 +50,38 @@ const BottomSheet = createBottomSheetNavigator<BottomSheetParams>();
 
 // BottomTab Icons
 function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
-  const iconSize = 26;
-
   const colorScheme = useColorScheme();
 
   return (
     <View
       style={{
         gap: 4,
-        flex: 1,
         minWidth: 40,
-        paddingTop: 10,
         alignItems: 'center',
         flexDirection: 'column',
+        justifyContent: 'center',
+        paddingTop: props.label === 'tabBtn' ? 0 : 8,
       }}>
-      {props.label === 'home' ? (
-        <House
-          weight={props?.focused ? 'fill' : 'regular'}
-          size={iconSize}
-          color={props?.color}
-        />
-      ) : props.label === 'vaults' ? (
-        <Users
-          weight={props?.focused ? 'fill' : 'regular'}
-          size={iconSize}
-          color={props?.color}
-        />
-      ) : props.label === 'activity' ? (
-        <ClockCounterClockwise
-          weight={props?.focused ? 'fill' : 'regular'}
-          size={iconSize}
-          color={props?.color}
-        />
-      ) : props.label === 'settings' ? (
-        <SlidersHorizontal
-          weight={props?.focused ? 'fill' : 'regular'}
-          size={iconSize}
-          color={props?.color}
-        />
-      ) : (
-        <>
-          <View
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 34,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}>
-            <CirclesThreePlus size={20} color={'#000'} weight="regular" />
-          </View>
-        </>
+      <TabIcon
+        label={props.label}
+        color={props.color}
+        focused={props.focused}
+      />
+
+      {props.label !== 'tabBtn' && (
+        <Text
+          style={{
+            fontSize: 10,
+            lineHeight: 13,
+            color: props?.focused
+              ? Colors[colorScheme].tint
+              : Colors[colorScheme].tabIconDefault,
+          }}>
+          {props.label === 'smartSave'
+            ? 'Smart Save'
+            : props?.label?.charAt(0).toUpperCase() + props?.label?.slice(1)}
+        </Text>
       )}
-
-      <RgText
-        style={{
-          display: props?.label === 'wallet' ? 'none' : 'none',
-
-          fontSize: 10,
-          color: props?.focused ? Colors[colorScheme].tint : '#89919E',
-        }}>
-        {props?.label?.charAt(0).toUpperCase() + props?.label?.slice(1)}
-      </RgText>
     </View>
   );
 }
@@ -195,6 +158,7 @@ const BottomSheetNavigator = () => {
           handleComponent: null,
           bottomInset: insets.bottom,
           style: {marginHorizontal: 16},
+          keyboardBlurBehavior: 'restore',
           handleIndicatorStyle: {backgroundColor: colors.modalHandle},
           backgroundComponent: props => (
             <CustomBackground borderRadius={12} {...props} />
@@ -341,14 +305,14 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="settings"
+      initialRouteName="smartSave"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
           height: 88,
           borderTopWidth: 0.5,
-          borderTopColor: '#222',
+          borderTopColor: '#1c1c1c',
           backgroundColor: Colors[colorScheme].tabBackground,
         },
         tabBarActiveTintColor: Colors[colorScheme].tint,
@@ -366,31 +330,31 @@ function BottomTabNavigator() {
       />
 
       <BottomTab.Screen
-        name="vaults"
-        component={Vaults}
+        name="smartSave"
+        component={SmartSave}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon label="vaults" color={color} focused={focused} />
+            <TabBarIcon label="smartSave" color={color} focused={focused} />
           ),
         })}
       />
 
       <BottomTab.Screen
-        name="wallet"
-        component={Vaults}
+        name="tabBtn"
+        component={SmartSave}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon label="wallet" color={color} focused={focused} />
+            <TabBarIcon label="tabBtn" color={color} focused={focused} />
           ),
         })}
       />
 
       <BottomTab.Screen
-        name="activity"
-        component={Activity}
+        name="transactions"
+        component={Transactions}
         options={() => ({
           tabBarIcon: ({color, focused}) => (
-            <TabBarIcon label="activity" color={color} focused={focused} />
+            <TabBarIcon label="transactions" color={color} focused={focused} />
           ),
         })}
       />

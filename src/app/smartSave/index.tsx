@@ -7,7 +7,7 @@ import {Container} from 'components/_ui/custom';
 import Searchbar from 'components/_common/Searchbar';
 import {RgText, Text} from 'components/_ui/typography';
 
-const Vaults = () => {
+const SmartSave = () => {
   const [search, setSearch] = useState('');
 
   return (
@@ -121,4 +121,4 @@ const Vaults = () => {
   );
 };
 
-export default Vaults;
+export default SmartSave;

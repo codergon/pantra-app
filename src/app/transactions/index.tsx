@@ -9,7 +9,7 @@ import TransactionItem from 'components/activity/transactionItem';
 import {FlatList, Keyboard, TouchableOpacity, View} from 'react-native';
 import {ArrowUp, ArrowDown, ClockCounterClockwise} from 'phosphor-react-native';
 
-const Activity = () => {
+const Transactions = () => {
   const {txnSearch, txnFilter, filteredTxns, setTxnFilter, setTxnSearch} =
     useAccountData();
 
@@ -126,4 +126,4 @@ const Activity = () => {
   );
 };
 
-export default Activity;
+export default Transactions;

@@ -27,7 +27,7 @@ const SignTxnModal = ({
       <ModalHeader
         name={'Abstract'}
         url={'abstract.technology'}
-        icon={require('assets/images/grads/5.png')}
+        icon={require('assets/images/grads/2.png')}
       />
 
       <AcctInfoBlock />

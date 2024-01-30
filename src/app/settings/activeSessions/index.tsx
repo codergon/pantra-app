@@ -48,7 +48,7 @@ const ActiveSessions = () => {
                   name: 'Abstract',
                   url: 'abstract.technology',
                   desc: 'Web3 super wallet ✨',
-                  icon: require('assets/images/grads/2.png'),
+                  icon: require('assets/images/grads/1.png'),
                 }}
               />
             );
