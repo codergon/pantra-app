@@ -17,7 +17,7 @@ const TxnReceiptModal = ({
   const {txnHash} = route.params;
   const {close} = useBottomSheet();
 
-  const {data} = useQuery(
+  const {data, isLoading} = useQuery(
     ['txn-receipt', txnHash],
     async () => {
       return await alchemy.core.getTransactionReceipt(txnHash);

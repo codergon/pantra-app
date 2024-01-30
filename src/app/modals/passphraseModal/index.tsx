@@ -1,12 +1,12 @@
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
-import {Copy, LockKey, X} from 'phosphor-react-native';
 import {truncate} from 'utils/HelperUtils';
 import useClipboard from 'hooks/useClipboard';
-import {RgText, Text} from 'components/_ui/typography';
 import {useBottomSheet} from '@gorhom/bottom-sheet';
 import {TouchableOpacity, View} from 'react-native';
 import {BottomSheetParams} from 'typings/navigation';
+import {Copy, LockKey, X} from 'phosphor-react-native';
+import {RgText, Text} from 'components/_ui/typography';
 import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
 import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 

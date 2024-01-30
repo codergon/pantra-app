@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     gap: 18,
     flex: 1,
-    paddingTop: 16,
+    paddingTop: 18,
     paddingBottom: 20,
     paddingHorizontal: 16,
     flexDirection: 'column',

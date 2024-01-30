@@ -1,18 +1,19 @@
 import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
-import FullBtn from 'components/shared/fullBtn';
 import Divider from 'components/_common/Divider';
-import {BdText, Text} from 'components/_ui/typography';
 import {RootTabScreenProps} from 'typings/navigation';
+import WalletIcon from 'components/shared/WalletIcon';
+import {testAddress} from 'providers/AccountDataProvider';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {getReadableVersion} from 'react-native-device-info';
 import SettingsItem from 'components/settings/SettingsItem';
+import {BdText, RgText, Text} from 'components/_ui/typography';
 import {MessageSquareHeart, Satellite} from 'lucide-react-native';
 import {
-  CurrencyCircleDollar,
   Lock,
-  UserGear,
   Wallet,
+  UserGear,
+  CurrencyCircleDollar,
 } from 'phosphor-react-native';
 
 const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
@@ -61,10 +62,28 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
     <>
       <Container paddingTop={10} style={[styles.container]}>
         <View style={[styles.header]}>
-          <BdText style={{fontSize: 22}}>Settings</BdText>
+          <BdText style={{fontSize: 26}}>Settings</BdText>
         </View>
 
         <ScrollView contentContainerStyle={[styles.settings]}>
+          <View style={[styles.illustration]}>
+            <WalletIcon size={42} addres={testAddress} />
+
+            <View
+              style={{
+                gap: 3,
+                flex: 1,
+                flexDirection: 'column',
+              }}>
+              <Text style={[styles.illustrationText, {color: colors?.white}]}>
+                alphaglitch.eth
+              </Text>
+              <RgText style={[styles.illustrationText_desc]}>
+                0x3a0c4...a2b1
+              </RgText>
+            </View>
+          </View>
+
           {settings?.map((config, i) => {
             return <SettingsItem key={i} {...config} />;
           })}
@@ -93,7 +112,7 @@ export default Settings;
 
 export const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 16,
     flex: 1,
   },
 
@@ -118,5 +137,31 @@ export const styles = StyleSheet.create({
     gap: 24,
     width: '100%',
     flexDirection: 'column',
+  },
+
+  illustration: {
+    gap: 16,
+    borderRadius: 16,
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: colors.accent1,
+  },
+  illustrationIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent3,
+  },
+  illustrationText: {
+    fontSize: 17,
+  },
+  illustrationText_desc: {
+    fontSize: 14,
+    color: colors.subText2,
   },
 });

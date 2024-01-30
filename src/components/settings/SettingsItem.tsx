@@ -62,11 +62,11 @@ export default SettingsItem;
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 22,
     minHeight: 34,
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 18,
+    paddingHorizontal: 20,
   },
   details: {
     gap: 3,

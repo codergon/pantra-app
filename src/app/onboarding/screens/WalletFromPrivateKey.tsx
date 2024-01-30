@@ -83,7 +83,8 @@ const WalletFromPrivateKey = ({
                   flex: 1,
                   flexDirection: 'column',
                 }}>
-                <RgText style={[styles.actionBtn__Text, {color: '#FFD772'}]}>
+                <RgText
+                  style={[styles.actionBtn__Text, {color: colors?.warning}]}>
                   Your keys are stored locally
                 </RgText>
                 <RgText style={[styles.actionBtn__Text__Description]}>

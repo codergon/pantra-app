@@ -235,10 +235,9 @@ const BottomSheetNavigator = () => {
         options={{
           detached: true,
           snapPoints: [420],
+          handleComponent: null,
           enableOverDrag: false,
           bottomInset: insets.bottom,
-          enableDismissOnClose: false,
-          enablePanDownToClose: false,
           style: {marginHorizontal: 16},
           handleIndicatorStyle: {backgroundColor: colors.modalHandle},
           backgroundComponent: props => (
