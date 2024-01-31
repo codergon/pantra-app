@@ -1,12 +1,13 @@
 import {View} from 'react-native';
 import {colors} from 'utils/Theming';
 import {Path, Svg} from 'react-native-svg';
-import {PaperPlane, SlidersHorizontal} from 'phosphor-react-native';
+import {SlidersHorizontal} from 'phosphor-react-native';
 
 interface TabIconProps {
   label: string;
   color?: string;
   focused?: boolean;
+  children?: React.ReactNode;
 }
 
 const iconSize = 21;
@@ -98,7 +99,7 @@ const tabIcons = {
     );
   },
 
-  tabBtn: () => {
+  tabBtn: (props: TabIconProps) => {
     return (
       <>
         <View
@@ -107,35 +108,43 @@ const tabIcons = {
             height: 40,
             paddingBottom: 1,
             borderRadius: 34,
+            overflow: 'hidden',
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: colors.primary + '20',
           }}>
-          <PaperPlane size={19} color={colors.primary} weight="fill" />
-
-          {/* <Svg
-            style={{
-              width: 17,
-              marginLeft: 2,
-              height: 17 * (12 / 13),
-            }}
-            fill="none"
-            viewBox="0 0 13 12">
-            <Path
-              fill={colors.primary}
-              d="M.947 3.864.504.38 12.18 5.755.504 11.513.947 8.04l4.795-2.285-4.795-1.89Z"
-            />
-          </Svg> */}
+          {props?.children ? (
+            props?.children
+          ) : (
+            <>
+              <Svg
+                style={{
+                  width: 18,
+                  marginTop: 2,
+                  marginLeft: 3,
+                  height: 18 * (12 / 13),
+                }}
+                fill="none"
+                viewBox="0 0 13 12">
+                <Path
+                  fill={colors.primary}
+                  d="M.947 3.864.504.38 12.18 5.755.504 11.513.947 8.04l4.795-2.285-4.795-1.89Z"
+                />
+              </Svg>
+            </>
+          )}
         </View>
       </>
     );
   },
 };
 
-const TabIcon = ({color, label, focused}: TabIconProps) => {
+const TabIcon = ({color, label, focused, children}: TabIconProps) => {
   const Icon = tabIcons[label as keyof typeof tabIcons];
 
-  return <Icon color={color} label={label} focused={focused} />;
+  return (
+    <Icon color={color} label={label} focused={focused} children={children} />
+  );
 };
 
 export default TabIcon;

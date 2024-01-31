@@ -110,7 +110,7 @@ const NFTpreview = ({route}: RootStackScreenProps<'NFTpreview'>) => {
               {' ETH '}
             </Text>
             <Text style={[styles.stat_value]}>
-              ($
+              ({activeCurrency?.symbol}
               {millify(
                 Number(nftData?.contract?.openSeaMetadata?.floorPrice) *
                   ethPrices[activeCurrency?.slug],

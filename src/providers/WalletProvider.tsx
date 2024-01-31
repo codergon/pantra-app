@@ -1,28 +1,64 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {Wallet} from 'ethers';
+import {Wallet, providers} from 'ethers';
 import Toast from 'react-native-toast-message';
 import {useStorage, useSecureStorage} from 'hooks';
+import React, {useEffect, useState, useCallback} from 'react';
 import useInitialization from 'hooks/useInitialization';
 
 // =========================
+import {parseEther} from 'viem';
 import {IWallet} from 'typings/common';
 import {getSdkError} from '@walletconnect/utils';
 import {SessionTypes} from '@walletconnect/types';
 import {SignClientTypes} from '@walletconnect/types';
-import {EIP155_SIGNING_METHODS} from '../data/EIP155';
+import {EIP155_CHAINS, EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
-import {useSendTransaction} from 'wagmi';
+
+export const provider = new providers.JsonRpcProvider(
+  EIP155_CHAINS['eip155:5'].rpc,
+);
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
   const [account, setAccount] = useSecureStorage<IWallet>('account');
 
-  // Send ETH
-  const {sendTransaction, data} = useSendTransaction();
+  const [txnPending, setTxnPending] = useState(false);
 
-  const sendETH = async ({}: SendETHProps) => {};
+  // Send ETH
+  const sendETH = async ({to, amount}: SendETHProps) => {
+    setTxnPending(true);
+    try {
+      Toast.show({
+        type: 'warning',
+        text1: 'Transaction Processing',
+        text2: 'Waiting for confirmation',
+      });
+
+      const tx = await account!.sendTransaction({
+        to,
+        value: parseEther(amount),
+      });
+
+      if (tx) {
+        Toast.show({
+          type: 'success',
+          text1: 'Transaction Successful',
+          text2: 'Transaction has been confirmed',
+        });
+      }
+    } catch (error) {
+      console.log('error', error);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Transaction Failed',
+        text2: 'Please try again',
+      });
+    } finally {
+      setTxnPending(false);
+    }
+  };
 
   // Create a new wallet
   const createSmartWallet = ({
@@ -37,7 +73,7 @@ export default function WalletProvider(props: WalletProviderProps) {
           ? Wallet.createRandom()
           : type === 'mnemonic'
           ? Wallet.fromMnemonic(mnemonic!)
-          : new Wallet(privateKey!);
+          : new Wallet(privateKey!, provider);
       setAccount(wallet);
     } catch (error) {
       Toast.show({
@@ -223,6 +259,7 @@ export default function WalletProvider(props: WalletProviderProps) {
         avatar: avatar || '',
 
         sendETH,
+        txnPending,
 
         updateAvatar,
         updateAccount,
@@ -235,8 +272,8 @@ export default function WalletProvider(props: WalletProviderProps) {
 
 interface SendETHProps {
   to: string;
-  from: string;
-  amount: number;
+  amount: string;
+  from?: `0x${string}`;
 }
 interface CreateWalletProps {
   type: 'new' | 'mnemonic' | 'privateKey';
@@ -246,9 +283,10 @@ interface CreateWalletProps {
 
 interface WalletContext {
   avatar: string;
+  txnPending: boolean;
   initialized: boolean;
-  account: IWallet | null;
   isAddingWallet: boolean;
+  account: IWallet | null;
 
   updateAvatar: (avatar: string) => void;
   sendETH: ({to, amount}: SendETHProps) => Promise<void>;

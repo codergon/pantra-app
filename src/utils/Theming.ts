@@ -5,7 +5,8 @@ export const colors = {
   invert: '#fff',
   // primary: "#8FF0B3",
   // primary: '#FD9264',
-  primary: '#D4FF5C',
+  // primary: '#D4FF5C',
+  primary: '#FFD772',
   secondary: '#2658D9',
 
   white: '#fff',

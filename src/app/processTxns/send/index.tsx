@@ -21,7 +21,7 @@ import {testAddress, useAccountData} from 'providers/AccountDataProvider';
 
 const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
   const insets = useSafeAreaInsets();
-  const {account} = useWallet();
+  const {account, sendETH} = useWallet();
   const scannedAddress = route.params?.toAddress;
   const {ethPrices, activeCurrency} = useAccountData();
   const {data: ethBalance} = useBalance({
@@ -30,7 +30,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
   });
   const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
-  const [amount, setAmount] = useState('1.45');
+  const [amount, setAmount] = useState('');
   const [toAddress, setToAddress] = useState('');
   const isValidAddress = useMemo(() => isAddress(toAddress), [toAddress]);
   const isValidAmount = useMemo(
@@ -83,7 +83,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
               </Text>
               <Text style={[styles.addrBlockText_balance]}>
                 Balance:{' '}
-                {millify(Number(ethBalance?.formatted), {
+                {millify(Number(ethBalance?.formatted || 0), {
                   precision: 3,
                 })}{' '}
                 ETH
@@ -189,13 +189,21 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
               <Text style={[styles.addrBlockText_balance]}>
                 {activeCurrency?.symbol}
                 {Number(
-                  Number(amount || 0) * ethPrices[activeCurrency?.slug],
+                  Number(amount || 0) * (ethPrices[activeCurrency?.slug] || 0),
                 )?.toFixed(2)}
               </Text>
             </View>
 
             <TouchableOpacity
               activeOpacity={0.5}
+              onPress={() => {
+                setAmount(
+                  (
+                    Number(ethBalance?.formatted || 0) -
+                    Number(feeData?.formatted?.gasPrice || 0) * 21000
+                  ).toFixed(5),
+                );
+              }}
               style={{
                 borderWidth: 1,
                 borderRadius: 20,
@@ -240,7 +248,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
                 {(
                   Number(feeData?.formatted?.gasPrice || 0) *
                   21000 *
-                  ethPrices[activeCurrency?.slug]
+                  (ethPrices[activeCurrency?.slug] || 0)
                 ).toFixed(4)}
               </Text>
             </View>
@@ -254,7 +262,13 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
           accept={true}
           title="Send ETH"
           disabled={!isValidAmount || !isValidAddress}
-          onPress={() => {}}
+          onPress={() => {
+            sendETH({
+              to: toAddress,
+              amount: amount,
+            });
+            navigation.replace('Main', {screen: 'home'});
+          }}
         />
       </View>
     </Container>

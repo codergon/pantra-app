@@ -1,4 +1,5 @@
 import TabIcon from './tabIcons';
+import LottieView from 'lottie-react-native';
 import Colors, {colors} from 'utils/Theming';
 import {Text} from 'components/_ui/typography';
 import useColorScheme from 'hooks/useColorScheme';
@@ -46,6 +47,7 @@ import ConfirmPasscode from 'app/passcode/confirmPasscode';
 import SelectActionModal from 'app/modals/selectActionModal';
 
 import SendETH from 'app/processTxns/send';
+import {useWallet} from 'providers/WalletProvider';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,7 +55,12 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 const BottomSheet = createBottomSheetNavigator<BottomSheetParams>();
 
 // BottomTab Icons
-function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
+function TabBarIcon(props: {
+  label: string;
+  color: string;
+  focused: boolean;
+  children?: React.ReactNode;
+}) {
   const colorScheme = useColorScheme();
 
   return (
@@ -70,6 +77,7 @@ function TabBarIcon(props: {label: string; color: string; focused: boolean}) {
         label={props.label}
         color={props.color}
         focused={props.focused}
+        children={props.children}
       />
 
       {props.label !== 'tabBtn' && (
@@ -323,6 +331,7 @@ function RootNavigator() {
 
 // Bottom Tab Navigator
 function BottomTabNavigator() {
+  const {txnPending} = useWallet();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
@@ -380,11 +389,24 @@ function BottomTabNavigator() {
                 flexDirection: 'column',
                 justifyContent: 'center',
               }}>
-              <TabBarIcon
-                label="tabBtn"
-                color={colors.primary}
-                focused={true}
-              />
+              <TabBarIcon label="tabBtn" color={colors.primary} focused={true}>
+                {txnPending && (
+                  <LottieView
+                    loop
+                    autoPlay
+                    speed={0.5}
+                    style={{
+                      width: 80,
+                      height: 80,
+                      marginTop: 5,
+                      marginLeft: -15,
+                      maxHeight: 100,
+                      backgroundColor: 'transparent',
+                    }}
+                    source={require('assets/lotties/wave.json')}
+                  />
+                )}
+              </TabBarIcon>
             </TouchableOpacity>
           ),
         })}

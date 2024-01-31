@@ -52,6 +52,10 @@
     {
       "path": "src/assets/images/splash.png",
       "sha1": "744cec58232ab08483f5e69f98ee326c4f29c35e"
+    },
+    {
+      "path": "src/assets/lotties/pulse.json",
+      "sha1": "3d7dfc1362c8dc0b6a0549ec2d4c58c821d42da1"
     }
   ]
 }

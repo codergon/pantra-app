@@ -38,6 +38,7 @@
     "ethers": "5.7.2",
     "fast-text-encoding": "^1.0.6",
     "javascript-time-ago": "^2.5.9",
+    "lottie-react-native": "^6.6.0",
     "lucide-react-native": "^0.309.0",
     "millify": "^6.1.0",
     "nanoid": "^5.0.4",
