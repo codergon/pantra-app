@@ -49,7 +49,7 @@ export function BdText(props: TextProps) {
       {...props}
       style={[
         props.style,
-        {fontFamily: 'AcidGrotesk-Medium', fontWeight: '900'},
+        {fontFamily: 'AcidGrotesk-Medium', fontWeight: '600'},
       ]}
     />
   );

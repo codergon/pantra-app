@@ -1,34 +1,55 @@
 import {styles} from './styles';
-import {useState} from 'react';
-import {padding} from 'helpers/styles';
-import {FlatList, View} from 'react-native';
-import {ArrowUp} from 'phosphor-react-native';
+import {View} from 'react-native';
+import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
-import Searchbar from 'components/_common/Searchbar';
-import {RgText, Text} from 'components/_ui/typography';
+import FastImage from 'react-native-fast-image';
+import SavingsToggleBtn from './savingsToggleBtn';
+import {BdText, Text} from 'components/_ui/typography';
 
 const SmartSave = () => {
-  const [search, setSearch] = useState('');
-
   return (
-    <Container paddingTop={0} style={[styles.container]}>
+    <Container paddingTop={10} style={[styles.container]}>
+      <View style={[styles.header]}>
+        <Text style={{fontSize: 30}}>Smart savings</Text>
+        <Text style={{fontSize: 16, color: colors.subText1, lineHeight: 24}}>
+          Save money on from your transactions
+        </Text>
+      </View>
+
       <View
-        style={[
-          {
-            gap: 4,
-            flexDirection: 'row',
+        style={{
+          flex: 0,
+          aspectRatio: 1.4,
+          borderRadius: 14,
+          overflow: 'hidden',
+          marginHorizontal: 4,
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}>
+        <FastImage
+          style={{
+            width: '100%',
+            height: '100%',
             alignItems: 'center',
-            ...padding(14, 16, 10),
-            justifyContent: 'space-between',
-          },
-        ]}>
-        <Searchbar value={search} onFocus={() => {}} onChangeText={setSearch} />
+            justifyContent: 'center',
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+          source={require('assets/images/grads/blur.png')}>
+          <View
+            style={{
+              gap: 14,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{fontSize: 20}}>Amount saved</Text>
+            <BdText style={{fontSize: 40}}>$400.00</BdText>
+          </View>
+        </FastImage>
       </View>
 
       <View style={[styles.content]}>
-        <View style={{marginBottom: 10}}>
-          {/* <RgText style={{fontSize: 24, color: '#999'}}>Transactions</RgText> */}
-        </View>
+        <SavingsToggleBtn />
       </View>
     </Container>
   );
