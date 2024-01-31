@@ -4,9 +4,9 @@ import {Path, Svg} from 'react-native-svg';
 import {PaperPlane, SlidersHorizontal} from 'phosphor-react-native';
 
 interface TabIconProps {
-  color: string;
   label: string;
-  focused: boolean;
+  color?: string;
+  focused?: boolean;
 }
 
 const iconSize = 21;
@@ -98,7 +98,7 @@ const tabIcons = {
     );
   },
 
-  tabBtn: (props: TabIconProps) => {
+  tabBtn: () => {
     return (
       <>
         <View

@@ -25,6 +25,15 @@ export function truncate(value?: string, length = 10) {
 }
 
 /**
+ * Extracts Ethereum address from a string
+ */
+export function extractEthAddress(inputString: string) {
+  const ethAddressRegex = /0x[a-fA-F0-9]{40}/;
+  const match = inputString.match(ethAddressRegex);
+  return match ? match[0] : '';
+}
+
+/**
  * Converts hex to utf8 string if it is valid bytes
  */
 export function convertHexToUtf8(value: string) {

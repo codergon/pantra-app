@@ -1,8 +1,8 @@
 import TabIcon from './tabIcons';
-import {View} from 'react-native';
 import Colors, {colors} from 'utils/Theming';
 import {Text} from 'components/_ui/typography';
 import useColorScheme from 'hooks/useColorScheme';
+import {TouchableOpacity, View} from 'react-native';
 import {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -39,9 +39,13 @@ import Currencies from 'app/settings/currencies';
 import Preferences from 'app/settings/preferences';
 import SecuritySettings from 'app/settings/security';
 import EnterPasscode from 'app/passcode/enterPasscode';
+import {useNavigation} from '@react-navigation/native';
 import ActiveSessions from 'app/settings/activeSessions';
 import CreatePasscode from 'app/passcode/createPasscode';
 import ConfirmPasscode from 'app/passcode/confirmPasscode';
+import SelectActionModal from 'app/modals/selectActionModal';
+
+import SendETH from 'app/processTxns/send';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -112,6 +116,20 @@ const BottomSheetNavigator = () => {
         ),
       }}>
       <BottomSheet.Screen name="Root" component={RootNavigator} />
+
+      {/* TabBar Button Options */}
+      <BottomSheet.Screen
+        name="selectActionModal"
+        component={SelectActionModal}
+        options={{
+          snapPoints: [280],
+          keyboardBlurBehavior: 'restore',
+          handleIndicatorStyle: {backgroundColor: colors.modalHandle},
+          backgroundComponent: props => (
+            <CustomBackground borderRadius={12} {...props} />
+          ),
+        }}
+      />
 
       {/* View Passphrase */}
       <BottomSheet.Screen
@@ -264,6 +282,10 @@ function RootNavigator() {
         headerShown: false,
       }}>
       <Stack.Group>
+        <Stack.Screen name="sendETH" component={SendETH} />
+      </Stack.Group>
+
+      <Stack.Group>
         <Stack.Screen name="enterPasscode" component={EnterPasscode} />
         <Stack.Screen name="createPasscode" component={CreatePasscode} />
         <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
@@ -301,7 +323,10 @@ function RootNavigator() {
 
 // Bottom Tab Navigator
 function BottomTabNavigator() {
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
+
+  const EmptyTab = () => <></>;
 
   return (
     <BottomTab.Navigator
@@ -341,10 +366,26 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="tabBtn"
-        component={SmartSave}
+        component={EmptyTab}
         options={() => ({
-          tabBarIcon: ({color, focused}) => (
-            <TabBarIcon label="tabBtn" color={color} focused={focused} />
+          tabBarButton: () => (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.navigate('selectActionModal');
+              }}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}>
+              <TabBarIcon
+                label="tabBtn"
+                color={colors.primary}
+                focused={true}
+              />
+            </TouchableOpacity>
           ),
         })}
       />

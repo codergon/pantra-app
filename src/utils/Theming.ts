@@ -37,7 +37,7 @@ export const colors = {
   subText2: '#aaa',
   subText3: '#ccc',
   subText4: '#ccc',
-  background: '#000',
+  background: '#050505', // reset
 
   error: '#FE5C4C',
   success: '#7AF88E',
@@ -49,7 +49,7 @@ export const colors = {
   // TabBar
   tint: '#fff',
   tabBorder: '#444',
-  tabBackground: '#000',
+  tabBackground: '#050505', // reset
   tabIconSelected: '#fff',
   tabIconDefault: '#89919e',
 

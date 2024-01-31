@@ -3,11 +3,11 @@ import {Container} from 'components/_ui/custom';
 import Divider from 'components/_common/Divider';
 import {RootTabScreenProps} from 'typings/navigation';
 import WalletIcon from 'components/shared/WalletIcon';
+import {RgText, Text} from 'components/_ui/typography';
 import {testAddress} from 'providers/AccountDataProvider';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {getReadableVersion} from 'react-native-device-info';
 import SettingsItem from 'components/settings/SettingsItem';
-import {BdText, RgText, Text} from 'components/_ui/typography';
 import {MessageSquareHeart, Satellite} from 'lucide-react-native';
 import {
   Lock,
@@ -62,7 +62,7 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
     <>
       <Container paddingTop={10} style={[styles.container]}>
         <View style={[styles.header]}>
-          <BdText style={{fontSize: 26}}>Settings</BdText>
+          <Text style={{fontSize: 26}}>Settings</Text>
         </View>
 
         <ScrollView contentContainerStyle={[styles.settings]}>

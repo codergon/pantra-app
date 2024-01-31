@@ -12,17 +12,17 @@ import {SignClientTypes} from '@walletconnect/types';
 import {EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
+import {useSendTransaction} from 'wagmi';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
   const [account, setAccount] = useSecureStorage<IWallet>('account');
 
-  // const initialized = useInitialization();
+  // Send ETH
+  const {sendTransaction, data} = useSendTransaction();
 
-  // useEffect(() => {
-  //   console.log('Web3WalletSDK initialized:', initialized);
-  // }, [initialized]);
+  const sendETH = async ({}: SendETHProps) => {};
 
   // Create a new wallet
   const createSmartWallet = ({
@@ -61,6 +61,11 @@ export default function WalletProvider(props: WalletProviderProps) {
   };
 
   // ==================================================================
+  // const initialized = useInitialization();
+
+  // useEffect(() => {
+  //   console.log('Web3WalletSDK initialized:', initialized);
+  // }, [initialized]);
 
   // Modal Visible State
   const [approvalModal, setApprovalModal] = useState(false);
@@ -217,6 +222,8 @@ export default function WalletProvider(props: WalletProviderProps) {
         initialized: true,
         avatar: avatar || '',
 
+        sendETH,
+
         updateAvatar,
         updateAccount,
         createSmartWallet,
@@ -226,6 +233,11 @@ export default function WalletProvider(props: WalletProviderProps) {
   );
 }
 
+interface SendETHProps {
+  to: string;
+  from: string;
+  amount: number;
+}
 interface CreateWalletProps {
   type: 'new' | 'mnemonic' | 'privateKey';
   mnemonic?: string;
@@ -237,7 +249,9 @@ interface WalletContext {
   initialized: boolean;
   account: IWallet | null;
   isAddingWallet: boolean;
+
   updateAvatar: (avatar: string) => void;
+  sendETH: ({to, amount}: SendETHProps) => Promise<void>;
   updateAccount: (key: keyof IWallet, value: IWallet[keyof IWallet]) => void;
   createSmartWallet: ({type, mnemonic, privateKey}: CreateWalletProps) => void;
 }

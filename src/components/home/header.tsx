@@ -13,7 +13,7 @@ interface HomeHeaderProps {
 }
 
 const HomeHeader = ({navigation}: HomeHeaderProps) => {
-  const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
+  const {data: feeData} = useFeeData({formatUnits: 'gwei', watch: true});
 
   return (
     <View style={[styles.header]}>
@@ -30,7 +30,7 @@ const HomeHeader = ({navigation}: HomeHeaderProps) => {
           <GasPump size={16} color={colors.primary} weight="fill" />
           <Text style={{fontSize: 13, paddingTop: 1}}>
             {feeData?.formatted?.gasPrice
-              ? (Number(feeData?.formatted?.gasPrice) * 1e9).toFixed(2)
+              ? Number(feeData?.formatted?.gasPrice).toFixed(2)
               : 0}
           </Text>
         </View>

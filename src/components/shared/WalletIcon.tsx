@@ -45,7 +45,6 @@ export default WalletIcon;
 
 const styles = StyleSheet.create({
   icon: {
-    borderRadius: 42,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,11 +1,15 @@
+import {isAddress} from 'viem';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
 import {useEffect, useState} from 'react';
+import {extractEthAddress} from 'utils/HelperUtils';
 import {CameraOff, Scan, X} from 'lucide-react-native';
 import {RgText, Text} from 'components/_ui/typography';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList, RootStackScreenProps} from 'typings/navigation';
 import {
   Camera,
   useCodeScanner,
@@ -13,8 +17,11 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 
-const ScanQR = () => {
-  const navigation = useNavigation();
+const ScanQR = ({route}: RootStackScreenProps<'scanQR'>) => {
+  const scanAddress = route.params?.scanAddress;
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const insets = useSafeAreaInsets();
   const device = useCameraDevice('back');
   const [isActive, setIsActive] = useState(true);
@@ -27,14 +34,27 @@ const ScanQR = () => {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: codes => {
-      // check if the value of any of the codes is a wallet connect uri
-      const wcUri = codes.find(code => code.value?.includes('wc:'));
+      if (scanAddress) {
+        try {
+          const address = codes.find(code =>
+            isAddress(extractEthAddress(code.value ?? '')),
+          );
 
-      if (wcUri) {
-        setIsActive(false);
-        console.log(JSON.stringify(wcUri?.value, null, 2));
+          if (address) {
+            navigation.navigate('sendETH', {
+              toAddress: extractEthAddress(address.value!),
+            });
+          }
+        } catch (e) {}
+      } else {
+        // check if the value of any of the codes is a wallet connect uri
+        const wcUri = codes.find(code => code.value?.includes('wc:'));
 
-        // navigation.navigate('connectWallet', {uri: wcUri?.value});
+        if (wcUri) {
+          setIsActive(false);
+          console.log(JSON.stringify(wcUri?.value, null, 2));
+          // navigation.navigate('connectWallet', {uri: wcUri?.value});
+        }
       }
     },
   });

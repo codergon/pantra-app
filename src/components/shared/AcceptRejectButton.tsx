@@ -1,4 +1,3 @@
-import React from 'react';
 import {colors} from 'utils/Theming';
 import {Text} from 'components/_ui/typography';
 import {TouchableOpacity, StyleSheet} from 'react-native';

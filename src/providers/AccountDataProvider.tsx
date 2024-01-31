@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
+import {useBalance} from 'wagmi';
 import {ALCHEMY_API_KEY} from '@env';
-import {Address, useBalance} from 'wagmi';
 import {useWallet} from './WalletProvider';
 import currencies from 'constants/currencies';
 import {useSettings} from './SettingsProvider';
@@ -37,7 +37,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const [tokensBalances, setTokensBalances] = useState<ITokensBalances>({});
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
-    address: testAddress ?? (account?.address as Address),
+    address: testAddress ?? account?.address,
   });
 
   const acctTokens = useQuery<GetTokensForOwnerResponse>(

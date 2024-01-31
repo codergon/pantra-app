@@ -20,6 +20,7 @@ type modalScreens = {
   selectAvatar: undefined;
   signTxnModal: undefined;
   importWalletModal: undefined;
+  selectActionModal: undefined;
   txnDetails: {txnHash: string};
   editWallet: {wallet: IWallet};
   walletOptions: {wallet: IWallet};
@@ -35,7 +36,11 @@ export type RootTabParamList = {
 
   settings: undefined;
 
-  scanQR: undefined;
+  scanQR:
+    | {
+        scanAddress?: boolean;
+      }
+    | undefined;
   shareQR: {
     address: string;
   };
@@ -72,6 +77,13 @@ export type RootStackParamList = {
   currencies: undefined;
   preferences: undefined;
 
+  // Process Transactions
+  sendETH:
+    | {
+        toAddress?: string;
+      }
+    | undefined;
+
   // Passcode
   enterPasscode:
     | {
@@ -84,7 +96,11 @@ export type RootStackParamList = {
   };
 
   Loader: undefined;
-  scanQR: undefined;
+  scanQR:
+    | {
+        scanAddress?: boolean;
+      }
+    | undefined;
   shareQR: {
     address: string;
   };
