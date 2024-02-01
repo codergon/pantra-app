@@ -28,7 +28,7 @@ const EditWalletModal = ({
     <View style={[styles.container]}>
       <View style={[styles.header]}>
         <View style={{flexDirection: 'column', gap: 2}}>
-          <Text style={[{fontSize: 18}]}>{wallet?.name || 'Wallet'}</Text>
+          <Text style={[{fontSize: 18}]}>{wallet?.name || 'Main Wallet'}</Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
             {truncate(wallet?.address, 14)}
           </Text>

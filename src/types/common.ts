@@ -2,7 +2,10 @@ import {Wallet} from 'ethers';
 
 export type IWallet = {
   name?: string;
-} & Wallet;
+  address?: Wallet['address'];
+  mnemonic?: Wallet['mnemonic'];
+  privateKey?: Wallet['privateKey'];
+};
 
 export type RecentSearches = RecentSearch[];
 

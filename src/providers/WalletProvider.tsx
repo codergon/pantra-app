@@ -39,7 +39,9 @@ export default function WalletProvider(props: WalletProviderProps) {
         text2: 'Waiting for confirmation',
       });
 
-      const tx = await account!.sendTransaction({
+      const signer = new Wallet(account!.privateKey!, provider);
+
+      const tx = await signer!.sendTransaction({
         to,
         value: parseEther(amount),
       });

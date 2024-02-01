@@ -22,7 +22,7 @@ const PassphraseModal = ({
   const wordsGroup1 = words?.slice(0, 6) || [];
   const wordsGroup2 = words?.slice(6, 12) || [];
 
-  // console.log(wallet?.privateKey);
+  console.log(wallet?.privateKey);
 
   return (
     <View style={[styles.container]}>

@@ -20,14 +20,14 @@ const WalletItem = ({wallet}: WalletItemProps) => {
         activeOpacity={0.7}
         style={styles.platformDetails}
         onPress={() => {
-          navigation.navigate('walletOptions', {wallet});
+          navigation.navigate('walletOptions');
         }}>
         <View style={[styles.imageContainer]}>
           <WalletIcon address={wallet.address} size={42} />
         </View>
 
         <View style={[styles.platformInfo]}>
-          <Text style={{fontSize: 16}}>{wallet?.name || `Wallet`}</Text>
+          <Text style={{fontSize: 16}}>{wallet?.name || `Main Wallet`}</Text>
 
           <View style={[styles.platformInfo_desc]}>
             <RgText style={{color: colors.subText, fontSize: 14}}>
