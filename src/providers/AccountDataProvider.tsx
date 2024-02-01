@@ -24,11 +24,14 @@ export const alchemy = new Alchemy({
   network: Network.ETH_MAINNET,
 });
 
-export const testAddress = '0xFE83aa8439A8699A25CA47D81e9Be430F5476F93';
-
 export default function AccountDataProvider(props: AccountDataProviderProps) {
   const {account} = useWallet();
+  const {isAuthorized} = useSettings();
   const {activeCurrency, useJazzicons} = useSettings();
+
+  const queryEnabled = useMemo(() => {
+    return !!account?.address;
+  }, [account?.address]);
 
   const [txnSearch, setTxnSearch] = useState('');
   const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
@@ -37,18 +40,19 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const [tokensBalances, setTokensBalances] = useState<ITokensBalances>({});
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
-    address: testAddress ?? account?.address,
+    enabled: queryEnabled,
+    address: account?.address! as `0x${string}`,
   });
 
   const acctTokens = useQuery<GetTokensForOwnerResponse>(
     ['acctTokens', account?.address],
     async () => {
-      return await alchemy.core.getTokensForOwner('alphaglitch.eth');
+      return await alchemy.core.getTokensForOwner(account?.address!);
     },
     {
+      enabled: queryEnabled,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      enabled: !!account?.address,
     },
   );
 
@@ -68,10 +72,11 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     ['acctTxns', account?.address],
     async () => {
       const fromTxns = await alchemy.core.getAssetTransfers({
+        maxCount: 30,
         fromBlock: '0x0',
         withMetadata: true,
         excludeZeroValue: false,
-        fromAddress: testAddress,
+        fromAddress: account?.address,
         order: SortingOrder.DESCENDING,
         category: [
           AssetTransfersCategory.ERC20,
@@ -83,9 +88,10 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       });
 
       const toTxns = await alchemy.core.getAssetTransfers({
+        maxCount: 30,
         fromBlock: '0x0',
         withMetadata: true,
-        toAddress: testAddress,
+        toAddress: account?.address,
         excludeZeroValue: false,
         order: SortingOrder.DESCENDING,
         category: [
@@ -111,9 +117,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       };
     },
     {
+      enabled: queryEnabled,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      enabled: !!account?.address,
     },
   );
 
@@ -142,8 +148,10 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     return acctTxns.data?.transfers.filter(
       txn =>
         (txnFilter === 'all' ||
-          (txnFilter === 'sent' && txn.from === testAddress.toLowerCase()) ||
-          (txnFilter === 'received' && txn.to === testAddress.toLowerCase())) &&
+          (txnFilter === 'sent' &&
+            txn.from === account?.address?.toLowerCase()) ||
+          (txnFilter === 'received' &&
+            txn.to === account?.address?.toLowerCase())) &&
         (txnSearch === '' ||
           txn.from?.toLowerCase().includes(txnSearch.toLowerCase()) ||
           txn.to?.toLowerCase().includes(txnSearch.toLowerCase()) ||
