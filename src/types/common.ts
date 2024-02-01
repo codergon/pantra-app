@@ -3,8 +3,8 @@ import {Wallet} from 'ethers';
 export type IWallet = {
   name?: string;
   address?: Wallet['address'];
-  mnemonic?: Wallet['mnemonic'];
   privateKey?: Wallet['privateKey'];
+  mnemonic?: Wallet['mnemonic']['phrase'];
 };
 
 export type RecentSearches = RecentSearch[];

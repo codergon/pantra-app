@@ -18,7 +18,7 @@ const PassphraseModal = ({
   const {account: wallet} = useWallet();
   const [copied, CopyToClipboard] = useClipboard();
 
-  const words = wallet?.mnemonic?.phrase?.split(' ');
+  const words = wallet?.mnemonic?.split(' ');
   const wordsGroup1 = words?.slice(0, 6) || [];
   const wordsGroup2 = words?.slice(6, 12) || [];
 
@@ -29,7 +29,7 @@ const PassphraseModal = ({
       <View style={[styles.header]}>
         <View style={{flexDirection: 'column', gap: 2}}>
           <Text style={[{fontSize: 18}]}>
-            {wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'}
+            {wallet?.mnemonic ? 'Passphrase' : 'Private Key'}
           </Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
             {wallet?.name || truncate(wallet?.address, 15)}
@@ -43,7 +43,7 @@ const PassphraseModal = ({
 
       <View style={{gap: 17, flex: 1}}>
         <View style={[styles.passphrase]}>
-          {wallet?.mnemonic?.phrase ? (
+          {wallet?.mnemonic ? (
             <>
               <View style={[styles.group]}>
                 {wordsGroup1.map((word, index) => {
@@ -116,13 +116,9 @@ const PassphraseModal = ({
       <View style={[styles.actionBtns]}>
         <AcceptRejectButton
           accept={true}
-          title={`Copy ${
-            wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'
-          }`}
+          title={`Copy ${wallet?.mnemonic ? 'Passphrase' : 'Private Key'}`}
           onPress={() => {
-            CopyToClipboard(
-              wallet?.mnemonic?.phrase || wallet?.privateKey || '',
-            );
+            CopyToClipboard(wallet?.mnemonic || wallet?.privateKey || '');
           }}>
           <Copy
             size={16}

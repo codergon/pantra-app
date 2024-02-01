@@ -87,7 +87,12 @@ export default function WalletProvider(props: WalletProviderProps) {
             : new Wallet(privateKey!, provider);
       }
 
-      setAccount(wallet);
+      setAccount({
+        name: 'Smart Wallet',
+        address: wallet.address,
+        privateKey: wallet.privateKey,
+        mnemonic: wallet.mnemonic?.phrase,
+      });
     } catch (error) {
       Toast.show({
         type: 'error',
