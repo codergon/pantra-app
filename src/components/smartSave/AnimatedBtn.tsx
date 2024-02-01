@@ -2,7 +2,6 @@ import React from 'react';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
 import {StyleSheet, View} from 'react-native';
-import {CreditCard} from 'phosphor-react-native';
 import Animated, {
   withSpring,
   useSharedValue,
@@ -14,6 +13,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import Icons from 'components/_common/Icons';
 
 const SIZE = 76;
 
@@ -65,7 +65,7 @@ export default function AnimatedBtn() {
         style={styles.wrapper}>
         <GestureDetector gesture={pan}>
           <Animated.View style={[styles.box, animatedStyles]}>
-            <CreditCard size={24} weight={'regular'} color="#000" />
+            <Icons.lighlink size={30} />
           </Animated.View>
         </GestureDetector>
       </View>

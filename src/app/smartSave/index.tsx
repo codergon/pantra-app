@@ -3,8 +3,9 @@ import {View} from 'react-native';
 import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
-import SavingsToggleBtn from './savingsToggleBtn';
 import {BdText, Text} from 'components/_ui/typography';
+import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
+import SavingsToggleBtn from '../../components/smartSave/savingsToggleBtn';
 
 const SmartSave = () => {
   return (
@@ -51,6 +52,8 @@ const SmartSave = () => {
       <View style={[styles.content]}>
         <SavingsToggleBtn />
       </View>
+
+      <WithdrawalInterval />
     </Container>
   );
 };

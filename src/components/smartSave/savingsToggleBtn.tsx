@@ -44,11 +44,7 @@ const SavingsToggleBtn = () => {
           borderColor: '#333',
           position: 'relative',
         }}>
-        <View
-          onLayout={e => {
-            console.log(e.nativeEvent.layout.height);
-          }}
-          style={[styles.btnContainer]}>
+        <View style={[styles.btnContainer]}>
           <BackgroundText />
           <AnimatedBtn />
         </View>

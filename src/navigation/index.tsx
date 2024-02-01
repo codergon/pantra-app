@@ -285,46 +285,53 @@ const BottomSheetNavigator = () => {
 function RootNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Main"
+      initialRouteName="Loader"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Group>
-        <Stack.Screen name="sendETH" component={SendETH} />
-      </Stack.Group>
-
-      <Stack.Group>
-        <Stack.Screen name="enterPasscode" component={EnterPasscode} />
-        <Stack.Screen name="createPasscode" component={CreatePasscode} />
-        <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
-      </Stack.Group>
-
-      <Stack.Group>
-        <Stack.Screen name="wallets" component={Wallets} />
-        <Stack.Screen name="currencies" component={Currencies} />
-        <Stack.Screen name="preferences" component={Preferences} />
-        <Stack.Screen name="sessions" component={ActiveSessions} />
-        <Stack.Screen name="security" component={SecuritySettings} />
-      </Stack.Group>
-
-      <Stack.Group>
-        <Stack.Screen
-          name="shareQR"
-          component={ShareQR}
-          options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-        />
-        <Stack.Screen
-          name="scanQR"
-          component={ScanQR}
-          options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-        />
-      </Stack.Group>
-
       <Stack.Screen name="Loader" component={Loader} />
-      <Stack.Screen name="NFTpreview" component={NFTPreview} />
 
       <Stack.Screen name="Onboarding" component={Onboarding} />
-      <Stack.Screen name="Main" component={BottomTabNavigator} />
+
+      <Stack.Screen name="enterPasscode" component={EnterPasscode} />
+
+      <Stack.Group>
+        <Stack.Screen name="Main" component={BottomTabNavigator} />
+
+        <Stack.Group>
+          <Stack.Screen name="NFTpreview" component={NFTPreview} />
+        </Stack.Group>
+
+        <Stack.Group>
+          <Stack.Screen name="sendETH" component={SendETH} />
+        </Stack.Group>
+
+        <Stack.Group>
+          <Stack.Screen name="createPasscode" component={CreatePasscode} />
+          <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
+        </Stack.Group>
+
+        <Stack.Group>
+          <Stack.Screen name="wallets" component={Wallets} />
+          <Stack.Screen name="currencies" component={Currencies} />
+          <Stack.Screen name="preferences" component={Preferences} />
+          <Stack.Screen name="sessions" component={ActiveSessions} />
+          <Stack.Screen name="security" component={SecuritySettings} />
+        </Stack.Group>
+
+        <Stack.Group>
+          <Stack.Screen
+            name="shareQR"
+            component={ShareQR}
+            options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+          />
+          <Stack.Screen
+            name="scanQR"
+            component={ScanQR}
+            options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+          />
+        </Stack.Group>
+      </Stack.Group>
     </Stack.Navigator>
   );
 }
@@ -339,7 +346,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="smartSave"
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
