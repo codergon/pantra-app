@@ -25,8 +25,8 @@ export const alchemy = new Alchemy({
 });
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
-  const {account} = useWallet();
-  const {isAuthorized} = useSettings();
+  const {account, setAccount} = useWallet();
+  const {setSettings, setPasscode} = useSettings();
   const {activeCurrency, useJazzicons} = useSettings();
 
   const queryEnabled = useMemo(() => {
@@ -43,6 +43,16 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     enabled: queryEnabled,
     address: account?.address! as `0x${string}`,
   });
+
+  const clearAccounts = () => {
+    setAccount();
+    setSettings();
+    setPasscode();
+    setEthPrices({});
+    setTxnSearch('');
+    setTxnFilter('all');
+    setTokensBalances({});
+  };
 
   const acctTokens = useQuery<GetTokensForOwnerResponse>(
     ['acctTokens', account?.address],
@@ -230,6 +240,8 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         filteredTxns,
         nftsCollections,
 
+        clearAccounts,
+
         ethPrices,
         useJazzicons,
         activeCurrency,
@@ -264,11 +276,12 @@ export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
 
 interface AccountDataContext {
   useJazzicons: boolean;
+  ethBalance: string | undefined;
   tokensBalances: ITokensBalances;
   ethPrices: Record<string, number>;
   activeCurrency: (typeof currencies)[number];
 
-  ethBalance: string | undefined;
+  clearAccounts: () => void;
 
   txnSearch: string;
   txnFilter: ITxnFilter;

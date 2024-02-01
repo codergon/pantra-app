@@ -25,7 +25,10 @@ function useAsyncState<T>(initialValue: T | null = null): UseAsyncStateHook<T> {
 
 export async function storeStorageItemAsync(key: string, value: any) {
   if (value == null) {
-    await AsyncStorage.removeItem(key);
+    const val = await AsyncStorage.getItem(key);
+    if (val) {
+      await AsyncStorage.removeItem(key);
+    }
   } else {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   }

@@ -17,7 +17,6 @@ import {
 // Screens
 import Home from 'app/home';
 import ScanQR from 'app/scanQR';
-import Loader from 'app/Loader';
 import ShareQR from 'app/shareQR';
 import Settings from 'app/settings';
 import SmartSave from 'app/smartSave';
@@ -25,6 +24,7 @@ import Onboarding from 'app/onboarding';
 import NFTPreview from 'app/NFTPreview';
 import PairModal from 'app/modals/pairModal';
 import SignTxnModal from 'app/modals/signTxn';
+import Loader from 'components/_common/Loader';
 import SelectAvatar from 'app/modals/selectAvatar';
 import ImportWalletModal from 'app/modals/importWallet';
 import TxnDetailsModal from 'app/modals/txnDetailsModal';

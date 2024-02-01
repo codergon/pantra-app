@@ -15,7 +15,8 @@ import {EIP155_CHAINS, EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
 
 export const provider = new providers.JsonRpcProvider(
-  EIP155_CHAINS['eip155:5'].rpc,
+  // EIP155_CHAINS['eip155:5'].rpc,
+  'https://replicator.phoenix.lightlink.io/rpc/vl',
 );
 
 export default function WalletProvider(props: WalletProviderProps) {
@@ -267,6 +268,7 @@ export default function WalletProvider(props: WalletProviderProps) {
         isAddingWallet,
         initialized: true,
         avatar: avatar || '',
+        setAccount,
 
         sendETH,
         txnPending,
@@ -299,6 +301,7 @@ interface WalletContext {
   initialized: boolean;
   isAddingWallet: boolean;
   account: IWallet | null;
+  setAccount: (account?: IWallet) => void;
 
   isAcctReady: boolean;
 

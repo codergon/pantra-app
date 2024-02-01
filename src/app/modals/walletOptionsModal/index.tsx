@@ -6,12 +6,16 @@ import {Unlink} from 'lucide-react-native';
 import useClipboard from 'hooks/useClipboard';
 import {useWallet} from 'providers/WalletProvider';
 import {RootTabParamList} from 'typings/navigation';
+import {useBottomSheet} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
+import {useAccountData} from 'providers/AccountDataProvider';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Copy, QrCode, Password, PencilSimple} from 'phosphor-react-native';
 
 const WalletOptionsModal = () => {
+  const {close} = useBottomSheet();
   const {account: wallet} = useWallet();
+  const {clearAccounts} = useAccountData();
   const [copied, CopyToClipboard] = useClipboard();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootTabParamList>>();
@@ -51,7 +55,10 @@ const WalletOptionsModal = () => {
         {
           color: colors.error,
           label: 'Remove Account',
-          onPress: () => console.log('Remove Account'),
+          onPress: () => {
+            clearAccounts();
+            close();
+          },
           icon: <Unlink size={15} strokeWidth={2.6} color={colors.error} />,
         },
       ].map((option, i) => {

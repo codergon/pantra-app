@@ -22,6 +22,8 @@ const PassphraseModal = ({
   const wordsGroup1 = words?.slice(0, 6) || [];
   const wordsGroup2 = words?.slice(6, 12) || [];
 
+  // console.log(wallet?.privateKey);
+
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
@@ -30,7 +32,7 @@ const PassphraseModal = ({
             {wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'}
           </Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
-            {wallet?.name || truncate(wallet?.address, 12)}
+            {wallet?.name || truncate(wallet?.address, 15)}
           </Text>
         </View>
 

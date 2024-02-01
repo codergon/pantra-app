@@ -6,10 +6,12 @@ import FullBtn from 'components/shared/fullBtn';
 import {Container} from 'components/_ui/custom';
 import BackBtn from 'components/_common/backBtn';
 import {useWallet} from 'providers/WalletProvider';
+import {useAccountData} from 'providers/AccountDataProvider';
 import {Header, RgText, Text} from 'components/_ui/typography';
 
 const Wallets = () => {
   const {account} = useWallet();
+  const {clearAccounts} = useAccountData();
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
@@ -36,7 +38,9 @@ const Wallets = () => {
 
           <View style={{width: '100%', paddingHorizontal: 18}}>
             <FullBtn
-              onPress={() => console.log('disconnect')}
+              onPress={() => {
+                clearAccounts();
+              }}
               style={{
                 marginTop: 20,
                 paddingVertical: 12,

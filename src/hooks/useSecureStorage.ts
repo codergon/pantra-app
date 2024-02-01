@@ -25,7 +25,10 @@ function useAsyncState<T>(initialValue: T | null = null): UseAsyncStateHook<T> {
 
 export async function storeSecureItemAsync(key: string, value: any) {
   if (value == null) {
-    await SecureStore.removeItem(key);
+    const val = await SecureStore.getItem(key);
+    if (val) {
+      await SecureStore.removeItem(key);
+    }
   } else {
     await SecureStore.setItem(key, JSON.stringify(value));
   }
