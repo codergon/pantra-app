@@ -15,6 +15,7 @@ import {
   UserGear,
   CurrencyCircleDollar,
 } from 'phosphor-react-native';
+import {truncate} from 'utils/HelperUtils';
 
 const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
   const {account} = useWallet();
@@ -69,7 +70,7 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
 
         <ScrollView contentContainerStyle={[styles.settings]}>
           <View style={[styles.illustration]}>
-            <WalletIcon size={42} addres={account?.address!} />
+            <WalletIcon size={42} address={account?.address!} />
 
             <View
               style={{
@@ -78,10 +79,10 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
                 flexDirection: 'column',
               }}>
               <Text style={[styles.illustrationText, {color: colors?.white}]}>
-                alphaglitch.eth
+                {account?.name || 'Main Wallet'}
               </Text>
               <RgText style={[styles.illustrationText_desc]}>
-                0x3a0c4...a2b1
+                {truncate(account?.address!, 15)}
               </RgText>
             </View>
           </View>

@@ -113,15 +113,18 @@ const Transactions = () => {
           );
         })}
       </View>
-
-      <FlatList
-        data={filteredTxns}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <TransactionItem txn={item} />}
-        contentContainerStyle={{paddingTop: 16, paddingBottom: 46}}
-        ItemSeparatorComponent={() => <View style={{height: 20}} />}
-      />
+      {filteredTxns?.length === 0 ? (
+        <></>
+      ) : (
+        <FlatList
+          data={filteredTxns}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}) => <TransactionItem txn={item} />}
+          contentContainerStyle={{paddingTop: 16, paddingBottom: 46}}
+          ItemSeparatorComponent={() => <View style={{height: 20}} />}
+        />
+      )}
     </Container>
   );
 };

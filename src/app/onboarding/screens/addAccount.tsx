@@ -3,7 +3,7 @@ import {useWallet} from 'providers/WalletProvider';
 import {Container} from 'components/_ui/custom';
 import {TouchableOpacity, View} from 'react-native';
 import {ArrowDown, Wallet} from 'phosphor-react-native';
-import {Header, RgText} from 'components/_ui/typography';
+import {Header, RgText, Text} from 'components/_ui/typography';
 import {AppStackScreenProps} from 'typings/navigation';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -49,7 +49,6 @@ const AddAccount = ({navigation}: AppStackScreenProps<'addAccount'>) => {
                 createSmartWallet({
                   type: 'new',
                 });
-                navigation.replace('Main');
               },
               icon: <Wallet weight="bold" size={18} color={'#fff'} />,
               description: 'Create a new wallet with automated smart savings',
@@ -76,10 +75,10 @@ const AddAccount = ({navigation}: AppStackScreenProps<'addAccount'>) => {
                     flex: 1,
                     flexDirection: 'column',
                   }}>
-                  <RgText style={[styles.actionBtn__Text]}>{btn.title}</RgText>
-                  <RgText style={[styles.actionBtn__Text__Description]}>
+                  <Text style={[styles.actionBtn__Text]}>{btn.title}</Text>
+                  <Text style={[styles.actionBtn__Text__Description]}>
                     {btn.description}
-                  </RgText>
+                  </Text>
                 </View>
               </TouchableOpacity>
             );

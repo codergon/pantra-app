@@ -12,7 +12,7 @@ const AcctInfoBlock = () => {
 
   return (
     <View style={[styles.info_block]}>
-      <WalletIcon addres={account?.address!} size={44} />
+      <WalletIcon address={account?.address!} size={44} />
 
       <View
         style={{
@@ -21,7 +21,7 @@ const AcctInfoBlock = () => {
           flexDirection: 'column',
         }}>
         <Text style={[styles.infoText, {color: colors.warning}]}>
-          {account?.name ?? 'Wallet One'}
+          {account?.name ?? 'Main Wallet'}
           <Text style={{fontSize: 13, color: colors.warning}}>
             {truncate(account?.address ?? '', 12)}
           </Text>

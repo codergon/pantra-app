@@ -2,6 +2,7 @@ import {styles} from './styles';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
 import useClipboard from 'hooks/useClipboard';
+import {useWallet} from 'providers/WalletProvider';
 import {useBottomSheet} from '@gorhom/bottom-sheet';
 import {TouchableOpacity, View} from 'react-native';
 import {BottomSheetParams} from 'typings/navigation';
@@ -13,13 +14,13 @@ import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 const PassphraseModal = ({
   route,
 }: BottomSheetScreenProps<BottomSheetParams, 'viewPassphrase'>) => {
-  const {wallet} = route.params;
   const {close} = useBottomSheet();
+  const {account: wallet} = useWallet();
   const [copied, CopyToClipboard] = useClipboard();
 
   const words = wallet?.mnemonic?.phrase?.split(' ');
-  const wordsGroup1 = words?.slice(0, 6);
-  const wordsGroup2 = words?.slice(6, 12);
+  const wordsGroup1 = words?.slice(0, 6) || [];
+  const wordsGroup2 = words?.slice(6, 12) || [];
 
   return (
     <View style={[styles.container]}>
@@ -117,7 +118,9 @@ const PassphraseModal = ({
             wallet?.mnemonic?.phrase ? 'Passphrase' : 'Private Key'
           }`}
           onPress={() => {
-            CopyToClipboard(wallet?.mnemonic?.phrase);
+            CopyToClipboard(
+              wallet?.mnemonic?.phrase || wallet?.privateKey || '',
+            );
           }}>
           <Copy
             size={16}

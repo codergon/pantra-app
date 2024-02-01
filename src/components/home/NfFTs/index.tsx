@@ -25,7 +25,7 @@ const NFTs = () => {
           </View>
 
           <Text style={{fontSize: 18}}>
-            Collections • {nftsCollections?.length}
+            Collectibles • {nftsCollections?.length}
           </Text>
         </View>
 

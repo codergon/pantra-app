@@ -2,7 +2,6 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import {IWallet} from './common';
 import {OwnedNft} from 'alchemy-sdk';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -17,14 +16,14 @@ declare global {
 
 type modalScreens = {
   pairModal: undefined;
+  editWallet: undefined;
   selectAvatar: undefined;
   signTxnModal: undefined;
+  walletOptions: undefined;
+  viewPassphrase: undefined;
   importWalletModal: undefined;
   selectActionModal: undefined;
   txnDetails: {txnHash: string};
-  editWallet: {wallet: IWallet};
-  walletOptions: {wallet: IWallet};
-  viewPassphrase: {wallet: IWallet};
 };
 
 export type RootTabParamList = {

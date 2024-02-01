@@ -28,7 +28,7 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
 
               <View style={[styles.txn_row_value]}>
                 {(key === 'from' || key === 'to') && (
-                  <WalletIcon addres={txnData[key]} size={16} />
+                  <WalletIcon address={txnData[key]} size={16} />
                 )}
 
                 <Text style={[]}>

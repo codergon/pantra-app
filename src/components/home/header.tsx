@@ -46,7 +46,7 @@ const HomeHeader = ({navigation}: HomeHeaderProps) => {
             }}
           />
         </View>
-        <Text style={{fontSize: 14.6}}>{"alphaknight's wallet"}</Text>
+        <Text style={{fontSize: 14.6}}>{'Lightlink Network'}</Text>
         <ChevronDown
           size={16}
           color="#fff"

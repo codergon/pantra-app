@@ -68,7 +68,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
       <ScrollView bounces={false} contentContainerStyle={[styles.body]}>
         <View style={[styles.addrBlocks]}>
           <View style={[styles.addrBlock]}>
-            <WalletIcon size={42} addres={account?.address!} />
+            <WalletIcon size={42} address={account?.address!} />
 
             <View
               style={{
@@ -79,7 +79,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
               <Text
                 numberOfLines={1}
                 style={[styles.addrBlockText, {color: colors?.white}]}>
-                alphaglitch.eth
+                {account?.name || 'Main Wallet'}
               </Text>
               <Text style={[styles.addrBlockText_balance]}>
                 Balance:{' '}
@@ -110,7 +110,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
             ]}>
             {isValidAddress ? (
               <>
-                <WalletIcon size={42} addres={toAddress} />
+                <WalletIcon size={42} address={toAddress} />
 
                 <View
                   style={{

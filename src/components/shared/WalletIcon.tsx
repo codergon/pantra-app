@@ -7,11 +7,11 @@ import {useAccountData} from 'providers/AccountDataProvider';
 
 interface WalletIconProps {
   size?: number;
-  addres: string;
+  address?: string;
   jazzicon?: boolean;
 }
 
-const WalletIcon = ({addres, size = 20, jazzicon = true}: WalletIconProps) => {
+const WalletIcon = ({address, size = 20, jazzicon = true}: WalletIconProps) => {
   const {useJazzicons} = useAccountData();
 
   return (
@@ -30,11 +30,11 @@ const WalletIcon = ({addres, size = 20, jazzicon = true}: WalletIconProps) => {
             resizeMode="cover"
             style={[styles.image]}
             source={{
-              uri: makeBlockie(addres),
+              uri: makeBlockie(address!),
             }}
           />
         ) : (
-          <Jazzicon size={size} address={addres} />
+          <Jazzicon size={size} address={address} />
         )}
       </View>
     </>

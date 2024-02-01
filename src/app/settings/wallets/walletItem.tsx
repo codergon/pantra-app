@@ -23,7 +23,7 @@ const WalletItem = ({wallet}: WalletItemProps) => {
           navigation.navigate('walletOptions', {wallet});
         }}>
         <View style={[styles.imageContainer]}>
-          <WalletIcon addres={wallet.address} size={42} />
+          <WalletIcon address={wallet.address} size={42} />
         </View>
 
         <View style={[styles.platformInfo]}>

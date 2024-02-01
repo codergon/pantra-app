@@ -59,7 +59,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const acctNfts = useQuery<OwnedNftsResponse>(
     ['acctNfts', account?.address],
     async () => {
-      return await alchemy.nft.getNftsForOwner('alphaglitch.eth');
+      return await alchemy.nft.getNftsForOwner(account?.address!);
     },
     {
       refetchOnReconnect: false,

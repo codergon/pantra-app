@@ -4,16 +4,14 @@ import {colors} from 'utils/Theming';
 import WalletOption from './walletOption';
 import {Unlink} from 'lucide-react-native';
 import useClipboard from 'hooks/useClipboard';
+import {useWallet} from 'providers/WalletProvider';
+import {RootTabParamList} from 'typings/navigation';
 import {useNavigation} from '@react-navigation/native';
-import {BottomSheetParams, RootTabParamList} from 'typings/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Copy, QrCode, Password, PencilSimple} from 'phosphor-react-native';
-import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 
-const WalletOptionsModal = ({
-  route,
-}: BottomSheetScreenProps<BottomSheetParams, 'walletOptions'>) => {
-  const {wallet} = route.params;
+const WalletOptionsModal = () => {
+  const {account: wallet} = useWallet();
   const [copied, CopyToClipboard] = useClipboard();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootTabParamList>>();
@@ -30,22 +28,24 @@ const WalletOptionsModal = ({
               color={colors[copied ? 'primary' : 'white']}
             />
           ),
-          onPress: () => CopyToClipboard(wallet.address),
+          onPress: () => {
+            if (wallet?.address) CopyToClipboard(wallet.address);
+          },
         },
         {
           label: 'Edit',
-          onPress: () => navigation.replace('editWallet', {wallet}),
+          onPress: () => navigation.replace('editWallet'),
           icon: <PencilSimple weight="regular" size={20} color={'#fff'} />,
         },
         {
           label: 'Show Address',
           icon: <QrCode weight="regular" size={20} color={'#fff'} />,
           onPress: () =>
-            navigation.navigate('shareQR', {address: wallet.address}),
+            navigation.navigate('shareQR', {address: wallet?.address!}),
         },
         {
           label: 'View Passphrase',
-          onPress: () => navigation.replace('viewPassphrase', {wallet}),
+          onPress: () => navigation.replace('viewPassphrase'),
           icon: <Password weight="regular" size={18} color={colors.white} />,
         },
         {

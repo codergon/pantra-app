@@ -5,10 +5,10 @@ import {X} from 'phosphor-react-native';
 import {truncate} from 'utils/HelperUtils';
 import {Text} from 'components/_ui/typography';
 import {useWallet} from 'providers/WalletProvider';
-import {Keyboard, TouchableOpacity, View} from 'react-native';
 import {BottomSheetParams} from 'typings/navigation';
 import WalletIcon from 'components/shared/WalletIcon';
 import {useSettings} from 'providers/SettingsProvider';
+import {Keyboard, TouchableOpacity, View} from 'react-native';
 import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
 import {BottomSheetTextInput, useBottomSheet} from '@gorhom/bottom-sheet';
 import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
@@ -16,11 +16,10 @@ import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 const EditWalletModal = ({
   route,
 }: BottomSheetScreenProps<BottomSheetParams, 'editWallet'>) => {
-  const {wallet} = route.params;
   const {close} = useBottomSheet();
-  const {updateAccount} = useWallet();
+  const {updateAccount, account: wallet} = useWallet();
   const {useJazzicons, updateSettings} = useSettings();
-  const [walletName, setWalletName] = useState(wallet.name);
+  const [walletName, setWalletName] = useState(wallet?.name);
   const [selectedIconType, setSelectedIconType] = useState(
     useJazzicons ? 0 : 1,
   );
@@ -31,7 +30,7 @@ const EditWalletModal = ({
         <View style={{flexDirection: 'column', gap: 2}}>
           <Text style={[{fontSize: 18}]}>{wallet?.name || 'Wallet'}</Text>
           <Text style={[{fontSize: 14, color: colors.subText1}]}>
-            {truncate(wallet.address, 14)}
+            {truncate(wallet?.address, 14)}
           </Text>
         </View>
 
@@ -74,7 +73,7 @@ const EditWalletModal = ({
                   <WalletIcon
                     size={38}
                     jazzicon={i === 0}
-                    addres={wallet.address}
+                    address={wallet?.address}
                   />
                 </TouchableOpacity>
 
@@ -90,7 +89,7 @@ const EditWalletModal = ({
           accept={true}
           title={'Update Wallet'}
           disabled={
-            walletName === wallet.name &&
+            walletName === wallet?.name &&
             (selectedIconType === 0) === useJazzicons
           }
           onPress={() => {

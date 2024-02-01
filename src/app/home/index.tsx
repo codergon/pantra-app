@@ -36,10 +36,10 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
       <HomeHeader navigation={navigation} />
 
       <View style={[styles.acctDetails]}>
-        <WalletIcon size={68} addres={account?.address!} />
+        <WalletIcon size={68} address={account?.address!} />
 
         <View style={styles.acctNameAddr}>
-          <Text style={{fontSize: 20}}>alphaglitch.eth</Text>
+          <Text style={{fontSize: 20}}>{account?.name || 'Main Wallet'}</Text>
           <RgText style={{color: colors.subText2}}>
             {truncate(account?.address!, 15)}
           </RgText>
@@ -61,8 +61,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
             {
               label: 'Edit',
               icon: <PencilSimple weight="regular" size={20} color={'#fff'} />,
-              onPress: () =>
-                navigation.navigate('editWallet', {wallet: account!}),
+              onPress: () => navigation.navigate('editWallet'),
             },
             {
               label: 'QR Code',
@@ -73,8 +72,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
             {
               label: 'More',
               icon: <Notches weight="bold" size={18} color={colors.primary} />,
-              onPress: () =>
-                navigation.navigate('walletOptions', {wallet: account!}),
+              onPress: () => navigation.navigate('walletOptions'),
             },
           ].map((btn, i) => {
             return (

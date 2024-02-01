@@ -1,5 +1,5 @@
-import {Wallet, providers} from 'ethers';
 import Toast from 'react-native-toast-message';
+import {Wallet, providers, utils} from 'ethers';
 import {useStorage, useSecureStorage} from 'hooks';
 import React, {useEffect, useState, useCallback} from 'react';
 import useInitialization from 'hooks/useInitialization';
@@ -71,12 +71,19 @@ export default function WalletProvider(props: WalletProviderProps) {
   }: CreateWalletProps) => {
     setIsAddingWallet(true);
     try {
-      const wallet =
-        type === 'new'
-          ? Wallet.createRandom()
-          : type === 'mnemonic'
-          ? Wallet.fromMnemonic(mnemonic!)
-          : new Wallet(privateKey!, provider);
+      let wallet;
+
+      if (type === 'new') {
+        const randomBytes = utils.randomBytes(32);
+        const privateHex = utils.hexlify(randomBytes);
+        wallet = new Wallet(privateHex, provider);
+      } else {
+        wallet =
+          type === 'mnemonic'
+            ? Wallet.fromMnemonic(mnemonic!)
+            : new Wallet(privateKey!, provider);
+      }
+
       setAccount(wallet);
     } catch (error) {
       Toast.show({
