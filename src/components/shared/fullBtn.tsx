@@ -1,5 +1,5 @@
 import React from 'react';
-import {RgText} from 'components/_ui/typography';
+import {Text} from 'components/_ui/typography';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -23,7 +23,7 @@ const FullBtn = ({gap, style, onPress, title, children}: FullBtnProps) => {
         }}
         style={[styles.btn, {gap: gap || 12}, style]}>
         {title && (
-          <RgText
+          <Text
             style={[
               {
                 fontSize: 14,
@@ -31,7 +31,7 @@ const FullBtn = ({gap, style, onPress, title, children}: FullBtnProps) => {
               },
             ]}>
             {title}
-          </RgText>
+          </Text>
         )}
         {children}
       </TouchableOpacity>

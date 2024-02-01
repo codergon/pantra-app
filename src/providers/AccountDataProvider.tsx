@@ -226,6 +226,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         useJazzicons,
         activeCurrency,
         tokensBalances,
+        ethBalance: ethBalance?.formatted,
         acctTokens: acctTokens?.data?.tokens!,
       }}>
       {props.children}
@@ -258,6 +259,8 @@ interface AccountDataContext {
   tokensBalances: ITokensBalances;
   ethPrices: Record<string, number>;
   activeCurrency: (typeof currencies)[number];
+
+  ethBalance: string | undefined;
 
   txnSearch: string;
   txnFilter: ITxnFilter;

@@ -1,10 +1,10 @@
 import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
 import Divider from 'components/_common/Divider';
+import {useWallet} from 'providers/WalletProvider';
 import {RootTabScreenProps} from 'typings/navigation';
 import WalletIcon from 'components/shared/WalletIcon';
 import {RgText, Text} from 'components/_ui/typography';
-import {testAddress} from 'providers/AccountDataProvider';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {getReadableVersion} from 'react-native-device-info';
 import SettingsItem from 'components/settings/SettingsItem';
@@ -17,6 +17,8 @@ import {
 } from 'phosphor-react-native';
 
 const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
+  const {account} = useWallet();
+
   const settings = [
     {
       title: 'Wallets',
@@ -67,7 +69,7 @@ const Settings = ({navigation}: RootTabScreenProps<'settings'>) => {
 
         <ScrollView contentContainerStyle={[styles.settings]}>
           <View style={[styles.illustration]}>
-            <WalletIcon size={42} addres={testAddress} />
+            <WalletIcon size={42} addres={account?.address!} />
 
             <View
               style={{

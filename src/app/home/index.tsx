@@ -13,7 +13,6 @@ import {useWallet} from 'providers/WalletProvider';
 import WalletIcon from 'components/shared/WalletIcon';
 import {RootTabScreenProps} from 'typings/navigation';
 import {RgText, Text} from 'components/_ui/typography';
-import {testAddress} from 'providers/AccountDataProvider';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Copy, Notches, QrCode, PencilSimple} from 'phosphor-react-native';
 
@@ -37,12 +36,12 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
       <HomeHeader navigation={navigation} />
 
       <View style={[styles.acctDetails]}>
-        <WalletIcon size={68} addres={testAddress} />
+        <WalletIcon size={68} addres={account?.address!} />
 
         <View style={styles.acctNameAddr}>
           <Text style={{fontSize: 20}}>alphaglitch.eth</Text>
           <RgText style={{color: colors.subText2}}>
-            {truncate(testAddress, 15)}
+            {truncate(account?.address!, 15)}
           </RgText>
         </View>
 
@@ -57,7 +56,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
                   color={colors[copied ? 'primary' : 'white']}
                 />
               ),
-              onPress: () => CopyToClipboard(testAddress),
+              onPress: () => CopyToClipboard(account?.address!),
             },
             {
               label: 'Edit',
@@ -69,7 +68,7 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
               label: 'QR Code',
               icon: <QrCode weight="regular" size={20} color={'#fff'} />,
               onPress: () =>
-                navigation.navigate('shareQR', {address: testAddress}),
+                navigation.navigate('shareQR', {address: account?.address!}),
             },
             {
               label: 'More',

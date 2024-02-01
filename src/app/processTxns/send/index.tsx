@@ -13,11 +13,11 @@ import {useWallet} from 'providers/WalletProvider';
 import WalletIcon from 'components/shared/WalletIcon';
 import TokenIcons from 'components/shared/tokenIcons';
 import {RootStackScreenProps} from 'typings/navigation';
+import {useAccountData} from 'providers/AccountDataProvider';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Header, Input, RgText, Text} from 'components/_ui/typography';
 import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
-import {testAddress, useAccountData} from 'providers/AccountDataProvider';
 
 const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
   const insets = useSafeAreaInsets();
@@ -26,7 +26,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
   const {ethPrices, activeCurrency} = useAccountData();
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
-    address: testAddress ?? account?.address,
+    address: account?.address! as `0x${string}`,
   });
   const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
@@ -68,7 +68,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
       <ScrollView bounces={false} contentContainerStyle={[styles.body]}>
         <View style={[styles.addrBlocks]}>
           <View style={[styles.addrBlock]}>
-            <WalletIcon size={42} addres={testAddress} />
+            <WalletIcon size={42} addres={account?.address!} />
 
             <View
               style={{

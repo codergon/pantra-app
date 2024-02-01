@@ -1,7 +1,7 @@
 import Splash from './screens/splash';
 import AddAccount from './screens/addAccount';
-import WalletFromMnemonic from './screens/walletFromMnemonic';
 import {OnboardingStackParamList} from 'typings/navigation';
+import WalletFromMnemonic from './screens/walletFromMnemonic';
 import WalletFromPrivateKey from './screens/WalletFromPrivateKey';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 

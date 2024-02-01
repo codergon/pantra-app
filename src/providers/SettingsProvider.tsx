@@ -9,7 +9,8 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isBiometricsSupported, setIsBiometricsSupported] = useState(false);
 
-  const [passcode, setPasscode] = useStorage<string>('passcode');
+  const [passcode, setPasscode, isPasscodeReady] =
+    useStorage<string>('passcode');
 
   const [settings, setSettings] = useStorage<ISettings>('settings', {
     privacy: false,
@@ -24,6 +25,16 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
   // setPasscode();
   // setSettings();
 
+  useEffect(() => {
+    (async () => {
+      if (!settings?.biometrics || isBiometricsSupported) return;
+      let {available} = await appBiometrics.isSensorAvailable();
+      if (available) {
+        setIsBiometricsSupported(true);
+      }
+    })();
+  }, [settings?.biometrics]);
+
   const updateSettings = async (
     key: keyof ISettings,
     value: ISettings[keyof ISettings],
@@ -31,14 +42,13 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
     setSettings({...settings!, [key]: value});
   };
 
-  useEffect(() => {
-    // biometricsAuth();
-  }, []);
-
   const biometricsAuth = async () => {
     try {
       let {available, biometryType} = await appBiometrics.isSensorAvailable();
-      if (!available) return;
+      if (!available) {
+        setIsBiometricsSupported(false);
+        return;
+      }
       setIsBiometricsSupported(available);
 
       let {success} = await appBiometrics.simplePrompt({
@@ -58,7 +68,10 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
 
         isAuthorized,
         biometricsAuth,
+        setIsAuthorized,
         isBiometricsSupported,
+
+        loadingSettings: !isPasscodeReady,
 
         useJazzicons: settings?.useJazzicons!,
         activeCurrency: settings?.activeCurrency!,
@@ -85,9 +98,12 @@ interface SettingsContext {
   passcode: string | null;
   setPasscode: (value?: string | undefined) => void;
 
+  loadingSettings: boolean;
+
   isAuthorized: boolean;
   isBiometricsSupported: boolean;
   biometricsAuth: () => Promise<void>;
+  setIsAuthorized: (value: boolean) => void;
 
   useJazzicons: boolean;
   activeCurrency: (typeof currencies)[number];

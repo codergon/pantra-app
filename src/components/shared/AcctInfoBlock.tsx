@@ -1,13 +1,18 @@
 import {colors} from 'utils/Theming';
 import WalletIcon from './WalletIcon';
+import {truncate} from 'utils/HelperUtils';
 import {StyleSheet, View} from 'react-native';
+import {useWallet} from 'providers/WalletProvider';
 import {RgText, Text} from 'components/_ui/typography';
-import {testAddress} from 'providers/AccountDataProvider';
+import {useAccountData} from 'providers/AccountDataProvider';
 
 const AcctInfoBlock = () => {
+  const {account} = useWallet();
+  const {ethBalance, activeCurrency, ethPrices} = useAccountData();
+
   return (
     <View style={[styles.info_block]}>
-      <WalletIcon addres={testAddress} size={44} />
+      <WalletIcon addres={account?.address!} size={44} />
 
       <View
         style={{
@@ -16,13 +21,17 @@ const AcctInfoBlock = () => {
           flexDirection: 'column',
         }}>
         <Text style={[styles.infoText, {color: colors.warning}]}>
-          Alphaglitch🦅{' '}
+          {account?.name ?? 'Wallet One'}
           <Text style={{fontSize: 13, color: colors.warning}}>
-            [0xFE83...6F93]
+            {truncate(account?.address ?? '', 12)}
           </Text>
         </Text>
         <RgText style={[styles.infoText_desc]}>
-          Balance: 0.00091 ETH ($2.25)
+          Balance: {Number(ethBalance).toFixed(4)} ETH ({activeCurrency?.symbol}
+          {Number(
+            Number(ethBalance || 0) * (ethPrices[activeCurrency?.slug] || 0),
+          )?.toFixed(2)}
+          )
         </RgText>
       </View>
     </View>

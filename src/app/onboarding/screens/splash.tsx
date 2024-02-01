@@ -4,7 +4,7 @@ import Image from 'react-native-fast-image';
 import FullBtn from 'components/shared/fullBtn';
 import {Container} from 'components/_ui/custom';
 import {useNavigation} from '@react-navigation/native';
-import {Header, RgText} from 'components/_ui/typography';
+import {Header, Text} from 'components/_ui/typography';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Splash = () => {
@@ -31,7 +31,7 @@ const Splash = () => {
       <View style={[styles.body]}>
         <View style={{gap: 4}}>
           <Header style={{textAlign: 'center'}}>Pantra - Smart Wallet</Header>
-          <RgText
+          <Text
             style={[
               {
                 fontSize: 14,
@@ -39,12 +39,12 @@ const Splash = () => {
                 color: '#777',
               },
             ]}>
-            Non-custodial wallet with smart savings powered by LightLink.
-          </RgText>
+            Gasless smart savings powered by LightLink.
+          </Text>
         </View>
 
         <FullBtn
-          title="Continue"
+          title="Get started"
           onPress={() => {
             navigation.navigate('addAccount');
           }}

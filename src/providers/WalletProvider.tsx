@@ -21,7 +21,10 @@ export const provider = new providers.JsonRpcProvider(
 export default function WalletProvider(props: WalletProviderProps) {
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
-  const [account, setAccount] = useSecureStorage<IWallet>('account');
+  const [account, setAccount, isAcctReady] =
+    useSecureStorage<IWallet>('account');
+
+  // setAccount();
 
   const [txnPending, setTxnPending] = useState(false);
 
@@ -261,6 +264,8 @@ export default function WalletProvider(props: WalletProviderProps) {
         sendETH,
         txnPending,
 
+        isAcctReady,
+
         updateAvatar,
         updateAccount,
         createSmartWallet,
@@ -287,6 +292,8 @@ interface WalletContext {
   initialized: boolean;
   isAddingWallet: boolean;
   account: IWallet | null;
+
+  isAcctReady: boolean;
 
   updateAvatar: (avatar: string) => void;
   sendETH: ({to, amount}: SendETHProps) => Promise<void>;

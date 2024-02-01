@@ -1,15 +1,13 @@
 import {styles} from './styles';
 import {RgText} from 'components/_ui/typography';
 import {TouchableOpacity, View} from 'react-native';
-import {BottomSheetParams} from 'typings/navigation';
 import {Key, TextColumns} from 'phosphor-react-native';
+import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 
-const ImportWalletModal = ({
-  navigation,
-}: BottomSheetScreenProps<BottomSheetParams, 'importWalletModal'>) => {
+const ImportWalletModal = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   return (
     <View
@@ -26,30 +24,23 @@ const ImportWalletModal = ({
             width: '100%',
             alignItems: 'center',
             flexDirection: 'column',
-          }}
-          onLayout={e => {
-            console.log(e.nativeEvent.layout.height);
           }}>
           {[
             {
               title: 'Mnemonic Phrase',
               onPress: () => {
-                navigation.navigate('Onboarding', {
-                  screen: 'walletFromMnemonic',
-                });
+                navigation.navigate('walletFromMnemonic');
               },
               icon: <TextColumns weight="regular" size={18} color={'#fff'} />,
-              description: 'Import your wallet using your Mnemonic Phrase',
+              description: 'Recover wallet from Mnemonic Phrase',
             },
             {
               title: 'Private Key',
               icon: <Key weight="regular" size={16} color={'#fff'} />,
               onPress: () => {
-                navigation.navigate('Onboarding', {
-                  screen: 'walletFromPrivateKey',
-                });
+                navigation.navigate('walletFromPrivateKey');
               },
-              description: 'Import your wallet using your Private Key',
+              description: 'Import your wallet from Private Key',
             },
           ].map((btn, i) => {
             return (
@@ -59,9 +50,8 @@ const ImportWalletModal = ({
                 style={[
                   styles.actionBtn,
                   {
-                    paddingTop: i === 0 ? 6 : 15,
-                    paddingBottom: i === 1 ? 6 : 15,
-                    borderBottomWidth: i === 1 ? 0 : 1,
+                    paddingTop: i === 0 ? 6 : 14,
+                    paddingBottom: i === 1 ? 6 : 14,
                   },
                 ]}>
                 <View style={[styles.actionBtn__Icon]}>{btn.icon}</View>

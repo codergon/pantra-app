@@ -2,8 +2,14 @@ import * as React from 'react';
 import SecureStore from 'react-native-encrypted-storage';
 
 type UseStateHook<T> = [T | null, (value?: T | null) => void, boolean];
+type UseAsyncStateHook<T> = [
+  T | null,
+  (value?: T | null) => void,
+  boolean,
+  (value: boolean) => void,
+];
 
-function useAsyncState<T>(initialValue: T | null = null): UseStateHook<T> {
+function useAsyncState<T>(initialValue: T | null = null): UseAsyncStateHook<T> {
   const [state, setState] = React.useState<T | null>(initialValue);
   const [isReady, setIsReady] = React.useState<boolean>(false);
 
@@ -11,12 +17,10 @@ function useAsyncState<T>(initialValue: T | null = null): UseStateHook<T> {
     if (initialValue !== null) {
       setState(initialValue);
       setIsReady(true);
-    } else {
-      setIsReady(false);
     }
   }, [initialValue]);
 
-  return [state, setState as (value?: T | null) => void, isReady];
+  return [state, setState as (value?: T | null) => void, isReady, setIsReady];
 }
 
 export async function storeSecureItemAsync(key: string, value: any) {
@@ -28,15 +32,17 @@ export async function storeSecureItemAsync(key: string, value: any) {
 }
 
 export function useSecureStorage<T>(key: string): UseStateHook<T> {
-  const [state, setState, isReady] = useAsyncState<T | null>(null);
+  const [state, setState, isReady, setIsReady] = useAsyncState<T | null>(null);
 
   // Get
   React.useEffect(() => {
     (async () => {
       await SecureStore.getItem(key)
         .then(value => {
-          if (value !== undefined)
+          if (value !== undefined) {
             setState(value === null ? null : JSON.parse(value));
+          }
+          setIsReady(true);
         })
         .catch((e: any) => {
           console.log('Error: ', e);

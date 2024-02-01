@@ -4,9 +4,9 @@ import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
 import {Text} from 'components/_ui/typography';
 import {FileMinus} from 'phosphor-react-native';
+import {useWallet} from 'providers/WalletProvider';
 import {ArrowDown, ArrowUp} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
-import {testAddress} from 'providers/AccountDataProvider';
 import {AssetTransfersWithMetadataResult} from 'alchemy-sdk';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
@@ -15,6 +15,7 @@ interface TransactionItemProps {
 }
 
 const TransactionItem = ({txn}: TransactionItemProps) => {
+  const {account} = useWallet();
   const navigation = useNavigation();
 
   return (
@@ -27,7 +28,7 @@ const TransactionItem = ({txn}: TransactionItemProps) => {
       <View style={styles.icon}>
         {txn.value === null || txn.value === 0 ? (
           <FileMinus size={20} color={colors.warning} />
-        ) : txn.from.toLowerCase() == testAddress.toLowerCase() ? (
+        ) : txn.from.toLowerCase() == account?.address?.toLowerCase() ? (
           <ArrowDown size={20} color={colors.primary} />
         ) : (
           <ArrowUp size={20} color={colors.primary} />

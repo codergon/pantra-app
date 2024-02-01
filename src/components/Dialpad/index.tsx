@@ -4,13 +4,16 @@ import {Text} from 'components/_ui/typography';
 import {Backspace} from 'phosphor-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import Icons from 'components/_common/Icons';
 
 const dialPadSize = layout.width * 0.2;
-const dialPadContent = [1, 2, 3, 4, 5, 6, 7, 8, 9, '', 0, 'X'];
+const dialPadContent = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'BIO', 0, 'X'];
 
 interface DialpadKeypadProps {
   code: number[];
   pinLength?: number;
+  useBiometrics?: boolean;
+  handleBiometrics: () => void;
   onComplete: (code: number[]) => void;
   setCode: React.Dispatch<React.SetStateAction<number[]>>;
 }
@@ -20,6 +23,9 @@ const DialpadKeypad = ({
   setCode,
   onComplete,
   pinLength = 6,
+  useBiometrics,
+
+  handleBiometrics,
 }: DialpadKeypadProps) => {
   const insets = useSafeAreaInsets();
 
@@ -39,16 +45,18 @@ const DialpadKeypad = ({
           renderItem={({item}) => {
             return (
               <TouchableOpacity
-                disabled={item === ''}
+                disabled={item === 'BIO' && !useBiometrics}
                 onPress={() => {
-                  if (item === 'X') {
+                  if (item === 'BIO') {
+                    handleBiometrics();
+                  } else if (item === 'X') {
                     setCode(prev => prev.slice(0, -1));
                   } else {
                     if (code.length < pinLength) {
                       setCode(prev => [...prev, Number(item)]);
-                    }
-                    if (code.length == pinLength - 1) {
-                      onComplete([...code, Number(item)]);
+                      if (code.length == pinLength - 1) {
+                        onComplete([...code, Number(item)]);
+                      }
                     }
                   }
                 }}
@@ -60,6 +68,8 @@ const DialpadKeypad = ({
                 ]}>
                 {item === 'X' ? (
                   <Backspace size={22} color={colors.white} />
+                ) : item === 'BIO' ? (
+                  <>{useBiometrics ? <Icons.FaceID size={26} /> : <></>}</>
                 ) : (
                   <Text style={[styles.dialPadText]}>{item}</Text>
                 )}

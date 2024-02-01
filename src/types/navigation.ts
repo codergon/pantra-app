@@ -52,6 +52,11 @@ export type RootTabParamList = {
         isReset?: boolean;
       }
     | undefined;
+  enterPasscodeInitial:
+    | {
+        isReset?: boolean;
+      }
+    | undefined;
   createPasscode: undefined;
   confirmPasscode: {
     codes: number[];
@@ -86,6 +91,11 @@ export type RootStackParamList = {
 
   // Passcode
   enterPasscode:
+    | {
+        isReset?: boolean;
+      }
+    | undefined;
+  enterPasscodeInitial:
     | {
         isReset?: boolean;
       }

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {styles} from './styles';
 import {colors} from 'utils/Theming';
 import useHaptics from 'hooks/useHaptics';
@@ -14,22 +14,34 @@ import {Header, RgText} from 'components/_ui/typography';
 const EnterPasscode = ({
   route,
   navigation,
-}: RootStackScreenProps<'enterPasscode'>) => {
+}: RootStackScreenProps<'enterPasscode' | 'enterPasscodeInitial'>) => {
   const isReset = route.params?.isReset;
 
   const hapticFeedback = useHaptics();
+  const {biometricsAuth, isBiometricsSupported, setIsAuthorized} =
+    useSettings();
 
   const [code, setCode] = useState<number[]>([]);
   const [isIncorrect, setIsIncorrect] = useState(false);
   const {passcode, setPasscode, settings, setSettings} = useSettings();
 
+  useEffect(() => {
+    if (!isReset && settings?.biometrics && isBiometricsSupported) {
+      biometricsAuth();
+    }
+  }, [isReset, settings?.biometrics, isBiometricsSupported]);
+
   const onComplete = (newCodes: number[]) => {
     setIsIncorrect(false);
     if (newCodes?.join('') === passcode) {
+      hapticFeedback('impactMedium');
+
       if (isReset) {
         setPasscode();
         setSettings({...settings!, passcode: false, biometrics: false});
         navigation.pop(1);
+      } else {
+        setIsAuthorized(true);
       }
     } else {
       hapticFeedback('notificationError');
@@ -60,7 +72,15 @@ const EnterPasscode = ({
         <DialpadPin code={code} isIncorrect={isIncorrect} />
       </View>
 
-      <DialpadKeypad code={code} setCode={setCode} onComplete={onComplete} />
+      <DialpadKeypad
+        code={code}
+        setCode={setCode}
+        onComplete={onComplete}
+        handleBiometrics={biometricsAuth}
+        useBiometrics={
+          !isReset && settings?.biometrics && isBiometricsSupported
+        }
+      />
     </Container>
   );
 };

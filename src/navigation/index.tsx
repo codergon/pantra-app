@@ -48,6 +48,7 @@ import SelectActionModal from 'app/modals/selectActionModal';
 
 import SendETH from 'app/processTxns/send';
 import {useWallet} from 'providers/WalletProvider';
+import {useSettings} from 'providers/SettingsProvider';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -211,7 +212,7 @@ const BottomSheetNavigator = () => {
         name="importWalletModal"
         component={ImportWalletModal}
         options={{
-          snapPoints: [226],
+          snapPoints: [256],
           enableOverDrag: true,
           overDragResistanceFactor: 3,
           handleIndicatorStyle: {backgroundColor: colors.modalHandle},
@@ -283,55 +284,68 @@ const BottomSheetNavigator = () => {
 
 //  Root Navigator
 function RootNavigator() {
+  const {account, isAcctReady} = useWallet();
+  const {passcode, isAuthorized, loadingSettings} = useSettings();
+
   return (
     <Stack.Navigator
-      initialRouteName="Loader"
+      initialRouteName="Main"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Loader" component={Loader} />
-
-      <Stack.Screen name="Onboarding" component={Onboarding} />
-
-      <Stack.Screen name="enterPasscode" component={EnterPasscode} />
-
-      <Stack.Group>
-        <Stack.Screen name="Main" component={BottomTabNavigator} />
-
+      {!isAcctReady || loadingSettings ? (
+        <Stack.Screen name="Loader" component={Loader} />
+      ) : !account ? (
+        <>
+          <Stack.Screen name="Onboarding" component={Onboarding} />
+        </>
+      ) : !!passcode && !isAuthorized ? (
+        <>
+          <Stack.Screen name="enterPasscode" component={EnterPasscode} />
+        </>
+      ) : (
         <Stack.Group>
-          <Stack.Screen name="NFTpreview" component={NFTPreview} />
-        </Stack.Group>
+          <Stack.Screen name="Main" component={BottomTabNavigator} />
 
-        <Stack.Group>
-          <Stack.Screen name="sendETH" component={SendETH} />
-        </Stack.Group>
+          <Stack.Group>
+            <Stack.Screen
+              component={EnterPasscode}
+              name="enterPasscodeInitial"
+            />
+            <Stack.Screen name="createPasscode" component={CreatePasscode} />
+            <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
+          </Stack.Group>
 
-        <Stack.Group>
-          <Stack.Screen name="createPasscode" component={CreatePasscode} />
-          <Stack.Screen name="confirmPasscode" component={ConfirmPasscode} />
-        </Stack.Group>
+          <Stack.Group>
+            <Stack.Screen name="NFTpreview" component={NFTPreview} />
+          </Stack.Group>
 
-        <Stack.Group>
-          <Stack.Screen name="wallets" component={Wallets} />
-          <Stack.Screen name="currencies" component={Currencies} />
-          <Stack.Screen name="preferences" component={Preferences} />
-          <Stack.Screen name="sessions" component={ActiveSessions} />
-          <Stack.Screen name="security" component={SecuritySettings} />
-        </Stack.Group>
+          <Stack.Group>
+            <Stack.Screen name="sendETH" component={SendETH} />
+          </Stack.Group>
 
-        <Stack.Group>
-          <Stack.Screen
-            name="shareQR"
-            component={ShareQR}
-            options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-          />
-          <Stack.Screen
-            name="scanQR"
-            component={ScanQR}
-            options={{presentation: 'modal', animation: 'slide_from_bottom'}}
-          />
+          <Stack.Group>
+            <Stack.Screen name="wallets" component={Wallets} />
+            <Stack.Screen name="currencies" component={Currencies} />
+            <Stack.Screen name="preferences" component={Preferences} />
+            <Stack.Screen name="sessions" component={ActiveSessions} />
+            <Stack.Screen name="security" component={SecuritySettings} />
+          </Stack.Group>
+
+          <Stack.Group>
+            <Stack.Screen
+              name="shareQR"
+              component={ShareQR}
+              options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+            />
+            <Stack.Screen
+              name="scanQR"
+              component={ScanQR}
+              options={{presentation: 'modal', animation: 'slide_from_bottom'}}
+            />
+          </Stack.Group>
         </Stack.Group>
-      </Stack.Group>
+      )}
     </Stack.Navigator>
   );
 }
