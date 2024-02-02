@@ -97,6 +97,14 @@ const Home = ({navigation}: RootTabScreenProps<'home'>) => {
               {...props}
               indicatorStyle={{backgroundColor: colors.primary}}
               style={{
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                shadowRadius: 0,
+                shadowOpacity: 0,
+                shadowColor: 'transparent',
+
                 height: 46,
                 marginHorizontal: 18,
                 // borderBottomWidth: 1,

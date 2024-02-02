@@ -34,7 +34,9 @@ const WalletIcon = ({address, size = 20, jazzicon = true}: WalletIconProps) => {
             }}
           />
         ) : (
-          <Jazzicon size={size} address={address} />
+          <>
+            <Jazzicon size={size} address={address} />
+          </>
         )}
       </View>
     </>
