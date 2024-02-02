@@ -15,8 +15,7 @@ import {EIP155_CHAINS, EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
 
 export const provider = new providers.JsonRpcProvider(
-  // EIP155_CHAINS['eip155:5'].rpc,
-  'https://replicator.phoenix.lightlink.io/rpc/vl',
+  'https://replicator.pegasus.lightlink.io/rpc/vl',
 );
 
 export default function WalletProvider(props: WalletProviderProps) {

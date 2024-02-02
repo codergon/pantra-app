@@ -17,21 +17,23 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 
-import {WagmiConfig} from 'wagmi';
 import {WC_PROJECT_ID} from '@env';
+import {lightlink} from 'utils/LightLinkChain';
+import {WagmiConfig, useWalletClient} from 'wagmi';
 import {defaultWagmiConfig} from '@web3modal/wagmi-react-native';
-import {mainnet, polygon, arbitrum, polygonMumbai} from 'wagmi/chains';
 
 dayjs.extend(duration);
 const queryClient = new QueryClient();
 
 // Wagmi Config
-const chains = [mainnet, polygon, arbitrum, polygonMumbai];
+const chains = [lightlink];
 const wagmiConfig = defaultWagmiConfig({
   chains,
   projectId: WC_PROJECT_ID,
   enableWalletConnect: false,
 });
+
+useWalletClient;
 
 const Providers = () => {
   return (

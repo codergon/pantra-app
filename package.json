@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "postinstall": "patch-package",
     "assets": "npx react-native-asset",
     "android": "react-native run-android",
     "ios:15": "react-native start --port 8089 --simulator \"iPhone 15 Pro Max\"",

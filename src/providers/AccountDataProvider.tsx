@@ -44,6 +44,8 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     address: account?.address! as `0x${string}`,
   });
 
+  console.log('ethBalance', ethBalance);
+
   const clearAccounts = () => {
     setAccount();
     setSettings();
@@ -57,6 +59,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const acctTokens = useQuery<GetTokensForOwnerResponse>(
     ['acctTokens', account?.address],
     async () => {
+      // return await axios.
       return await alchemy.core.getTokensForOwner(account?.address!);
     },
     {
