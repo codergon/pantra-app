@@ -64,10 +64,10 @@ const tokenIcons = {
   },
 };
 
-const TokenIcons = ({color, label}: TabIconProps) => {
+const TokenIcons = ({color, label, size}: TabIconProps) => {
   const Icon = tokenIcons[label as keyof typeof tokenIcons];
 
-  return <Icon color={color} label={label} />;
+  return <Icon color={color} label={label} size={size} />;
 };
 
 export default TokenIcons;

@@ -4,6 +4,7 @@ import {Wallet} from 'phosphor-react-native';
 import {Text} from 'components/_ui/typography';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
+import EthBalance from './EthBalance';
 
 const Tokens = () => {
   const {acctTokens, activeCurrency, acctBalance} = useAccountData();
@@ -12,27 +13,31 @@ const Tokens = () => {
   return (
     <View style={{flex: 1, paddingHorizontal: 18}}>
       <FlatList
-        data={acctTokens}
+        data={[...acctTokens]}
         ListHeaderComponent={() => {
           return (
-            <View style={styles.header}>
-              <View
-                style={[
-                  styles.headerIcon,
-                  {backgroundColor: colors.secondary},
-                ]}>
-                <Wallet color="#fff" size={20} />
+            <>
+              <View style={styles.header}>
+                <View
+                  style={[
+                    styles.headerIcon,
+                    {backgroundColor: colors.secondary},
+                  ]}>
+                  <Wallet color="#fff" size={20} />
+                </View>
+
+                <Text style={{fontSize: 18}}>
+                  Wallet • {activeCurrency?.symbol}
+                  {balance[0]}
+                  {'.'}
+                  <Text style={{color: colors.subText2}}>
+                    {balance[1] ? balance[1] : '00'}
+                  </Text>
+                </Text>
               </View>
 
-              <Text style={{fontSize: 18}}>
-                Wallet • {activeCurrency?.symbol}
-                {balance[0]}
-                {'.'}
-                <Text style={{color: colors.subText2}}>
-                  {balance[1] ? balance[1] : '00'}
-                </Text>
-              </Text>
-            </View>
+              <EthBalance />
+            </>
           );
         }}
         showsVerticalScrollIndicator={false}

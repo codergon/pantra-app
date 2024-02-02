@@ -39,6 +39,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
   const [tokensBalances, setTokensBalances] = useState<ITokensBalances>({});
   const {data: ethBalance} = useBalance({
+    watch: true,
     formatUnits: 'ether',
     enabled: queryEnabled,
     address: account?.address! as `0x${string}`,
@@ -207,7 +208,16 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   }, [acctTokens?.data?.tokens]);
 
   const acctBalance = useMemo(() => {
-    if (!acctTokens.data?.tokens) return {total: 0, tokens: 0};
+    const ethBalanceCurrent = isNaN(Number(ethBalance?.formatted))
+      ? 0
+      : Number(ethBalance?.formatted) * ethPrices[activeCurrency?.slug];
+
+    if (!acctTokens.data?.tokens)
+      return {
+        total: 0,
+        tokens: 0,
+        ethBalance: ethBalanceCurrent,
+      };
 
     const totalTokensBalance = acctTokens?.data?.tokens?.reduce(
       (acc, token) => {
@@ -223,6 +233,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       Number(ethBalance?.formatted) * ethPrices[activeCurrency?.slug];
 
     return {
+      ethBalance: ethBalanceCurrent,
       total: isNaN(totalEthBalance) ? 0 : totalEthBalance,
       tokens: isNaN(totalTokensBalance) ? 0 : totalTokensBalance,
     };
@@ -241,6 +252,10 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         filteredTxns,
         nftsCollections,
 
+        etherBalance: isNaN(Number(ethBalance?.formatted))
+          ? 0
+          : Number(ethBalance?.formatted),
+
         clearAccounts,
 
         ethPrices,
@@ -248,7 +263,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         activeCurrency,
         tokensBalances,
         ethBalance: ethBalance?.formatted,
-        acctTokens: acctTokens?.data?.tokens!,
+        acctTokens: acctTokens?.data?.tokens! ?? [],
       }}>
       {props.children}
     </AccountDataContext.Provider>
@@ -258,6 +273,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
 interface IAcctBalance {
   total: number;
   tokens: number;
+  ethBalance: number;
 }
 
 type ITokenBalance = {
@@ -282,17 +298,18 @@ interface AccountDataContext {
   ethPrices: Record<string, number>;
   activeCurrency: (typeof currencies)[number];
 
+  etherBalance: number;
   clearAccounts: () => void;
 
   txnSearch: string;
   txnFilter: ITxnFilter;
+  acctTokens: OwnedToken[];
   acctBalance: IAcctBalance;
   nftsCollections: ICollection[];
+  acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
   setTxnSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredTxns: AssetTransfersWithMetadataResponse['transfers'];
   setTxnFilter: React.Dispatch<React.SetStateAction<ITxnFilter>>;
-  acctTokens: OwnedToken[];
-  acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
   acctTxns: UseQueryResult<AssetTransfersWithMetadataResponse, unknown>;
 }
 
