@@ -4,14 +4,27 @@ import {padding} from 'helpers/styles';
 import {Text} from 'components/_ui/typography';
 import {Container} from 'components/_ui/custom';
 import Searchbar from 'components/_common/Searchbar';
+import EmptyState from 'components/shared/emptyState';
 import {useAccountData} from 'providers/AccountDataProvider';
 import TransactionItem from 'components/activity/transactionItem';
 import {FlatList, Keyboard, TouchableOpacity, View} from 'react-native';
-import {ArrowUp, ArrowDown, ClockCounterClockwise} from 'phosphor-react-native';
+import {
+  XCircle,
+  ArrowUp,
+  ArrowDown,
+  TextAlignCenter,
+  ClockCounterClockwise,
+} from 'phosphor-react-native';
 
 const Transactions = () => {
-  const {txnSearch, txnFilter, filteredTxns, setTxnFilter, setTxnSearch} =
-    useAccountData();
+  const {
+    txnSearch,
+    acctTxns,
+    txnFilter,
+    filteredTxns,
+    setTxnFilter,
+    setTxnSearch,
+  } = useAccountData();
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
@@ -113,8 +126,25 @@ const Transactions = () => {
           );
         })}
       </View>
-      {filteredTxns?.length === 0 ? (
-        <></>
+
+      {acctTxns?.isLoading || acctTxns?.error || filteredTxns?.length === 0 ? (
+        <>
+          <EmptyState
+            errorIcon={
+              <XCircle size={30} weight="light" color={colors.white} />
+            }
+            error={acctTxns?.error}
+            isLoading={acctTxns?.isLoading}
+            emptyIcon={
+              <TextAlignCenter size={30} weight="light" color={colors.white} />
+            }
+            data={{
+              message: 'No transactions found',
+              loadingText: 'Loading transactions...',
+              errorMessage: 'Could not load transactions',
+            }}
+          />
+        </>
       ) : (
         <FlatList
           data={filteredTxns}

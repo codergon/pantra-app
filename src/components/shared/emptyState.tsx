@@ -1,5 +1,6 @@
 import {RgText} from 'components/_ui/typography';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {colors} from 'utils/Theming';
 
 interface EmptyStateProps {
   error?: any;
@@ -36,7 +37,7 @@ const EmptyState = ({
           : !error && !isLoading
           ? emptyIcon
           : icon}
-        <RgText style={{fontSize: 16, color: '#000'}}>
+        <RgText style={{fontSize: 16}}>
           {isLoading
             ? data?.loadingText || 'Loading...'
             : error
@@ -45,7 +46,7 @@ const EmptyState = ({
         </RgText>
         {isLoading && (
           <View style={{}}>
-            <ActivityIndicator size={'small'} color={'#000'} />
+            <ActivityIndicator size={'small'} color={colors.white} />
           </View>
         )}
       </View>

@@ -33,4 +33,16 @@ export const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
   },
+
+  txn_block: {
+    gap: 15,
+    width: '100%',
+    minHeight: 220,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    flexDirection: 'column',
+    backgroundColor: colors.accent2,
+  },
 });

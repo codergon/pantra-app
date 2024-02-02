@@ -3,8 +3,8 @@ import {colors} from 'utils/Theming';
 import WalletIcon from './WalletIcon';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'components/_ui/typography';
-import {TransactionReceipt} from 'alchemy-sdk';
 import Divider from 'components/_common/Divider';
+import {TransactionReceipt} from 'typings/common';
 import {useAccountData} from 'providers/AccountDataProvider';
 import {convertHexToUtf8, truncate} from 'utils/HelperUtils';
 
@@ -15,13 +15,13 @@ interface TxnDetailsProps {
 const TxnReceipt = ({txnData}: TxnDetailsProps) => {
   const {ethPrices, activeCurrency} = useAccountData();
 
-  const gasUsed = parseInt(txnData['gasUsed'].toHexString(), 16);
-  const gasPrice = parseInt(txnData['effectiveGasPrice'].toHexString(), 16);
+  const gasUsed = Number(txnData['gasUsed']);
+  const gasPrice = Number(txnData['gasPrice']);
 
   return (
     <View style={[styles.txnDetails]}>
       <View style={[styles.txn_block]}>
-        {['from', 'to', 'nonce', 'block no'].map((key, i) => {
+        {['from', 'to', 'block no', 'confirmations'].map((key, i) => {
           return (
             <View key={i} style={[styles.txn_row]}>
               <Text style={[styles.txn_row_label]}>{key}</Text>
@@ -34,8 +34,6 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
                 <Text style={[]}>
                   {key === 'from' || key === 'to'
                     ? truncate(txnData[key], 13)
-                    : key === 'nonce'
-                    ? '#' + convertHexToUtf8(txnData['transactionIndex'] + '')
                     : txnData['blockNumber']}
                 </Text>
               </View>
@@ -51,10 +49,10 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
             style={[
               styles.txn_row_value,
               {
-                color: txnData['status'] === 1 ? colors.success : colors.error,
+                color: txnData['success'] ? colors.success : colors.error,
               },
             ]}>
-            {txnData['status'] === 1 ? 'Success' : 'Failed'}
+            {txnData['success'] ? 'Success' : 'Failed'}
           </Text>
         </View>
 
@@ -62,16 +60,24 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
 
         <View style={[styles.txn_row]}>
           <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
-            Transaction Fee
+            Amount
           </Text>
           <Text style={[styles.txn_row_value]}>
-            $
-            {millify(
-              ((gasPrice * gasUsed) / 1e18) * ethPrices[activeCurrency?.slug],
-              {
-                precision: 2,
-              },
-            )}{' '}
+            {millify(Number(txnData?.value) * 1e-18, {
+              precision: 2,
+            })}{' '}
+            ETH (
+            {!isNaN(Number(txnData?.value))
+              ? '$' +
+                millify(
+                  Number(txnData?.value) *
+                    1e-18 *
+                    (ethPrices[activeCurrency?.slug] ?? 0),
+
+                  {precision: 2},
+                )
+              : ''}
+            )
           </Text>
         </View>
       </View>

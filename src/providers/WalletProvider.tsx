@@ -1,7 +1,7 @@
 import Toast from 'react-native-toast-message';
 import {Wallet, providers, utils} from 'ethers';
 import {useStorage, useSecureStorage} from 'hooks';
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import useInitialization from 'hooks/useInitialization';
 
 // =========================
@@ -14,11 +14,19 @@ import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
 import {EIP155_CHAINS, EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
 
-export const provider = new providers.JsonRpcProvider(
-  'https://replicator.pegasus.lightlink.io/rpc/vl',
-);
+const SUPPORTED_CHAINS = {
+  mainnet: 'phoenix.lightlink.io',
+  testnet: 'pegasus.lightlink.io',
+};
 
 export default function WalletProvider(props: WalletProviderProps) {
+  const [currentChain, setCurrentChain] =
+    useState<keyof typeof SUPPORTED_CHAINS>('testnet');
+
+  const currentRPC = useMemo(() => {
+    return SUPPORTED_CHAINS[currentChain];
+  }, [currentChain]);
+
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
   const [account, setAccount, isAcctReady] =
@@ -27,6 +35,10 @@ export default function WalletProvider(props: WalletProviderProps) {
   // setAccount();
 
   const [txnPending, setTxnPending] = useState(false);
+
+  const provider = new providers.JsonRpcProvider(
+    `https://replicator.${currentRPC}/rpc/vl`,
+  );
 
   // Send ETH
   const sendETH = async ({to, amount}: SendETHProps) => {
@@ -276,6 +288,8 @@ export default function WalletProvider(props: WalletProviderProps) {
         avatar: avatar || '',
         setAccount,
 
+        currentRPC,
+
         sendETH,
         txnPending,
 
@@ -302,6 +316,8 @@ interface CreateWalletProps {
 }
 
 interface WalletContext {
+  currentRPC: string;
+
   avatar: string;
   txnPending: boolean;
   initialized: boolean;

@@ -21,3 +21,42 @@ export interface RecentSearchContact {
   address?: string;
   image_url?: string;
 }
+
+export interface ITransaction {
+  blockHash: string;
+  blockNumber: string;
+  confirmations: string;
+  contractAddress: string;
+  cumulativeGasUsed: string;
+  from: string;
+  gas: string;
+  gasPrice: string;
+  gasUsed: string;
+  hash: string;
+  input: string;
+  isError: string;
+  nonce: string;
+  timeStamp: string;
+  to: string;
+  transactionIndex: string;
+  txreceipt_status: string;
+  value: string;
+}
+
+export interface TransactionReceipt {
+  blockNumber: string;
+  confirmations: string;
+  from: string;
+  gasLimit: string;
+  gasPrice: string;
+  gasUsed: string;
+  hash: string;
+  input: string;
+  logs: any[];
+  next_page_params: any;
+  revertReason: string;
+  success: boolean;
+  timeStamp: string;
+  to: string;
+  value: string;
+}

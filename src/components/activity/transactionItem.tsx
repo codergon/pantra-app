@@ -2,33 +2,35 @@ import dayjs from 'dayjs';
 import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
+import {ITransaction} from 'typings/common';
 import {Text} from 'components/_ui/typography';
 import {FileMinus} from 'phosphor-react-native';
 import {useWallet} from 'providers/WalletProvider';
 import {ArrowDown, ArrowUp} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
-import {AssetTransfersWithMetadataResult} from 'alchemy-sdk';
+import {useAccountData} from 'providers/AccountDataProvider';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 interface TransactionItemProps {
-  txn: AssetTransfersWithMetadataResult;
+  txn: ITransaction;
 }
 
 const TransactionItem = ({txn}: TransactionItemProps) => {
   const {account} = useWallet();
   const navigation = useNavigation();
+  const {ethPrices, activeCurrency} = useAccountData();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('txnDetails', {txnHash: txn.hash});
+        navigation.navigate('txnDetails', {txnHash: txn?.hash});
       }}
       activeOpacity={0.6}
       style={[styles.container]}>
       <View style={styles.icon}>
-        {txn.value === null || txn.value === 0 ? (
+        {txn?.value === null || Number(txn?.value) === 0 ? (
           <FileMinus size={20} color={colors.warning} />
-        ) : txn.from.toLowerCase() == account?.address?.toLowerCase() ? (
+        ) : txn?.from.toLowerCase() == account?.address?.toLowerCase() ? (
           <ArrowDown size={20} color={colors.primary} />
         ) : (
           <ArrowUp size={20} color={colors.primary} />
@@ -38,10 +40,10 @@ const TransactionItem = ({txn}: TransactionItemProps) => {
       <View style={[styles.details]}>
         <View style={[styles.info]}>
           <Text numberOfLines={1} style={{flex: 1}}>
-            {truncate(txn.to!, 15)?.toUpperCase()}
+            {truncate(txn?.to!, 15)?.toUpperCase()}
           </Text>
           <Text style={[{fontSize: 12, color: colors.subText1}]}>
-            {dayjs(txn.metadata.blockTimestamp!).format(
+            {dayjs(Number(txn?.timeStamp) * 1000).format(
               'hh:mm a,  DD MMM YYYY',
             )}
           </Text>
@@ -49,14 +51,21 @@ const TransactionItem = ({txn}: TransactionItemProps) => {
 
         <View style={[styles.stats]}>
           <Text numberOfLines={1} style={[{fontSize: 15}]}>
-            {millify(Number(txn?.value), {
+            {millify(Number(txn?.value) * 1e-18, {
               precision: 2,
             })}{' '}
-            {txn?.asset}
+            ETH
           </Text>
           <Text style={[{fontSize: 13, color: colors.subText}]}>
             {!isNaN(Number(txn?.value))
-              ? '$' + millify(Number(txn?.value), {precision: 2})
+              ? activeCurrency?.symbol +
+                millify(
+                  Number(txn?.value) *
+                    1e-18 *
+                    (ethPrices[activeCurrency?.slug] ?? 0),
+
+                  {precision: 2},
+                )
               : ''}
           </Text>
         </View>

@@ -18,6 +18,7 @@ import {
   GetTokensForOwnerResponse,
   AssetTransfersWithMetadataResponse,
 } from 'alchemy-sdk';
+import {ITransaction} from 'typings/common';
 
 export const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
@@ -68,6 +69,32 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
+  const acctTxns = useQuery<ITransaction[]>(
+    ['acctTxns', account?.address],
+    async () => {
+      const txns: ITransaction[] = await axios
+        .get<{
+          result: ITransaction[];
+        }>(
+          `https://pegasus.lightlink.io/api?module=account&action=txlist&address=0xf521fC8d46007f5cb9dAf69e873541843294E834&sort=asc`,
+        )
+        .then(res => res.data.result);
+
+      if (!txns) return [];
+
+      const sortedTxns = (txns ?? []).sort((a, b) => {
+        return dayjs(b?.timeStamp).valueOf() - dayjs(a?.timeStamp).valueOf();
+      });
+
+      return sortedTxns;
+    },
+    {
+      enabled: queryEnabled,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  );
+
   const acctNfts = useQuery<OwnedNftsResponse>(
     ['acctNfts', account?.address],
     async () => {
@@ -77,61 +104,6 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       enabled: !!account?.address,
-    },
-  );
-
-  const acctTxns = useQuery<AssetTransfersWithMetadataResponse>(
-    ['acctTxns', account?.address],
-    async () => {
-      const fromTxns = await alchemy.core.getAssetTransfers({
-        maxCount: 30,
-        fromBlock: '0x0',
-        withMetadata: true,
-        excludeZeroValue: false,
-        fromAddress: account?.address,
-        order: SortingOrder.DESCENDING,
-        category: [
-          AssetTransfersCategory.ERC20,
-          AssetTransfersCategory.ERC721,
-          AssetTransfersCategory.ERC1155,
-          AssetTransfersCategory.INTERNAL,
-          AssetTransfersCategory.EXTERNAL,
-        ],
-      });
-
-      const toTxns = await alchemy.core.getAssetTransfers({
-        maxCount: 30,
-        fromBlock: '0x0',
-        withMetadata: true,
-        toAddress: account?.address,
-        excludeZeroValue: false,
-        order: SortingOrder.DESCENDING,
-        category: [
-          AssetTransfersCategory.ERC20,
-          AssetTransfersCategory.ERC721,
-          AssetTransfersCategory.ERC1155,
-          AssetTransfersCategory.INTERNAL,
-          AssetTransfersCategory.EXTERNAL,
-        ],
-      });
-
-      const sortedTxns = [...fromTxns.transfers, ...toTxns.transfers].sort(
-        (a, b) => {
-          return (
-            dayjs(b?.metadata?.blockTimestamp).valueOf() -
-            dayjs(a?.metadata?.blockTimestamp).valueOf()
-          );
-        },
-      );
-
-      return {
-        transfers: sortedTxns,
-      };
-    },
-    {
-      enabled: queryEnabled,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
     },
   );
 
@@ -155,9 +127,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
 
   // Filter txns based on search and filter
   const filteredTxns = useMemo(() => {
-    if (!acctTxns.data?.transfers) return [];
+    if (!acctTxns.data) return [];
 
-    return acctTxns.data?.transfers.filter(
+    return acctTxns.data.filter(
       txn =>
         (txnFilter === 'all' ||
           (txnFilter === 'sent' &&
@@ -169,7 +141,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
           txn.to?.toLowerCase().includes(txnSearch.toLowerCase()) ||
           txn.hash?.toLowerCase().includes(txnSearch.toLowerCase())),
     );
-  }, [acctTxns.data?.transfers, txnFilter, txnSearch]);
+  }, [acctTxns.data, txnFilter, txnSearch]);
 
   // Fetch prices for tokens in ACTIVE CURRENCY
   useEffect(() => {
@@ -243,7 +215,6 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     <AccountDataContext.Provider
       value={{
         acctNfts,
-        acctTxns,
         txnFilter,
         txnSearch,
         acctBalance,
@@ -252,9 +223,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         filteredTxns,
         nftsCollections,
 
-        etherBalance: isNaN(Number(ethBalance?.formatted))
-          ? 0
-          : Number(ethBalance?.formatted),
+        acctTxns: acctTxns,
 
         clearAccounts,
 
@@ -264,6 +233,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         tokensBalances,
         ethBalance: ethBalance?.formatted,
         acctTokens: acctTokens?.data?.tokens! ?? [],
+        etherBalance: isNaN(Number(ethBalance?.formatted))
+          ? 0
+          : Number(ethBalance?.formatted),
       }}>
       {props.children}
     </AccountDataContext.Provider>
@@ -301,6 +273,9 @@ interface AccountDataContext {
   etherBalance: number;
   clearAccounts: () => void;
 
+  filteredTxns: ITransaction[];
+  acctTxns: UseQueryResult<ITransaction[], unknown>;
+
   txnSearch: string;
   txnFilter: ITxnFilter;
   acctTokens: OwnedToken[];
@@ -308,9 +283,7 @@ interface AccountDataContext {
   nftsCollections: ICollection[];
   acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
   setTxnSearch: React.Dispatch<React.SetStateAction<string>>;
-  filteredTxns: AssetTransfersWithMetadataResponse['transfers'];
   setTxnFilter: React.Dispatch<React.SetStateAction<ITxnFilter>>;
-  acctTxns: UseQueryResult<AssetTransfersWithMetadataResponse, unknown>;
 }
 
 const AccountDataContext = React.createContext({} as AccountDataContext);
