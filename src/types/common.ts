@@ -28,24 +28,6 @@ export interface ITransaction {
   value: string;
 }
 
-export interface TransactionReceipt {
-  blockNumber: string;
-  confirmations: string;
-  from: string;
-  gasLimit: string;
-  gasPrice: string;
-  gasUsed: string;
-  hash: string;
-  input: string;
-  logs: any[];
-  next_page_params: any;
-  revertReason: string;
-  success: boolean;
-  timeStamp: string;
-  to: string;
-  value: string;
-}
-
 export interface IERC721Tokens {
   token: Token721;
   token_id: any;

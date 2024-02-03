@@ -17,7 +17,7 @@ import {BottomSheetScreenProps} from '@th3rdwave/react-navigation-bottom-sheet';
 const TxnReceiptModal = ({
   route,
 }: BottomSheetScreenProps<BottomSheetParams, 'txnDetails'>) => {
-  const {txnHash} = route.params;
+  let {txnHash} = route.params;
   const {close} = useBottomSheet();
   const {currentRPC} = useWallet();
 
@@ -25,10 +25,8 @@ const TxnReceiptModal = ({
     ['txn-receipt', txnHash],
     async () => {
       return await axios
-        .get(
-          `https://${currentRPC}/api?module=transaction&action=gettxinfo&txhash=${txnHash}`,
-        )
-        .then(res => res.data?.result);
+        .get(`https://${currentRPC}/api/v2/transactions/${txnHash}`)
+        .then(res => res.data);
     },
     {
       enabled: !!txnHash,

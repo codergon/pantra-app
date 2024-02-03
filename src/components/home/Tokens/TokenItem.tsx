@@ -58,12 +58,17 @@ const TokenItem = ({token}: TokenItemProps) => {
           <Text
             numberOfLines={1}
             style={[styles.token_balance, {color: colors.white}]}>
-            {Number(token?.value) / 1e18 > 1e9
+            {Number(token?.value) / Math.pow(10, Number(token.token.decimals)) >
+            1e9
               ? '> 1B'
-              : millify(Number(token?.value) / 1e18, {
-                  precision: 2,
-                  units: [' ', 'K', 'M', 'B', 'T'],
-                })}{' '}
+              : millify(
+                  Number(token?.value) /
+                    Math.pow(10, Number(token.token.decimals)),
+                  {
+                    precision: 2,
+                    units: [' ', 'K', 'M', 'B', 'T'],
+                  },
+                )}{' '}
             {token?.token.symbol}
           </Text>
           <Text style={[styles.token_balance, {color: colors.subText}]}>

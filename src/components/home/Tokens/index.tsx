@@ -1,15 +1,14 @@
 import TokenItem from './TokenItem';
 import {colors} from 'utils/Theming';
+import EthBalance from './EthBalance';
 import {Wallet} from 'phosphor-react-native';
 import {Text} from 'components/_ui/typography';
+import EmptyState from 'components/shared/emptyState';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
-import EthBalance from './EthBalance';
-import EmptyState from 'components/shared/emptyState';
 
 const Tokens = () => {
-  const {acctTokens, ERC20Tokens, activeCurrency, acctBalance} =
-    useAccountData();
+  const {ERC20Tokens, activeCurrency, acctBalance} = useAccountData();
   const balance = Number(acctBalance?.total).toFixed(2).split('.');
 
   return (
@@ -19,7 +18,7 @@ const Tokens = () => {
           return (
             <>
               <EmptyState
-                isLoading={acctTokens?.isLoading}
+                isLoading={ERC20Tokens?.isLoading}
                 data={{
                   message: '',
                   loadingText: 'Fetching tokens...',

@@ -9,6 +9,7 @@ import {useSettings} from './SettingsProvider';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {INFTItem, IERC20Tokens, ITransaction} from 'typings/common';
+import {TransactionReceipt} from 'typings/txns';
 
 export const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
@@ -83,21 +84,21 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   );
 
   // Fetch transactions for account
-  const acctTxns = useQuery<ITransaction[]>(
+  const acctTxns = useQuery<TransactionReceipt[]>(
     ['acctTxns', account?.address],
     async () => {
-      const txns: ITransaction[] = await axios
+      const txns: TransactionReceipt[] = await axios
         .get<{
-          result: ITransaction[];
+          items: TransactionReceipt[];
         }>(
-          `https://${currentRPC}/api?module=account&action=txlist&address=${account?.address}&sort=asc`,
+          `https://${currentRPC}/api/v2/addresses/${account?.address}/transactions`,
         )
-        .then(res => res.data.result);
+        .then(res => res.data.items);
 
       if (!txns) return [];
 
-      const sortedTxns = (txns ?? []).sort((a, b) => {
-        return dayjs(b?.timeStamp).valueOf() - dayjs(a?.timeStamp).valueOf();
+      const sortedTxns = (txns ?? [])?.sort((a, b) => {
+        return dayjs(b?.timestamp).valueOf() - dayjs(a?.timestamp).valueOf();
       });
 
       return sortedTxns;
@@ -109,23 +110,54 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
+  // Fetch token transfers
+  const tokenTransfers = useQuery<TransactionReceipt[]>(
+    ['tokenTransfers', account?.address],
+    async () => {
+      const txns: TransactionReceipt[] = await axios
+        .get<{
+          items: TransactionReceipt[];
+        }>(
+          `https://${currentRPC}/api/v2/addresses/${account?.address}/token-transfers?type=`,
+        )
+        .then(res => res.data.items);
+
+      if (!txns) return [];
+
+      const sortedTxns = (txns ?? []).sort((a, b) => {
+        return dayjs(b?.timestamp).valueOf() - dayjs(a?.timestamp).valueOf();
+      });
+
+      return sortedTxns;
+    },
+    {
+      enabled: queryEnabled,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  console.log(JSON.stringify(tokenTransfers?.data?.[0], null, 2));
+
   // Filter txns based on search and filter
   const filteredTxns = useMemo(() => {
     if (!acctTxns.data) return [];
 
-    return acctTxns.data.filter(
+    return [...(acctTxns.data ?? []), ...(tokenTransfers.data ?? [])].filter(
       txn =>
         (txnFilter === 'all' ||
           (txnFilter === 'sent' &&
-            txn.from === account?.address?.toLowerCase()) ||
+            txn?.from?.hash?.toLowerCase() ===
+              account?.address?.toLowerCase()) ||
           (txnFilter === 'received' &&
-            txn.to === account?.address?.toLowerCase())) &&
+            txn?.to?.hash?.toLowerCase() ===
+              account?.address?.toLowerCase())) &&
         (txnSearch === '' ||
-          txn.from?.toLowerCase().includes(txnSearch.toLowerCase()) ||
-          txn.to?.toLowerCase().includes(txnSearch.toLowerCase()) ||
-          txn.hash?.toLowerCase().includes(txnSearch.toLowerCase())),
+          txn.from?.hash?.toLowerCase().includes(txnSearch.toLowerCase()) ||
+          txn?.to?.hash?.toLowerCase().includes(txnSearch.toLowerCase()) ||
+          txn?.hash?.toLowerCase().includes(txnSearch.toLowerCase())),
     );
-  }, [acctTxns.data, txnFilter, txnSearch]);
+  }, [acctTxns.data, txnFilter, txnSearch, tokenTransfers.data]);
 
   // Fetch prices for tokens in ACTIVE CURRENCY
   useEffect(() => {
@@ -263,8 +295,8 @@ interface AccountDataContext {
   ERC20Tokens: UseQueryResult<IERC20Tokens[], unknown>;
   ERC721Tokens: UseQueryResult<INFTItem[], unknown>;
 
-  filteredTxns: ITransaction[];
-  acctTxns: UseQueryResult<ITransaction[], unknown>;
+  filteredTxns: TransactionReceipt[];
+  acctTxns: UseQueryResult<TransactionReceipt[], unknown>;
 
   txnSearch: string;
   txnFilter: ITxnFilter;

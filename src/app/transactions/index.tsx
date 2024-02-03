@@ -18,8 +18,8 @@ import {
 
 const Transactions = () => {
   const {
-    txnSearch,
     acctTxns,
+    txnSearch,
     txnFilter,
     filteredTxns,
     setTxnFilter,

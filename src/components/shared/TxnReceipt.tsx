@@ -1,12 +1,14 @@
 import millify from 'millify';
 import {colors} from 'utils/Theming';
 import WalletIcon from './WalletIcon';
+import {truncate} from 'utils/HelperUtils';
 import {View, StyleSheet} from 'react-native';
+import {formatIpfsLink} from 'helpers/common';
 import {Text} from 'components/_ui/typography';
+import FastImage from 'react-native-fast-image';
+import {TransactionReceipt} from 'typings/txns';
 import Divider from 'components/_common/Divider';
-import {TransactionReceipt} from 'typings/common';
 import {useAccountData} from 'providers/AccountDataProvider';
-import {convertHexToUtf8, truncate} from 'utils/HelperUtils';
 
 interface TxnDetailsProps {
   txnData: TransactionReceipt;
@@ -15,26 +17,23 @@ interface TxnDetailsProps {
 const TxnReceipt = ({txnData}: TxnDetailsProps) => {
   const {ethPrices, activeCurrency} = useAccountData();
 
-  const gasUsed = Number(txnData['gasUsed']);
-  const gasPrice = Number(txnData['gasPrice']);
-
   return (
     <View style={[styles.txnDetails]}>
       <View style={[styles.txn_block]}>
-        {['from', 'to', 'block no', 'confirmations'].map((key, i) => {
+        {['from', 'to', 'block', 'nonce'].map((key, i) => {
           return (
             <View key={i} style={[styles.txn_row]}>
               <Text style={[styles.txn_row_label]}>{key}</Text>
 
               <View style={[styles.txn_row_value]}>
                 {(key === 'from' || key === 'to') && (
-                  <WalletIcon address={txnData[key]} size={16} />
+                  <WalletIcon address={txnData[key]?.hash} size={16} />
                 )}
 
                 <Text style={[]}>
                   {key === 'from' || key === 'to'
-                    ? truncate(txnData[key], 13)
-                    : txnData['blockNumber']}
+                    ? truncate(txnData[key]?.hash, 13)
+                    : txnData[key as keyof TransactionReceipt]}
                 </Text>
               </View>
             </View>
@@ -42,44 +41,100 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
         })}
 
         <View style={[styles.txn_row]}>
-          <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
-            Status
-          </Text>
+          <Text style={[styles.txn_row_label]}>Status</Text>
           <Text
             style={[
               styles.txn_row_value,
               {
-                color: txnData['success'] ? colors.success : colors.error,
+                color:
+                  txnData?.result === 'success' ? colors.success : colors.error,
               },
             ]}>
-            {txnData['success'] ? 'Success' : 'Failed'}
+            {txnData?.result === 'success' ? 'Success' : 'Failed'}
           </Text>
         </View>
 
         <Divider marginVertical={6} />
 
-        <View style={[styles.txn_row]}>
-          <Text style={[styles.txn_row_label, {textTransform: 'capitalize'}]}>
-            Amount
-          </Text>
-          <Text style={[styles.txn_row_value]}>
-            {millify(Number(txnData?.value) * 1e-18, {
-              precision: 2,
-            })}{' '}
-            ETH (
-            {!isNaN(Number(txnData?.value))
-              ? '$' +
-                millify(
-                  Number(txnData?.value) *
-                    1e-18 *
-                    (ethPrices[activeCurrency?.slug] ?? 0),
+        {txnData?.method === 'transfer' ? (
+          <>
+            <View style={[styles.txn_row]}>
+              <Text style={[styles.txn_row_label]}>Transferred token</Text>
 
-                  {precision: 2},
-                )
-              : ''}
-            )
-          </Text>
-        </View>
+              <View
+                style={[
+                  {
+                    gap: 4,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  },
+                ]}>
+                <View style={[styles.token_image]}>
+                  {txnData?.token_transfers?.[0]?.token?.icon_url ? (
+                    <FastImage
+                      source={{
+                        cache: FastImage.cacheControl.immutable,
+                        uri: formatIpfsLink(
+                          txnData?.token_transfers?.[0]?.token?.icon_url,
+                        ),
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
+                      style={[{width: '100%', height: '100%'}]}
+                    />
+                  ) : (
+                    <>
+                      <FastImage
+                        resizeMode={FastImage.resizeMode.cover}
+                        style={[{width: '100%', height: '100%'}]}
+                        source={require('assets/images/masks/mask-2.png')}
+                      />
+                    </>
+                  )}
+                </View>
+                <Text style={[styles.txn_row_value]}>
+                  {txnData?.token_transfers?.[0]?.token?.symbol}
+                </Text>
+              </View>
+            </View>
+
+            <View style={[styles.txn_row]}>
+              <Text style={[styles.txn_row_label]}>Amount Transferred</Text>
+              <Text style={[styles.txn_row_value]}>
+                {millify(
+                  Number(txnData?.token_transfers?.[0]?.total?.value) /
+                    Math.pow(
+                      10,
+                      Number(txnData?.token_transfers?.[0]?.total?.decimals),
+                    ),
+                  {
+                    precision: 2,
+                  },
+                )}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={[styles.txn_row]}>
+            <Text style={[styles.txn_row_label]}>Amount</Text>
+            <Text style={[styles.txn_row_value]}>
+              {millify(Number(txnData?.value) * 1e-18, {
+                precision: 2,
+              })}{' '}
+              ETH (
+              {!isNaN(Number(txnData?.value))
+                ? '$' +
+                  millify(
+                    Number(txnData?.value) *
+                      1e-18 *
+                      (ethPrices[activeCurrency?.slug] ?? 0),
+
+                    {precision: 2},
+                  )
+                : ''}
+              )
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -111,12 +166,19 @@ const styles = StyleSheet.create({
   },
   txn_row_label: {
     color: colors.subText3,
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
   },
   txn_row_value: {
     gap: 6,
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  token_image: {
+    width: 18,
+    height: 18,
+    borderWidth: 1,
+    borderRadius: 40,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',

@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
 import {colors} from 'utils/Theming';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
     flexDirection: 'column',
-    // paddingHorizontal: 8,
   },
   nft_collection: {
     fontSize: 22,
