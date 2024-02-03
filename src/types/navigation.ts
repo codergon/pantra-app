@@ -2,7 +2,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import {OwnedNft} from 'alchemy-sdk';
+import {TokenInstance} from './common';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -43,7 +43,7 @@ export type RootTabParamList = {
   shareQR: {
     address: string;
   };
-  NFTpreview: OwnedNft;
+  NFTpreview: TokenInstance;
 
   // Passcode
   enterPasscode:
@@ -113,7 +113,7 @@ export type RootStackParamList = {
   shareQR: {
     address: string;
   };
-  NFTpreview: OwnedNft;
+  NFTpreview: TokenInstance;
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
   Onboarding: NavigatorScreenParams<OnboardingStackParamList> | undefined;
 };

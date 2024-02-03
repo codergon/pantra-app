@@ -2,16 +2,16 @@ import Toast from 'react-native-toast-message';
 import {Wallet, providers, utils} from 'ethers';
 import {useStorage, useSecureStorage} from 'hooks';
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
-import useInitialization from 'hooks/useInitialization';
 
 // =========================
+// import useInitialization from 'hooks/useInitialization';
 import {parseEther} from 'viem';
 import {IWallet} from 'typings/common';
 import {getSdkError} from '@walletconnect/utils';
 import {SessionTypes} from '@walletconnect/types';
 import {SignClientTypes} from '@walletconnect/types';
+import {EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
-import {EIP155_CHAINS, EIP155_SIGNING_METHODS} from '../data/EIP155';
 import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
 
 const SUPPORTED_CHAINS = {

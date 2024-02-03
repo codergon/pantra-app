@@ -1,23 +1,18 @@
 import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {padding} from 'helpers/styles';
-import {OwnedToken} from 'alchemy-sdk';
-import {formatIpfsLink} from 'helpers/common';
+import {IERC20Tokens} from 'typings/common';
 import {StyleSheet, View} from 'react-native';
+import {formatIpfsLink} from 'helpers/common';
 import {Text} from 'components/_ui/typography';
 import FastImage from 'react-native-fast-image';
-import {useAccountData} from 'providers/AccountDataProvider';
 
 interface TokenItemProps {
-  token: OwnedToken;
+  token: IERC20Tokens;
 }
 
 const TokenItem = ({token}: TokenItemProps) => {
-  const {tokensBalances, activeCurrency} = useAccountData();
-
-  const tokenBalance =
-    tokensBalances[token.contractAddress]?.[activeCurrency?.slug] *
-    Number(token.balance);
+  const tokenBalance = Number(token.value) * Number(token.token.exchange_rate);
 
   return (
     <View
@@ -28,11 +23,11 @@ const TokenItem = ({token}: TokenItemProps) => {
         },
       ]}>
       <View style={[styles.token_image]}>
-        {token?.logo ? (
+        {token?.token.icon_url ? (
           <FastImage
             source={{
-              uri: formatIpfsLink(token?.logo),
               cache: FastImage.cacheControl.immutable,
+              uri: formatIpfsLink(token?.token.icon_url),
             }}
             resizeMode={FastImage.resizeMode.cover}
             style={[{width: '100%', height: '100%'}]}
@@ -42,7 +37,7 @@ const TokenItem = ({token}: TokenItemProps) => {
             <FastImage
               resizeMode={FastImage.resizeMode.cover}
               style={[{width: '100%', height: '100%'}]}
-              source={require('assets/images/masks/mask-1.png')}
+              source={require('assets/images/masks/mask-2.png')}
             />
           </>
         )}
@@ -50,7 +45,7 @@ const TokenItem = ({token}: TokenItemProps) => {
 
       <View style={[styles.token_info]}>
         <Text style={[styles.token_name]} numberOfLines={1}>
-          {token?.name}
+          {token.token.name}
         </Text>
 
         <View
@@ -63,14 +58,17 @@ const TokenItem = ({token}: TokenItemProps) => {
           <Text
             numberOfLines={1}
             style={[styles.token_balance, {color: colors.white}]}>
-            {millify(Number(token?.balance), {
-              precision: 2,
-            })}{' '}
-            {token?.symbol}
+            {Number(token?.value) / 1e18 > 1e9
+              ? '> 1B'
+              : millify(Number(token?.value) / 1e18, {
+                  precision: 2,
+                  units: [' ', 'K', 'M', 'B', 'T'],
+                })}{' '}
+            {token?.token.symbol}
           </Text>
           <Text style={[styles.token_balance, {color: colors.subText}]}>
             {!isNaN(Number(tokenBalance))
-              ? activeCurrency?.symbol +
+              ? '$' +
                 (Number(tokenBalance) > 1000
                   ? millify(Number(tokenBalance), {precision: 2})
                   : Number(tokenBalance).toFixed(2))

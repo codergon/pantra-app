@@ -1,6 +1,6 @@
 import {colors} from 'utils/Theming';
-import {OwnedNft} from 'alchemy-sdk';
 import layout from 'constants/layout';
+import {TokenInstance} from 'typings/common';
 import {formatIpfsLink} from 'helpers/common';
 import FastImage from 'react-native-fast-image';
 import {RgText} from 'components/_ui/typography';
@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 interface NFTItemProps {
-  nft: OwnedNft;
+  nft: TokenInstance;
 }
 
 const NFTItem = ({nft}: NFTItemProps) => {
@@ -27,18 +27,10 @@ const NFTItem = ({nft}: NFTItemProps) => {
         },
       ]}>
       <View style={[styles.nft_image]}>
-        {nft?.image?.thumbnailUrl ||
-        nft?.contract?.openSeaMetadata?.imageUrl ? (
+        {nft?.image_url ? (
           <FastImage
             source={{
-              uri: formatIpfsLink(
-                nft?.image?.thumbnailUrl ||
-                  nft?.contract?.openSeaMetadata?.imageUrl +
-                    (nft?.contract?.openSeaMetadata?.imageUrl?.slice(-3) ===
-                    's60'
-                      ? '0'
-                      : ''),
-              ),
+              uri: formatIpfsLink(nft?.image_url),
               cache: FastImage.cacheControl.immutable,
             }}
             resizeMode={FastImage.resizeMode.cover}
@@ -57,7 +49,7 @@ const NFTItem = ({nft}: NFTItemProps) => {
 
       <View style={[styles.nft_info]}>
         <RgText style={[styles.nft_name]} numberOfLines={1}>
-          {nft?.name ?? nft?.collection?.name}
+          #{nft?.id}
         </RgText>
       </View>
     </TouchableOpacity>

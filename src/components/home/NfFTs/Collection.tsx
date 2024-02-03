@@ -1,8 +1,11 @@
+import NFTItem from './NFTItem';
 import {colors} from 'utils/Theming';
-import {CaretDown, Note} from 'phosphor-react-native';
-import {RgText, Text} from 'components/_ui/typography';
-import {ICollection} from 'providers/AccountDataProvider';
-import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {INFTItem} from 'typings/common';
+import {formatIpfsLink} from 'helpers/common';
+import {Text} from 'components/_ui/typography';
+import {CaretDown} from 'phosphor-react-native';
+import FastImage from 'react-native-fast-image';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
   measure,
   runOnUI,
@@ -12,18 +15,15 @@ import Animated, {
   useDerivedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import NFTItem from './NFTItem';
-import FastImage from 'react-native-fast-image';
-import {formatIpfsLink} from 'helpers/common';
 
 interface TxnDataProps {
-  collection: ICollection;
+  collection: INFTItem;
 }
 
 const Collection = ({collection}: TxnDataProps) => {
-  const contentRef = useAnimatedRef<Animated.View>();
   const open = useSharedValue(false);
   const contentHeight = useSharedValue(0);
+  const contentRef = useAnimatedRef<Animated.View>();
   const progress = useDerivedValue(() =>
     open.value ? withTiming(1) : withTiming(0),
   );
@@ -51,22 +51,45 @@ const Collection = ({collection}: TxnDataProps) => {
             }
             open.value = !open.value;
           }}
-          style={styles.collection_header}>
+          style={[styles.collection_header]}>
           <View style={styles.collection_header_label}>
             <View style={[styles.collection_image]}>
-              <FastImage
-                source={{
-                  uri: formatIpfsLink(collection?.contract?.imageUrl),
-                  cache: FastImage.cacheControl.immutable,
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-                style={[{width: '100%', height: '100%'}]}
-              />
+              {collection?.token.icon_url ||
+              collection?.token_instances?.[0]?.image_url ? (
+                <FastImage
+                  source={{
+                    uri: formatIpfsLink(
+                      collection?.token.icon_url ||
+                        collection?.token_instances?.[0]?.image_url,
+                    ),
+                    cache: FastImage.cacheControl.immutable,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                  style={[{width: '100%', height: '100%'}]}
+                />
+              ) : (
+                <>
+                  <FastImage
+                    resizeMode={FastImage.resizeMode.cover}
+                    style={[{width: '100%', height: '100%'}]}
+                    source={require('assets/images/masks/mask-1.png')}
+                  />
+                </>
+              )}
             </View>
 
-            <Text style={{fontSize: 15}}>
-              {collection.contract.collectionName}
-            </Text>
+            <View
+              style={{
+                gap: 2,
+                flexDirection: 'column',
+              }}>
+              <Text style={{fontSize: 15}} numberOfLines={1}>
+                {collection?.token?.name}
+              </Text>
+              <Text style={{fontSize: 13, color: colors.subText2}}>
+                NFTS: {collection?.amount}
+              </Text>
+            </View>
           </View>
 
           <Animated.View style={[animatedStyle]}>
@@ -76,7 +99,7 @@ const Collection = ({collection}: TxnDataProps) => {
 
         <Animated.View style={[contentAnimatedStyle, {width: '100%'}]}>
           <Animated.View ref={contentRef} style={[styles.collection_content]}>
-            {collection?.nfts?.map((nft, i) => {
+            {collection?.token_instances?.map((nft, i) => {
               return <NFTItem key={i} nft={nft} />;
             })}
           </Animated.View>
@@ -113,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   collection_header_label: {
-    gap: 8,
+    gap: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

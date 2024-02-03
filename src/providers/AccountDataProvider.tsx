@@ -3,22 +3,12 @@ import dayjs from 'dayjs';
 import {useBalance} from 'wagmi';
 import {ALCHEMY_API_KEY} from '@env';
 import {useWallet} from './WalletProvider';
+import {Network, Alchemy} from 'alchemy-sdk';
 import currencies from 'constants/currencies';
 import {useSettings} from './SettingsProvider';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {
-  Network,
-  Alchemy,
-  OwnedToken,
-  SortingOrder,
-  NftContractForNft,
-  OwnedNftsResponse,
-  AssetTransfersCategory,
-  GetTokensForOwnerResponse,
-  AssetTransfersWithMetadataResponse,
-} from 'alchemy-sdk';
-import {ITransaction} from 'typings/common';
+import {INFTItem, IERC20Tokens, ITransaction} from 'typings/common';
 
 export const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
@@ -26,9 +16,9 @@ export const alchemy = new Alchemy({
 });
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
-  const {account, setAccount} = useWallet();
-  const {setSettings, setPasscode} = useSettings();
-  const {activeCurrency, useJazzicons} = useSettings();
+  const {account, setAccount, currentRPC} = useWallet();
+  const {setSettings, setPasscode, activeCurrency, useJazzicons} =
+    useSettings();
 
   const queryEnabled = useMemo(() => {
     return !!account?.address;
@@ -56,11 +46,16 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     setTokensBalances({});
   };
 
-  const acctTokens = useQuery<GetTokensForOwnerResponse>(
-    ['acctTokens', account?.address],
+  const ERC20Tokens = useQuery<IERC20Tokens[]>(
+    ['ERC20Tokens', account?.address],
     async () => {
-      // return await axios.
-      return await alchemy.core.getTokensForOwner(account?.address!);
+      const tokens: IERC20Tokens[] = await axios
+        .get(
+          `https://${currentRPC}/api/v2/addresses/${account?.address}/tokens?type=ERC-20`,
+        )
+        .then(res => res.data.items);
+
+      return tokens ?? [];
     },
     {
       enabled: queryEnabled,
@@ -69,6 +64,25 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     },
   );
 
+  const ERC721Tokens = useQuery<INFTItem[]>(
+    ['ERC721Tokens', account?.address],
+    async () => {
+      const nfts: INFTItem[] = await axios
+        .get(
+          `https://${currentRPC}/api/v2/addresses/${account?.address}/nft/collections?type=`,
+        )
+        .then(res => res.data.items);
+
+      return nfts ?? [];
+    },
+    {
+      enabled: queryEnabled,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  // Fetch transactions for account
   const acctTxns = useQuery<ITransaction[]>(
     ['acctTxns', account?.address],
     async () => {
@@ -76,7 +90,7 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
         .get<{
           result: ITransaction[];
         }>(
-          `https://pegasus.lightlink.io/api?module=account&action=txlist&address=0xf521fC8d46007f5cb9dAf69e873541843294E834&sort=asc`,
+          `https://${currentRPC}/api?module=account&action=txlist&address=${account?.address}&sort=asc`,
         )
         .then(res => res.data.result);
 
@@ -94,36 +108,6 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       refetchOnWindowFocus: false,
     },
   );
-
-  const acctNfts = useQuery<OwnedNftsResponse>(
-    ['acctNfts', account?.address],
-    async () => {
-      return await alchemy.nft.getNftsForOwner(account?.address!);
-    },
-    {
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      enabled: !!account?.address,
-    },
-  );
-
-  const nftsCollections = useMemo(() => {
-    if (!acctNfts.data?.ownedNfts) return [];
-
-    const grouped = acctNfts.data?.ownedNfts.reduce((acc, nft) => {
-      const key = nft.contract?.address.toLowerCase();
-      if (!acc[key]) {
-        acc[key] = {
-          contract: nft.contract.openSeaMetadata,
-          nfts: [],
-        };
-      }
-      acc[key].nfts.push(nft);
-      return acc;
-    }, {} as {[key: string]: {contract: NftContractForNft['openSeaMetadata']; nfts: OwnedNftsResponse['ownedNfts']}});
-
-    return Object.values(grouped);
-  }, [acctNfts.data?.ownedNfts]);
 
   // Filter txns based on search and filter
   const filteredTxns = useMemo(() => {
@@ -146,9 +130,9 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   // Fetch prices for tokens in ACTIVE CURRENCY
   useEffect(() => {
     const fetchPrices = async () => {
-      if (!acctTokens.data?.tokens) return;
-      const tokenAddresses = acctTokens.data.tokens
-        .map(token => token.contractAddress)
+      if (!ERC20Tokens.data) return;
+      const tokenAddresses = ERC20Tokens.data
+        .map(token => token.token.address)
         .join('%2C');
 
       try {
@@ -177,25 +161,26 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     };
 
     fetchPrices();
-  }, [acctTokens?.data?.tokens]);
+  }, [ERC20Tokens?.data]);
 
+  // Calculate account balance based on tokens and eth balance
   const acctBalance = useMemo(() => {
     const ethBalanceCurrent = isNaN(Number(ethBalance?.formatted))
       ? 0
       : Number(ethBalance?.formatted) * ethPrices[activeCurrency?.slug];
 
-    if (!acctTokens.data?.tokens)
+    if (!ERC20Tokens.data)
       return {
         total: 0,
         tokens: 0,
         ethBalance: ethBalanceCurrent,
       };
 
-    const totalTokensBalance = acctTokens?.data?.tokens?.reduce(
+    const totalTokensBalance = (ERC20Tokens?.data || [])?.reduce(
       (acc, token) => {
         const price =
-          tokensBalances[token.contractAddress]?.[activeCurrency?.slug] || 0;
-        return acc + (token.balance ? price * Number(token.balance) : 0);
+          tokensBalances[token.token.address]?.[activeCurrency?.slug] || 0;
+        return acc + (token.value ? price * Number(token.value) : 0);
       },
       0,
     );
@@ -209,30 +194,29 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       total: isNaN(totalEthBalance) ? 0 : totalEthBalance,
       tokens: isNaN(totalTokensBalance) ? 0 : totalTokensBalance,
     };
-  }, [ethPrices, tokensBalances, acctTokens?.data, activeCurrency]);
+  }, [ethPrices, tokensBalances, ERC20Tokens?.data, activeCurrency]);
 
   return (
     <AccountDataContext.Provider
       value={{
-        acctNfts,
+        ERC20Tokens,
+        ERC721Tokens,
+
         txnFilter,
         txnSearch,
-        acctBalance,
-        setTxnSearch,
-        setTxnFilter,
         filteredTxns,
-        nftsCollections,
-
         acctTxns: acctTxns,
 
+        setTxnSearch,
         clearAccounts,
+        setTxnFilter,
 
         ethPrices,
+        acctBalance,
         useJazzicons,
         activeCurrency,
         tokensBalances,
         ethBalance: ethBalance?.formatted,
-        acctTokens: acctTokens?.data?.tokens! ?? [],
         etherBalance: isNaN(Number(ethBalance?.formatted))
           ? 0
           : Number(ethBalance?.formatted),
@@ -257,8 +241,11 @@ type ITokensBalances = {
 };
 
 export interface ICollection {
-  contract: NftContractForNft['openSeaMetadata'];
-  nfts: OwnedNftsResponse['ownedNfts'];
+  contract: {
+    name: string;
+    symbol: string;
+  };
+  nfts: IERC20Tokens[];
 }
 
 export type ITxnFilter = 'all' | 'sent' | 'received' | 'minted';
@@ -273,15 +260,15 @@ interface AccountDataContext {
   etherBalance: number;
   clearAccounts: () => void;
 
+  ERC20Tokens: UseQueryResult<IERC20Tokens[], unknown>;
+  ERC721Tokens: UseQueryResult<INFTItem[], unknown>;
+
   filteredTxns: ITransaction[];
   acctTxns: UseQueryResult<ITransaction[], unknown>;
 
   txnSearch: string;
   txnFilter: ITxnFilter;
-  acctTokens: OwnedToken[];
   acctBalance: IAcctBalance;
-  nftsCollections: ICollection[];
-  acctNfts: UseQueryResult<OwnedNftsResponse, unknown>;
   setTxnSearch: React.Dispatch<React.SetStateAction<string>>;
   setTxnFilter: React.Dispatch<React.SetStateAction<ITxnFilter>>;
 }

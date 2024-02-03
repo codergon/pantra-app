@@ -3,15 +3,15 @@ import {colors} from 'utils/Theming';
 
 const styles = StyleSheet.create({
   container: {
-    gap: 24,
     flex: 1,
-    paddingHorizontal: 18,
   },
   header: {
     width: '100%',
+    marginBottom: 14,
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 18,
   },
   header_title: {
     gap: 6,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
 
   collection_details: {
-    gap: 10,
+    gap: 12,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   },
 
   collection_info: {
+    gap: 2,
     flex: 1,
     overflow: 'hidden',
     paddingVertical: 10,
@@ -84,24 +85,47 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     borderRadius: 16,
-    flexDirection: 'row',
+    overflow: 'hidden',
+    paddingVertical: 12,
     alignItems: 'center',
+    paddingHorizontal: 18,
+    flexDirection: 'column',
     borderColor: colors.border2,
     backgroundColor: colors.accent0,
     justifyContent: 'space-between',
   },
-  nft_stat: {
-    flex: 1,
-    paddingVertical: 15,
+  nft_stat_title: {
+    width: '100%',
+    paddingTop: 10,
+    paddingBottom: 12,
+    marginBottom: 12,
+    borderBottomWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    borderBottomColor: colors.border,
+  },
+  nft_stat_title_text: {
+    fontSize: 16,
+    textTransform: 'capitalize',
+  },
+
+  nft_stat: {
+    gap: 30,
+    width: '100%',
+    overflow: 'hidden',
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   stat_label: {
-    fontSize: 20,
+    fontSize: 14,
   },
   stat_value: {
-    fontSize: 20,
+    flex: 1,
+    fontSize: 14,
+    textAlign: 'right',
     color: colors.subText,
   },
 });

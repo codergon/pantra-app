@@ -6,7 +6,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
 
 const NFTs = () => {
-  const {nftsCollections} = useAccountData();
+  const {ERC721Tokens} = useAccountData();
 
   return (
     <View style={{flex: 1, paddingHorizontal: 12}}>
@@ -25,11 +25,11 @@ const NFTs = () => {
           </View>
 
           <Text style={{fontSize: 18}}>
-            Collectibles • {nftsCollections?.length}
+            Collectibles • {ERC721Tokens?.data?.length}
           </Text>
         </View>
 
-        {nftsCollections?.map((collection, index) => {
+        {ERC721Tokens?.data?.map((collection, index) => {
           return <Collection key={index} collection={collection} />;
         })}
       </ScrollView>

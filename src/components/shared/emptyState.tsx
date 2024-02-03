@@ -1,6 +1,6 @@
+import {colors} from 'utils/Theming';
 import {RgText} from 'components/_ui/typography';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {colors} from 'utils/Theming';
 
 interface EmptyStateProps {
   error?: any;

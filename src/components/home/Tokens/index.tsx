@@ -5,15 +5,30 @@ import {Text} from 'components/_ui/typography';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {useAccountData} from 'providers/AccountDataProvider';
 import EthBalance from './EthBalance';
+import EmptyState from 'components/shared/emptyState';
 
 const Tokens = () => {
-  const {acctTokens, activeCurrency, acctBalance} = useAccountData();
+  const {acctTokens, ERC20Tokens, activeCurrency, acctBalance} =
+    useAccountData();
   const balance = Number(acctBalance?.total).toFixed(2).split('.');
 
   return (
     <View style={{flex: 1, paddingHorizontal: 18}}>
       <FlatList
-        data={[...acctTokens]}
+        ListEmptyComponent={() => {
+          return (
+            <>
+              <EmptyState
+                isLoading={acctTokens?.isLoading}
+                data={{
+                  message: '',
+                  loadingText: 'Fetching tokens...',
+                }}
+              />
+            </>
+          );
+        }}
+        data={ERC20Tokens.data}
         ListHeaderComponent={() => {
           return (
             <>
