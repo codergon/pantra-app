@@ -1,9 +1,9 @@
 import styles from '../styles';
-import {useEffect, useState} from 'react';
 import {colors} from 'utils/Theming';
-import {useWallet} from 'providers/WalletProvider';
+import {useEffect, useState} from 'react';
 import {LockKey} from 'phosphor-react-native';
 import BackBtn from 'components/_common/backBtn';
+import {useWallet} from 'providers/WalletProvider';
 import {AppStackScreenProps} from 'typings/navigation';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
