@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
+import {useEffect, useState} from 'react';
 import Icons from 'components/_common/Icons';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {useWallet} from 'providers/WalletProvider';

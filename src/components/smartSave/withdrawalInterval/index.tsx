@@ -1,10 +1,11 @@
 import styles from './styles';
+import {Fragment} from 'react';
 import Interval from './interval';
 import {colors} from 'utils/Theming';
-import {Fragment, useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {ChevronDown} from 'lucide-react-native';
 import {Text} from 'components/_ui/typography';
+import {ChevronDown} from 'lucide-react-native';
+import {useWallet} from 'providers/WalletProvider';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
 import {
   Menu,
   renderers,
@@ -14,10 +15,22 @@ import {
 } from 'react-native-popup-menu';
 
 const WithdrawalInterval = () => {
-  const [interval, setInterval] = useState({
-    value: 0,
-    label: 'Daily',
-  });
+  const {withdrawalInterval, setSavingsWithdrawal, updateWithdrawalInterval} =
+    useWallet();
+  const intervals = [
+    {
+      value: 0,
+      label: 'Daily',
+    },
+    {
+      value: 1,
+      label: 'Weekly',
+    },
+    {
+      value: 2,
+      label: 'Monthly',
+    },
+  ];
 
   return (
     <>
@@ -36,6 +49,7 @@ const WithdrawalInterval = () => {
           }}
           renderer={renderers.Popover}>
           <MenuTrigger
+            disabled={setSavingsWithdrawal.isLoading}
             customStyles={{
               triggerTouchable: {
                 activeOpacity: 0.6,
@@ -51,15 +65,20 @@ const WithdrawalInterval = () => {
               ]}>
               <View
                 style={{
-                  // gap: 8,
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
                 <Text style={{fontSize: 15}}>Withdrawal Interval - </Text>
-                <Interval details={interval} />
+                <Interval
+                  details={intervals.find(i => i.value === withdrawalInterval)!}
+                />
               </View>
 
-              <ChevronDown size={17} color={colors.white} strokeWidth={2.6} />
+              {setSavingsWithdrawal.isLoading ? (
+                <ActivityIndicator size="small" color={colors.subText} />
+              ) : (
+                <ChevronDown size={17} color={colors.white} strokeWidth={2.6} />
+              )}
             </View>
           </MenuTrigger>
 
@@ -88,24 +107,11 @@ const WithdrawalInterval = () => {
               bounces={false}
               showsVerticalScrollIndicator={true}
               showsHorizontalScrollIndicator={false}>
-              {[
-                {
-                  value: 0,
-                  label: 'Daily',
-                },
-                {
-                  value: 1,
-                  label: 'Weekly',
-                },
-                {
-                  value: 2,
-                  label: 'Monthly',
-                },
-              ].map((interval, index, intervals) => {
+              {intervals.map((interval, index, intervals) => {
                 return (
                   <MenuOption
                     key={index}
-                    onSelect={() => setInterval(interval)}
+                    onSelect={() => updateWithdrawalInterval(interval.value)}
                     customStyles={{
                       optionWrapper: {
                         paddingVertical: 12,

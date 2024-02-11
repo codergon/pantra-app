@@ -359,7 +359,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="home"
+      initialRouteName="smartSave"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

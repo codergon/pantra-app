@@ -31,6 +31,12 @@ export default function WalletProvider(props: WalletProviderProps) {
   );
 
   // Smart Savings
+  const [withdrawalInterval, setWithdrawalInterval] =
+    useStorage<WithdrawalInterval>(
+      'withdrawalInterval',
+      WithdrawalInterval.DAILY,
+    );
+
   const [smartSavings, setSmartSavings] = useStorage<boolean>(
     'smartSavings',
     false,
@@ -79,6 +85,31 @@ export default function WalletProvider(props: WalletProviderProps) {
       } catch (error) {
         console.log('error', error);
       }
+    }
+  };
+
+  // Set withdrawal interval from the savings contract
+  const setSavingsWithdrawal = useContractWrite({
+    gasPrice: 0n,
+    abi: factoryAbi,
+    address: CONTRACT_ADDRESS,
+    functionName: 'setWithdrawalInterval',
+    args: [withdrawalInterval],
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+    }),
+  });
+
+  const updateWithdrawalInterval = async (value: WithdrawalInterval) => {
+    try {
+      await setSavingsWithdrawal?.writeAsync();
+      setWithdrawalInterval(value);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error updating withdrawal interval',
+        text2: 'Please try again',
+      });
     }
   };
 
@@ -179,6 +210,10 @@ export default function WalletProvider(props: WalletProviderProps) {
   return (
     <WalletContext.Provider
       value={{
+        withdrawalInterval,
+        setSavingsWithdrawal,
+        updateWithdrawalInterval,
+
         smartSavings,
         setSmartSavings,
         toggleSmartSavings,
@@ -219,6 +254,10 @@ interface CreateWalletProps {
 }
 
 interface WalletContext {
+  withdrawalInterval: WithdrawalInterval | null;
+  setSavingsWithdrawal: ReturnType<typeof useContractWrite>;
+  updateWithdrawalInterval: (value: WithdrawalInterval) => void;
+
   smartSavings: boolean | null;
   setSmartSavings: (value: boolean) => void;
   toggleSmartSavings: () => Promise<void>;

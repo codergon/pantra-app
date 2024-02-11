@@ -60,7 +60,11 @@ export function useStorage<T>(key: string, defaultValue?: T): UseStateHook<T> {
   );
 
   return [
-    state !== undefined ? state : defaultValue || null,
+    state || (state !== undefined && defaultValue === undefined)
+      ? state
+      : defaultValue !== undefined
+      ? defaultValue
+      : null,
     setValue,
     isReady,
   ];
