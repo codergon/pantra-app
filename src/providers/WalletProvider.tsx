@@ -101,6 +101,7 @@ export default function WalletProvider(props: WalletProviderProps) {
   });
 
   const updateWithdrawalInterval = async (value: WithdrawalInterval) => {
+    if (value === withdrawalInterval) return;
     try {
       await setSavingsWithdrawal?.writeAsync();
       setWithdrawalInterval(value);
