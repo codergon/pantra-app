@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
   },
 
+  body: {
+    width: '100%',
+    flexDirection: 'column',
+  },
+
   header: {
     gap: 2,
     paddingTop: 14,

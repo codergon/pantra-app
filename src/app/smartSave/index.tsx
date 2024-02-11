@@ -12,6 +12,7 @@ import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
 import TokenIcons from 'components/shared/tokenIcons';
 import {
   ActivityIndicator,
+  ScrollView,
   TextInput,
   TouchableOpacity,
   View,
@@ -67,150 +68,152 @@ const SmartSave = () => {
         </Text>
       </View>
 
-      <View
-        style={{
-          flex: 0,
-          aspectRatio: 1.4,
-          borderRadius: 14,
-          overflow: 'hidden',
-          marginHorizontal: 4,
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center',
-        }}>
-        <FastImage
+      <ScrollView bounces={false} contentContainerStyle={[styles.body]}>
+        <View
           style={{
-            width: '100%',
-            height: '100%',
+            flex: 0,
+            aspectRatio: 1.4,
+            borderRadius: 14,
+            overflow: 'hidden',
+            marginHorizontal: 4,
             alignItems: 'center',
+            flexDirection: 'row',
             justifyContent: 'center',
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-          source={require('assets/images/grads/blur.png')}>
-          <View
+          }}>
+          <FastImage
             style={{
-              gap: 14,
+              width: '100%',
+              height: '100%',
               alignItems: 'center',
               justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 20}}>Amount saved</Text>
-            {getSavingsBalance?.isLoading ? (
-              <ActivityIndicator size="large" color={colors.subText} />
-            ) : (
-              <BdText style={{fontSize: 40}}>
-                {activeCurrency?.symbol}
-                {savingsBalance[0].toFixed(2)}{' '}
-              </BdText>
-            )}
-          </View>
-        </FastImage>
-      </View>
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+            source={require('assets/images/grads/blur.png')}>
+            <View
+              style={{
+                gap: 14,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{fontSize: 20}}>Amount saved</Text>
+              {getSavingsBalance?.isLoading ? (
+                <ActivityIndicator size="large" color={colors.subText} />
+              ) : (
+                <BdText style={{fontSize: 40}}>
+                  {activeCurrency?.symbol}
+                  {savingsBalance[0].toFixed(2)}{' '}
+                </BdText>
+              )}
+            </View>
+          </FastImage>
+        </View>
 
-      <View style={[styles.content]}>
-        <SavingsToggleBtn />
+        <View style={[styles.content]}>
+          <SavingsToggleBtn />
 
-        {isAddress(getSavingsWallet?.data as string) && smartSavings && (
-          <WithdrawalInterval />
-        )}
+          {isAddress(getSavingsWallet?.data as string) && smartSavings && (
+            <WithdrawalInterval />
+          )}
 
-        {canWithdraw && (
-          <>
-            <View style={[styles.addrBlockContainer]}>
-              <View style={[styles.addrBlock]}>
-                <View style={[styles.icon]}>
-                  <TokenIcons size={42} label={'eth'} />
+          {canWithdraw && (
+            <>
+              <View style={[styles.addrBlockContainer]}>
+                <View style={[styles.addrBlock]}>
+                  <View style={[styles.icon]}>
+                    <TokenIcons size={42} label={'eth'} />
+                  </View>
+
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      inputRef.current?.focus();
+                    }}
+                    style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}>
+                    <Input
+                      value={amount}
+                      innerRef={inputRef}
+                      color={colors?.white}
+                      keyboardType="numeric"
+                      placeholder={'Amount'}
+                      onChangeText={setAmount}
+                      style={[
+                        styles.addressInput,
+                        {
+                          height: 34,
+                          paddingBottom: 5,
+                        },
+                      ]}
+                      placeholderTextColor={colors?.subText1}
+                    />
+
+                    <Text style={[styles.addrBlockText_balance]}>
+                      {activeCurrency?.symbol}
+                      {amountInCurrency?.toFixed(2)}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => {
+                      setAmount(savingsBalance[1].toString());
+                    }}
+                    style={{
+                      borderWidth: 1,
+                      borderRadius: 20,
+                      paddingVertical: 3,
+                      paddingHorizontal: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderColor: colors?.warning + '42',
+                      backgroundColor: colors?.warning + '22',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        lineHeight: 14,
+                        color: colors?.warning,
+                      }}>
+                      Max
+                    </Text>
+                  </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    inputRef.current?.focus();
-                  }}
-                  style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                  }}>
-                  <Input
-                    value={amount}
-                    innerRef={inputRef}
-                    color={colors?.white}
-                    keyboardType="numeric"
-                    placeholder={'Amount'}
-                    onChangeText={setAmount}
-                    style={[
-                      styles.addressInput,
-                      {
-                        height: 34,
-                        paddingBottom: 5,
-                      },
-                    ]}
-                    placeholderTextColor={colors?.subText1}
-                  />
-
-                  <Text style={[styles.addrBlockText_balance]}>
-                    {activeCurrency?.symbol}
-                    {amountInCurrency?.toFixed(2)}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => {
-                    setAmount(savingsBalance[1].toString());
-                  }}
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 20,
-                    paddingVertical: 3,
-                    paddingHorizontal: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderColor: colors?.warning + '42',
-                    backgroundColor: colors?.warning + '22',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      lineHeight: 14,
-                      color: colors?.warning,
+                <View style={{width: '100%'}}>
+                  <AcceptRejectButton
+                    flex={0}
+                    accept={true}
+                    title={'Withdraw'}
+                    disabled={!isValidAmount || withdrawFromSavings?.isLoading}
+                    onPress={() => {
+                      withdrawSavings({amount: amount});
                     }}>
-                    Max
-                  </Text>
-                </TouchableOpacity>
+                    {withdrawFromSavings?.isLoading && (
+                      <View
+                        style={{
+                          right: 16,
+                          position: 'absolute',
+                        }}>
+                        <CircleSpinner
+                          size={19}
+                          color="#000"
+                          thickness={1.6}
+                          animating={true}
+                          strokeCap="round"
+                          unfilledColor="#888"
+                        />
+                      </View>
+                    )}
+                  </AcceptRejectButton>
+                </View>
               </View>
-
-              <View style={{width: '100%'}}>
-                <AcceptRejectButton
-                  flex={0}
-                  accept={true}
-                  title={'Withdraw'}
-                  disabled={!isValidAmount || withdrawFromSavings?.isLoading}
-                  onPress={() => {
-                    withdrawSavings({amount: amount});
-                  }}>
-                  {withdrawFromSavings?.isLoading && (
-                    <View
-                      style={{
-                        right: 16,
-                        position: 'absolute',
-                      }}>
-                      <CircleSpinner
-                        size={19}
-                        color="#000"
-                        thickness={1.6}
-                        animating={true}
-                        strokeCap="round"
-                        unfilledColor="#888"
-                      />
-                    </View>
-                  )}
-                </AcceptRejectButton>
-              </View>
-            </View>
-          </>
-        )}
-      </View>
+            </>
+          )}
+        </View>
+      </ScrollView>
     </Container>
   );
 };

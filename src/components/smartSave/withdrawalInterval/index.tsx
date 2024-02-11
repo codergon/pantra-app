@@ -64,6 +64,7 @@ const WithdrawalInterval = () => {
                 }}>
                 <Text style={{fontSize: 15}}>Withdrawal Interval - </Text>
                 <Interval
+                  isActive={false}
                   details={intervals.find(i => i.value === withdrawalInterval)!}
                 />
               </View>
@@ -115,7 +116,10 @@ const WithdrawalInterval = () => {
                           index === intervals.length - 1 ? 0 : 1,
                       },
                     }}>
-                    <Interval details={interval} />
+                    <Interval
+                      details={interval}
+                      isActive={withdrawalInterval === interval.value}
+                    />
                   </MenuOption>
                 );
               })}
