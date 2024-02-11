@@ -21,12 +21,20 @@ export const styles = StyleSheet.create({
   divider: {
     height: 1,
     width: '100%',
-    borderWidth: 1,
+    borderWidth: 0.8,
+    overflow: 'hidden',
     borderStyle: 'dashed',
     borderColor: colors.border4,
   },
 
   body: {
+    gap: 24,
+    width: '100%',
+    paddingBottom: 34,
+    paddingHorizontal: 18,
+    flexDirection: 'column',
+  },
+  footer: {
     gap: 24,
     width: '100%',
     paddingHorizontal: 18,
@@ -69,6 +77,21 @@ export const styles = StyleSheet.create({
     flex: 1,
     height: 34,
     fontSize: 17,
+  },
+  rowItem: {
+    gap: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  rowItemLabel: {
+    fontSize: 15,
+    color: colors.subText,
+  },
+  currAmt: {
+    gap: 2,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   icon: {
     width: 42,

@@ -306,9 +306,7 @@ function RootNavigator() {
         <Stack.Group>
           <Stack.Screen name="Main" component={BottomTabNavigator} />
 
-          <Stack.Group>
-            <Stack.Screen name="sendETH" component={SendETH} />
-          </Stack.Group>
+          <Stack.Screen name="sendETH" component={SendETH} />
 
           <Stack.Group>
             <Stack.Screen

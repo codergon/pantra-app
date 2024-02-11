@@ -17,7 +17,8 @@ export const alchemy = new Alchemy({
 });
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
-  const {account, setAccount, currentRPC} = useWallet();
+  const {account, setAccount, currentRPC, ethPrices, setEthPrices} =
+    useWallet();
   const {setSettings, setPasscode, activeCurrency, useJazzicons} =
     useSettings();
 
@@ -28,13 +29,12 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
   const [txnSearch, setTxnSearch] = useState('');
   const [txnFilter, setTxnFilter] = useState<ITxnFilter>('all');
 
-  const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
   const [tokensBalances, setTokensBalances] = useState<ITokensBalances>({});
   const {data: ethBalance} = useBalance({
     watch: true,
     formatUnits: 'ether',
     enabled: queryEnabled,
-    address: account?.address! as `0x${string}`,
+    address: account?.address!,
   });
 
   const clearAccounts = () => {

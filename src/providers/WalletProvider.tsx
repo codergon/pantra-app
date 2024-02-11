@@ -7,12 +7,19 @@ import {waitForTransaction} from '@wagmi/core';
 import {Wallet, providers, utils} from 'ethers';
 import {privateKeyToAccount} from 'viem/accounts';
 import {useStorage, useSecureStorage} from 'hooks';
-import {useContractRead, useContractWrite} from 'wagmi';
+import {
+  useContractRead,
+  useContractWrite,
+  useFeeData,
+  useSendTransaction,
+} from 'wagmi';
 import {
   CONTRACT_ADDRESS,
   SUPPORTED_CHAINS,
   WithdrawalInterval,
 } from 'contracts/data';
+import {useSettings} from './SettingsProvider';
+import {walletClient} from './Providers';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [currentChain, setCurrentChain] =
@@ -20,6 +27,11 @@ export default function WalletProvider(props: WalletProviderProps) {
   const currentRPC = useMemo(() => {
     return SUPPORTED_CHAINS[currentChain];
   }, [currentChain]);
+
+  const {activeCurrency} = useSettings();
+  const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
+
+  const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
   const [avatar, updateAvatar] = useStorage<string>('avatar');
   const [isAddingWallet, setIsAddingWallet] = useState(false);
@@ -42,13 +54,24 @@ export default function WalletProvider(props: WalletProviderProps) {
     false,
   );
 
+  // Get the savings contract
   const getSavingsWallet = useContractRead({
     abi: factoryAbi,
     functionName: 'getWallet',
     address: CONTRACT_ADDRESS,
     enabled: !!account?.address,
     ...(!!account?.privateKey && {
-      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+      account: privateKeyToAccount(account?.privateKey),
+    }),
+  });
+
+  const getSavingsBalance = useContractRead({
+    abi: factoryAbi,
+    address: CONTRACT_ADDRESS,
+    enabled: !!account?.address,
+    functionName: 'getWalletBalance',
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey),
     }),
   });
 
@@ -60,7 +83,7 @@ export default function WalletProvider(props: WalletProviderProps) {
     functionName: 'createWallet',
     args: [WithdrawalInterval.DAILY],
     ...(!!account?.privateKey && {
-      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+      account: privateKeyToAccount(account?.privateKey),
     }),
   });
 
@@ -96,7 +119,7 @@ export default function WalletProvider(props: WalletProviderProps) {
     functionName: 'setWithdrawalInterval',
     args: [withdrawalInterval],
     ...(!!account?.privateKey && {
-      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+      account: privateKeyToAccount(account?.privateKey),
     }),
   });
 
@@ -116,23 +139,58 @@ export default function WalletProvider(props: WalletProviderProps) {
 
   // Send ETH
   const [txnPending, setTxnPending] = useState(false);
-  const sendETH = async ({to, amount}: SendETHProps) => {
+
+  const depositIntoSavings = useContractWrite({
+    gasPrice: 0n,
+    abi: factoryAbi,
+    functionName: 'deposit',
+    address: CONTRACT_ADDRESS,
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey),
+    }),
+  });
+
+  const sendETH = async ({
+    to,
+    amount,
+    shouldSave,
+    amountSaved,
+  }: SendETHProps) => {
     setTxnPending(true);
+
     try {
       Toast.show({
         type: 'warning',
-        text1: 'Transaction Processing',
         text2: 'Waiting for confirmation',
+        text1: `Transaction${shouldSave ? 's' : ''} Processing'`,
       });
 
-      const signer = new Wallet(account!.privateKey!, provider);
-
-      const tx = await signer!.sendTransaction({
+      // Process the send transaction
+      const request = await walletClient.prepareTransactionRequest({
         to,
+        ...(!!account?.privateKey && {
+          account: privateKeyToAccount(account?.privateKey),
+        }),
         value: parseEther(amount),
       });
 
-      if (tx) {
+      const signature = await walletClient.signTransaction(request);
+
+      const txnHash = await walletClient.sendRawTransaction({
+        serializedTransaction: signature,
+      });
+
+      // Process the savings transaction
+      if (shouldSave) {
+        const savingsTx = await depositIntoSavings.writeAsync({
+          value: parseEther(amountSaved?.ether?.toString()),
+        });
+        await waitForTransaction({hash: savingsTx?.hash});
+      }
+
+      await waitForTransaction({hash: txnHash});
+
+      if (!!txnHash) {
         Toast.show({
           type: 'success',
           text1: 'Transaction Successful',
@@ -149,6 +207,41 @@ export default function WalletProvider(props: WalletProviderProps) {
       });
     } finally {
       setTxnPending(false);
+    }
+  };
+
+  // Withdraw from savings
+  const withdrawFromSavings = useContractWrite({
+    gasPrice: 0n,
+    abi: factoryAbi,
+    args: [parseEther('0.001')],
+    functionName: 'withdraw',
+    address: CONTRACT_ADDRESS,
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey),
+    }),
+  });
+
+  const withdrawSavings = async ({amount}: WithdrawETHProps) => {
+    try {
+      const txnHash = await withdrawFromSavings?.writeAsync({
+        args: [parseEther(amount)],
+      });
+      await waitForTransaction({hash: txnHash?.hash});
+
+      Toast.show({
+        type: 'success',
+        text1: 'Withdrawal Successful',
+        text2: 'Transaction has been confirmed',
+      });
+    } catch (error) {
+      console.log('error', error);
+
+      Toast.show({
+        type: 'error',
+        text1: 'Withdrawal Failed',
+        text2: 'Please try again',
+      });
     }
   };
 
@@ -175,9 +268,9 @@ export default function WalletProvider(props: WalletProviderProps) {
 
       setAccount({
         name: 'Smart Wallet',
-        address: wallet.address,
-        privateKey: wallet.privateKey,
         mnemonic: wallet.mnemonic?.phrase,
+        address: wallet.address as `0x${string}`,
+        privateKey: wallet.privateKey as `0x${string}`,
       });
     } catch (error) {
       Toast.show({
@@ -211,27 +304,35 @@ export default function WalletProvider(props: WalletProviderProps) {
   return (
     <WalletContext.Provider
       value={{
+        sendETH,
+        txnPending,
+
+        withdrawSavings,
+        withdrawFromSavings,
+
         withdrawalInterval,
         setSavingsWithdrawal,
         updateWithdrawalInterval,
 
+        getSavingsWallet,
+        getSavingsBalance,
+
         smartSavings,
         setSmartSavings,
         toggleSmartSavings,
-        getSavingsWallet,
         createSavingsWallet,
 
         account,
+        setAccount,
         isAddingWallet,
         initialized: true,
         avatar: avatar || '',
-        setAccount,
+
+        ethPrices,
+        setEthPrices,
+        curretGasPrice: feeData?.formatted?.gasPrice!,
 
         currentRPC,
-
-        sendETH,
-        txnPending,
-
         isAcctReady,
 
         updateAvatar,
@@ -244,9 +345,18 @@ export default function WalletProvider(props: WalletProviderProps) {
 }
 
 interface SendETHProps {
-  to: string;
+  to: `0x${string}`;
   amount: string;
   from?: `0x${string}`;
+  shouldSave?: boolean;
+  amountSaved: {
+    ether: number;
+    currency: number;
+  };
+}
+
+interface WithdrawETHProps {
+  amount: string;
 }
 interface CreateWalletProps {
   type: 'new' | 'mnemonic' | 'privateKey';
@@ -255,29 +365,38 @@ interface CreateWalletProps {
 }
 
 interface WalletContext {
+  txnPending: boolean;
+  sendETH: ({to, amount}: SendETHProps) => Promise<void>;
+
+  withdrawSavings: ({amount}: WithdrawETHProps) => void;
+  withdrawFromSavings: ReturnType<typeof useContractWrite>;
+
   withdrawalInterval: WithdrawalInterval | null;
   setSavingsWithdrawal: ReturnType<typeof useContractWrite>;
   updateWithdrawalInterval: (value: WithdrawalInterval) => void;
 
+  getSavingsWallet: ReturnType<typeof useContractRead>;
+  getSavingsBalance: ReturnType<typeof useContractRead>;
+
   smartSavings: boolean | null;
   setSmartSavings: (value: boolean) => void;
   toggleSmartSavings: () => Promise<void>;
-  getSavingsWallet: ReturnType<typeof useContractRead>;
   createSavingsWallet: ReturnType<typeof useContractWrite>;
 
+  ethPrices: Record<string, number>;
+  curretGasPrice: string | undefined;
+  setEthPrices: (ethPrices: Record<string, number>) => void;
+
   currentRPC: string;
+  isAcctReady: boolean;
 
   avatar: string;
-  txnPending: boolean;
   initialized: boolean;
   isAddingWallet: boolean;
   account: IWallet | null;
   setAccount: (account?: IWallet) => void;
 
-  isAcctReady: boolean;
-
   updateAvatar: (avatar: string) => void;
-  sendETH: ({to, amount}: SendETHProps) => Promise<void>;
   updateAccount: (key: keyof IWallet, value: IWallet[keyof IWallet]) => void;
   createSmartWallet: ({type, mnemonic, privateKey}: CreateWalletProps) => void;
 }

@@ -1,45 +1,41 @@
 import millify from 'millify';
 import {isAddress} from 'viem';
 import {styles} from './styles';
+import {useBalance} from 'wagmi';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
-import {useBalance, useFeeData} from 'wagmi';
-import {ScanLine, X} from 'lucide-react-native';
 import {CaretDown} from 'phosphor-react-native';
 import {Container} from 'components/_ui/custom';
+import {ScanLine, X} from 'lucide-react-native';
 import BackBtn from 'components/_common/backBtn';
-import {useEffect, useMemo, useState} from 'react';
 import {useWallet} from 'providers/WalletProvider';
 import WalletIcon from 'components/shared/WalletIcon';
 import TokenIcons from 'components/shared/tokenIcons';
 import {RootStackScreenProps} from 'typings/navigation';
 import {useAccountData} from 'providers/AccountDataProvider';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Fragment, useEffect, useMemo, useRef, useState} from 'react';
 import {Header, Input, RgText, Text} from 'components/_ui/typography';
 import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
+import {ScrollView, TextInput, TouchableOpacity, View} from 'react-native';
 
 const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
-  const insets = useSafeAreaInsets();
-  const {account, sendETH} = useWallet();
   const scannedAddress = route.params?.toAddress;
+
+  const insets = useSafeAreaInsets();
   const {ethPrices, activeCurrency} = useAccountData();
+  const {account, sendETH, curretGasPrice} = useWallet();
   const {data: ethBalance} = useBalance({
     formatUnits: 'ether',
-    address: account?.address! as `0x${string}`,
+    address: account?.address!,
   });
-  const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
+  const inputRef = useRef<TextInput>(null);
   const [amount, setAmount] = useState('');
-  const [toAddress, setToAddress] = useState('');
-  const isValidAddress = useMemo(() => isAddress(toAddress), [toAddress]);
-  const isValidAmount = useMemo(
-    () =>
-      Number(amount) <=
-      Number(ethBalance?.formatted) -
-        Number(feeData?.formatted?.gasPrice || 0) * 21000,
-    [amount],
+  const [toAddress, setToAddress] = useState(
+    '0x965700b261B5726fF1c813B42AA08Fc8ddB6eF4f',
   );
+  const isValidAddress = useMemo(() => isAddress(toAddress), [toAddress]);
 
   useEffect(() => {
     // Set the scanned address as the toAddress
@@ -49,6 +45,42 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
       navigation.setParams({toAddress: undefined});
     }
   }, [scannedAddress]);
+
+  // Amount, Gas and Savings calculations
+  const estimatedGas = useMemo(() => {
+    const gasprice = Number(curretGasPrice || 0) * 21000;
+    const gaspriceInCurrency =
+      gasprice * (ethPrices[activeCurrency?.slug] || 0);
+    return [gasprice, gaspriceInCurrency];
+  }, [curretGasPrice]);
+
+  const amountInCurrency = useMemo(() => {
+    const amt = isNaN(Number(amount)) ? 0 : Number(amount);
+    return Number(amt) * (ethPrices[activeCurrency?.slug] || 0);
+  }, [amount]);
+
+  // Amount to be saved and the next round figure
+  const amountSaved = useMemo(() => {
+    /* 
+      The amount saved is the difference between the amount and the next round figure of the amount eg for $47.83, the amount saved is $2.17
+    */
+    const roundFigure = Math.ceil(amountInCurrency / 5) * 5;
+    const roundFigureEth = roundFigure / (ethPrices[activeCurrency?.slug] || 0);
+    const saved = roundFigure - amountInCurrency;
+    const savedEth = saved / (ethPrices[activeCurrency?.slug] || 0);
+    return [saved, savedEth, roundFigure, roundFigureEth];
+  }, [amountInCurrency]);
+
+  const shouldSave = useMemo(() => {
+    return amountSaved[3] + estimatedGas[0] <= Number(ethBalance?.formatted);
+  }, [amountSaved]);
+
+  const isValidAmount = useMemo(
+    () =>
+      Number(amount) <= Number(ethBalance?.formatted) - estimatedGas[0] &&
+      Number(amount) > 0,
+    [amount],
+  );
 
   return (
     <Container
@@ -164,7 +196,11 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
               <TokenIcons size={42} label={'eth'} />
             </View>
 
-            <View
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                inputRef.current?.focus();
+              }}
               style={{
                 flex: 1,
                 flexDirection: 'column',
@@ -172,6 +208,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
               }}>
               <Input
                 value={amount}
+                innerRef={inputRef}
                 color={colors?.white}
                 keyboardType="numeric"
                 placeholder={'Amount'}
@@ -188,19 +225,16 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
 
               <Text style={[styles.addrBlockText_balance]}>
                 {activeCurrency?.symbol}
-                {Number(
-                  Number(amount || 0) * (ethPrices[activeCurrency?.slug] || 0),
-                )?.toFixed(2)}
+                {amountInCurrency?.toFixed(2)}
               </Text>
-            </View>
+            </TouchableOpacity>
 
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
                 setAmount(
                   (
-                    Number(ethBalance?.formatted || 0) -
-                    Number(feeData?.formatted?.gasPrice || 0) * 21000
+                    Number(ethBalance?.formatted || 0) - estimatedGas[0]
                   ).toFixed(5),
                 );
               }}
@@ -222,52 +256,93 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
           </View>
         </View>
 
-        <View style={styles.divider} />
+        <View
+          style={{
+            gap: 16,
+            padding: 14,
+            width: '100%',
+            borderWidth: 1,
+            borderRadius: 16,
+            borderStyle: 'dashed',
+            borderColor: colors.border4,
+          }}>
+          {[
+            ...(shouldSave
+              ? [
+                  {
+                    label: 'Savings',
+                    etherAmount: amountSaved[1],
+                    currencyAmount: amountSaved[0],
+                  },
+                ]
+              : []),
+            {
+              etherAmount: shouldSave
+                ? amountSaved[3]
+                : isNaN(Number(amount))
+                ? 0
+                : Number(amount),
+              currencyAmount: shouldSave ? amountSaved[2] : amountInCurrency,
+              label: `Amount ${shouldSave ? ' + Savings' : ''}`,
+            },
+            {
+              label: 'Estimated Balance',
+              etherAmount: estimatedGas[0],
+              currencyAmount: estimatedGas[1],
+            },
+          ].map((item, index, items) => {
+            return (
+              <Fragment key={index}>
+                <View style={[styles.rowItem]}>
+                  <Text style={[styles.rowItemLabel]}>{item?.label}</Text>
 
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{fontSize: 17}}>
-              Gas{' '}
-              <Text style={{color: colors.subText, fontStyle: 'italic'}}>
-                (estimated)
-              </Text>
-            </Text>
-
-            <View
-              style={{gap: 2, flexDirection: 'column', alignItems: 'flex-end'}}>
-              <Text style={{fontSize: 17}}>
-                {(Number(feeData?.formatted?.gasPrice || 0) * 21000).toFixed(8)}{' '}
-                ETH
-              </Text>
-              <Text style={{fontSize: 17, color: colors.subText1}}>
-                {activeCurrency?.symbol}{' '}
-                {(
-                  Number(feeData?.formatted?.gasPrice || 0) *
-                  21000 *
-                  (ethPrices[activeCurrency?.slug] || 0)
-                ).toFixed(4)}
-              </Text>
-            </View>
-          </View>
+                  <View style={[styles.currAmt]}>
+                    <Text style={{fontSize: 15}}>
+                      {item?.etherAmount?.toFixed(
+                        index === items.length - 1 ? 8 : 4,
+                      )}{' '}
+                      ETH
+                    </Text>
+                    <Text style={{fontSize: 15, color: colors.subText1}}>
+                      {activeCurrency?.symbol}
+                      {item?.currencyAmount?.toFixed(
+                        index === items.length - 1 ? 4 : 2,
+                      )}
+                    </Text>
+                  </View>
+                </View>
+                {((index === 1 && items?.length == 3) ||
+                  (index === 0 && items?.length == 2)) && (
+                  <View style={styles.divider} />
+                )}
+              </Fragment>
+            );
+          })}
         </View>
       </ScrollView>
 
-      <View style={styles.body}>
+      <View style={styles.footer}>
         <AcceptRejectButton
           flex={0}
           accept={true}
           title="Send ETH"
-          // disabled={!isValidAmount || !isValidAddress}
+          disabled={!isValidAmount || !isValidAddress}
           onPress={() => {
             sendETH({
-              to: toAddress,
+              shouldSave,
               amount: amount,
+              to: toAddress as `0x${string}`,
+              amountSaved: {
+                ether: amountSaved[1],
+                currency: amountSaved[0],
+              },
             });
-            // navigation.replace('Main', {screen: 'home'});
+
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            } else {
+              navigation.replace('Main', {screen: 'home'});
+            }
           }}
         />
       </View>

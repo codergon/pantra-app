@@ -1,9 +1,9 @@
-import {useFeeData} from 'wagmi';
 import {colors} from 'utils/Theming';
 import Image from 'react-native-fast-image';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
 import {ChevronDown} from 'lucide-react-native';
+import {useWallet} from 'providers/WalletProvider';
 import {RootTabScreenProps} from 'typings/navigation';
 import {TouchableOpacity} from 'components/_ui/themed';
 import {Barcode, GasPump} from 'phosphor-react-native';
@@ -13,7 +13,7 @@ interface HomeHeaderProps {
 }
 
 const HomeHeader = ({navigation}: HomeHeaderProps) => {
-  const {data: feeData} = useFeeData({formatUnits: 'gwei', watch: true});
+  const {curretGasPrice} = useWallet();
 
   return (
     <View style={[styles.header]}>
@@ -29,9 +29,7 @@ const HomeHeader = ({navigation}: HomeHeaderProps) => {
         <View style={[styles.gasPrice]}>
           <GasPump size={16} color={colors.primary} weight="fill" />
           <Text style={{fontSize: 13, paddingTop: 1}}>
-            {feeData?.formatted?.gasPrice
-              ? Number(feeData?.formatted?.gasPrice).toFixed(2)
-              : 0}
+            {curretGasPrice ? Number(curretGasPrice).toFixed(2) : 0}
           </Text>
         </View>
       </View>

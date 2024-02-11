@@ -56,7 +56,10 @@ export type ViewProps = ThemeProps &
     transparent?: boolean;
     ref?: React.Ref<DefaultView>;
   };
-export type InputProps = {color?: string} & DefaultInput['props'];
+export type InputProps = DefaultInput['props'] & {
+  color?: string;
+  innerRef?: React.Ref<DefaultInput>;
+};
 
 export function NormalText(props: TextProps) {
   const {style, lightColor, darkColor, grey, ...otherProps} = props;
@@ -70,13 +73,14 @@ export function NormalText(props: TextProps) {
 
 export function TextInput(props: InputProps) {
   const theme = useColorScheme();
-  const {style, color, placeholderTextColor, ...otherProps} = props;
+  const {style, color, placeholderTextColor, innerRef, ...otherProps} = props;
 
   const textColor = useThemeColor({light: color, dark: color}, 'text');
   const placeholderColor = Colors[theme].grey;
 
   return (
     <DefaultInput
+      ref={innerRef}
       style={[
         {
           color: textColor,

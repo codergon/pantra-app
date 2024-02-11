@@ -2,8 +2,8 @@ import {Wallet} from 'ethers';
 
 export type IWallet = {
   name?: string;
-  address?: Wallet['address'];
-  privateKey?: Wallet['privateKey'];
+  address?: `0x${string}`;
+  privateKey?: `0x${string}`;
   mnemonic?: Wallet['mnemonic']['phrase'];
 };
 

@@ -1,16 +1,29 @@
+import {useMemo} from 'react';
 import {isAddress} from 'viem';
 import {styles} from './styles';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
 import {useWallet} from 'providers/WalletProvider';
 import {BdText, Text} from 'components/_ui/typography';
-import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
+import {useSettings} from 'providers/SettingsProvider';
 import SavingsToggleBtn from '../../components/smartSave/savingsToggleBtn';
+import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
 
 const SmartSave = () => {
-  const {getSavingsWallet} = useWallet();
+  const {activeCurrency} = useSettings();
+  const {getSavingsWallet, getSavingsBalance, ethPrices} = useWallet();
+
+  const savingsBalance = useMemo(() => {
+    const bal = !isNaN(Number(getSavingsBalance?.data))
+      ? Number(getSavingsBalance?.data)
+      : 0;
+    const balance = bal / 1e18;
+    const price = Number(ethPrices?.[activeCurrency?.slug]);
+
+    return balance * (isNaN(price) ? 0 : price);
+  }, [getSavingsBalance]);
 
   return (
     <Container paddingTop={10} style={[styles.container]}>
@@ -48,7 +61,14 @@ const SmartSave = () => {
               justifyContent: 'center',
             }}>
             <Text style={{fontSize: 20}}>Amount saved</Text>
-            <BdText style={{fontSize: 40}}>$400.00</BdText>
+            {getSavingsBalance?.isLoading ? (
+              <ActivityIndicator size="large" color={colors.subText} />
+            ) : (
+              <BdText style={{fontSize: 40}}>
+                {activeCurrency?.symbol}
+                {savingsBalance.toFixed(2)}{' '}
+              </BdText>
+            )}
           </View>
         </FastImage>
       </View>

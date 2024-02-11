@@ -1,10 +1,10 @@
-import {Pressable} from '../_ui/themed';
-import {padding} from 'helpers/styles';
-import {InputRg} from '../_ui/typography';
-import {View, StyleSheet} from 'react-native';
-import {MagnifyingGlass, X} from 'phosphor-react-native';
 import {colors} from 'utils/Theming';
+import {padding} from 'helpers/styles';
+import {Pressable} from '../_ui/themed';
+import {X} from 'phosphor-react-native';
+import {InputRg} from '../_ui/typography';
 import {Search} from 'lucide-react-native';
+import {View, StyleSheet} from 'react-native';
 
 type SearchbarProps = {
   value: string;
@@ -39,9 +39,8 @@ const Searchbar = ({
         returnKeyType="search"
         returnKeyLabel="Search"
         onChangeText={onChangeText}
-        style={styles.searchbar__input}
         placeholderTextColor={'#999'}
-        // onSubmitEditing={() => handleSearch(value)}
+        style={styles.searchbar__input}
         placeholder={placeholder ?? 'Search for something...'}
       />
 
@@ -49,11 +48,6 @@ const Searchbar = ({
         <Pressable
           onPress={_ => {
             onChangeText('');
-            // setSearchQuery({
-            //   data: null,
-            //   loading: false,
-            //   error: null,
-            // });
           }}
           style={{
             ...styles.close__icon__cover,

@@ -2,16 +2,15 @@ import dayjs from 'dayjs';
 import millify from 'millify';
 import {colors} from 'utils/Theming';
 import {truncate} from 'utils/HelperUtils';
+import {formatIpfsLink} from 'helpers/common';
 import {Text} from 'components/_ui/typography';
 import {TransactionReceipt} from 'typings/txns';
+import FastImage from 'react-native-fast-image';
 import {useWallet} from 'providers/WalletProvider';
 import {ArrowDown, ArrowUp} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useAccountData} from 'providers/AccountDataProvider';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ArrowBendUpRight, ArrowBendLeftDown} from 'phosphor-react-native';
-import FastImage from 'react-native-fast-image';
-import {formatIpfsLink} from 'helpers/common';
 
 interface TransactionItemProps {
   txn: TransactionReceipt;
@@ -107,9 +106,11 @@ const TransactionItem = ({txn}: TransactionItemProps) => {
           ) : (
             <>
               <Text numberOfLines={1} style={[{fontSize: 15}]}>
-                {millify(Number(txn?.value) * 1e-18, {
-                  precision: 2,
-                })}{' '}
+                {isNaN(Number(txn?.value))
+                  ? 0
+                  : millify(Number(txn?.value) * 1e-18, {
+                      precision: 2,
+                    })}{' '}
                 ETH
               </Text>
               <Text style={[{fontSize: 13, color: colors.subText}]}>
