@@ -5,7 +5,7 @@ import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
 import {useWallet} from 'providers/WalletProvider';
-import {BdText, Input, Text} from 'components/_ui/typography';
+import {BdText, Input, RgText, Text} from 'components/_ui/typography';
 import {useSettings} from 'providers/SettingsProvider';
 import SavingsToggleBtn from '../../components/smartSave/savingsToggleBtn';
 import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
@@ -35,9 +35,9 @@ const SmartSave = () => {
 
   const [amount, setAmount] = useState('');
 
-  const amountInCurrency = useMemo(() => {
+  const amountInEth = useMemo(() => {
     const amt = isNaN(Number(amount)) ? 0 : Number(amount);
-    return Number(amt) * (ethPrices[activeCurrency?.slug] || 0);
+    return Number(amt) / (ethPrices[activeCurrency?.slug] || 0);
   }, [amount]);
 
   const savingsBalance = useMemo(() => {
@@ -55,7 +55,7 @@ const SmartSave = () => {
   }, [savingsBalance]);
 
   const isValidAmount = useMemo(
-    () => Number(amount) <= savingsBalance[1] && Number(amount) > 0,
+    () => Number(amount) <= savingsBalance[0] && Number(amount) > 0,
     [amount],
   );
 
@@ -120,7 +120,9 @@ const SmartSave = () => {
               <View style={[styles.addrBlockContainer]}>
                 <View style={[styles.addrBlock]}>
                   <View style={[styles.icon]}>
-                    <TokenIcons size={42} label={'eth'} />
+                    <RgText style={{fontSize: 18}}>
+                      {activeCurrency.symbol}
+                    </RgText>
                   </View>
 
                   <TouchableOpacity
@@ -151,15 +153,14 @@ const SmartSave = () => {
                     />
 
                     <Text style={[styles.addrBlockText_balance]}>
-                      {activeCurrency?.symbol}
-                      {amountInCurrency?.toFixed(2)}
+                      {amountInEth?.toFixed(6)} ETH
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => {
-                      setAmount(savingsBalance[1].toString());
+                      setAmount(savingsBalance[0].toString());
                     }}
                     style={{
                       borderWidth: 1,
@@ -189,7 +190,7 @@ const SmartSave = () => {
                     title={'Withdraw'}
                     disabled={!isValidAmount || withdrawFromSavings?.isLoading}
                     onPress={() => {
-                      withdrawSavings({amount: amount});
+                      withdrawSavings({amount: amountInEth.toString()});
                     }}>
                     {withdrawFromSavings?.isLoading && (
                       <View
