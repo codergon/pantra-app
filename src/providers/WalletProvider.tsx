@@ -1,4 +1,5 @@
 import {IWallet} from 'typings/common';
+import {walletClient} from './Providers';
 import {factoryAbi} from 'contracts/abis';
 import {isAddress, parseEther} from 'viem';
 import Toast from 'react-native-toast-message';
@@ -7,19 +8,12 @@ import {waitForTransaction} from '@wagmi/core';
 import {Wallet, providers, utils} from 'ethers';
 import {privateKeyToAccount} from 'viem/accounts';
 import {useStorage, useSecureStorage} from 'hooks';
-import {
-  useContractRead,
-  useContractWrite,
-  useFeeData,
-  useSendTransaction,
-} from 'wagmi';
+import {useFeeData, useContractRead, useContractWrite} from 'wagmi';
 import {
   CONTRACT_ADDRESS,
   SUPPORTED_CHAINS,
   WithdrawalInterval,
 } from 'contracts/data';
-import {useSettings} from './SettingsProvider';
-import {walletClient} from './Providers';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [currentChain, setCurrentChain] =
@@ -28,9 +22,7 @@ export default function WalletProvider(props: WalletProviderProps) {
     return SUPPORTED_CHAINS[currentChain];
   }, [currentChain]);
 
-  const {activeCurrency} = useSettings();
   const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
-
   const {data: feeData} = useFeeData({formatUnits: 'ether', watch: true});
 
   const [avatar, updateAvatar] = useStorage<string>('avatar');
@@ -68,7 +60,8 @@ export default function WalletProvider(props: WalletProviderProps) {
   const getSavingsBalance = useContractRead({
     abi: factoryAbi,
     address: CONTRACT_ADDRESS,
-    enabled: !!account?.address,
+    enabled:
+      !!account?.address && !!isAddress(getSavingsWallet?.data as string),
     functionName: 'getWalletBalance',
     ...(!!account?.privateKey && {
       account: privateKeyToAccount(account?.privateKey),
@@ -185,6 +178,7 @@ export default function WalletProvider(props: WalletProviderProps) {
         const savingsTx = await depositIntoSavings.writeAsync({
           value: parseEther(amountSaved?.ether?.toString()),
         });
+        await getSavingsBalance?.refetch();
         await waitForTransaction({hash: savingsTx?.hash});
       }
 
@@ -227,6 +221,8 @@ export default function WalletProvider(props: WalletProviderProps) {
       const txnHash = await withdrawFromSavings?.writeAsync({
         args: [parseEther(amount)],
       });
+
+      await getSavingsBalance?.refetch();
       await waitForTransaction({hash: txnHash?.hash});
 
       Toast.show({
