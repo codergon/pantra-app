@@ -56,13 +56,7 @@ const WithdrawalInterval = () => {
                 underlayColor: 'transparent',
               },
             }}>
-            <View
-              style={[
-                styles.interval,
-                {
-                  borderColor: '#444',
-                },
-              ]}>
+            <View style={[styles.interval]}>
               <View
                 style={{
                   flexDirection: 'row',

@@ -178,8 +178,8 @@ export default function WalletProvider(props: WalletProviderProps) {
         const savingsTx = await depositIntoSavings.writeAsync({
           value: parseEther(amountSaved?.ether?.toString()),
         });
-        await getSavingsBalance?.refetch();
         await waitForTransaction({hash: savingsTx?.hash});
+        await getSavingsBalance?.refetch();
       }
 
       await waitForTransaction({hash: txnHash});
@@ -221,9 +221,9 @@ export default function WalletProvider(props: WalletProviderProps) {
       const txnHash = await withdrawFromSavings?.writeAsync({
         args: [parseEther(amount)],
       });
+      await waitForTransaction({hash: txnHash?.hash});
 
       await getSavingsBalance?.refetch();
-      await waitForTransaction({hash: txnHash?.hash});
 
       Toast.show({
         type: 'success',

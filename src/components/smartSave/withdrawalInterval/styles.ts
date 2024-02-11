@@ -1,3 +1,4 @@
+import {colors} from 'utils/Theming';
 import {padding} from 'helpers/styles';
 import {StyleSheet} from 'react-native';
 
@@ -7,10 +8,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     borderRadius: 14,
-    ...padding(10, 14),
+    ...padding(14, 14),
     flexDirection: 'row',
     alignItems: 'center',
+    borderColor: colors.border25,
     justifyContent: 'space-between',
+    backgroundColor: colors.accent1,
   },
 });
 
