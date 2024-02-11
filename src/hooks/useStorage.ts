@@ -50,12 +50,18 @@ export function useStorage<T>(key: string, defaultValue?: T): UseStateHook<T> {
   // Set
   const setValue = React.useCallback(
     (value: T | null = null) => {
-      storeStorageItemAsync(key, value || null).then(() => {
-        setState(value);
-      });
+      storeStorageItemAsync(key, value !== undefined ? value : null).then(
+        () => {
+          setState(value);
+        },
+      );
     },
     [key],
   );
 
-  return [state || defaultValue || null, setValue, isReady];
+  return [
+    state !== undefined ? state : defaultValue || null,
+    setValue,
+    isReady,
+  ];
 }

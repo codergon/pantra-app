@@ -1,26 +1,41 @@
-import React from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
-import {StyleSheet, View} from 'react-native';
-import Animated, {
-  withSpring,
-  useSharedValue,
-  useAnimatedStyle,
-  useAnimatedReaction,
-} from 'react-native-reanimated';
+import Icons from 'components/_common/Icons';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {useWallet} from 'providers/WalletProvider';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import Icons from 'components/_common/Icons';
+import Animated, {
+  runOnJS,
+  withSpring,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedReaction,
+} from 'react-native-reanimated';
 
 const SIZE = 76;
 
 export default function AnimatedBtn() {
-  const width = useSharedValue(0);
+  const width = layout.width - 58;
+  const rightOffset = width / 2 - SIZE / 2;
+  const leftOffset = -rightOffset;
+
+  const {
+    smartSavings,
+    getSavingsWallet,
+    toggleSmartSavings,
+    createSavingsWallet,
+  } = useWallet();
+
   const pressed = useSharedValue(false);
-  const offset = useSharedValue(-(layout.width - 58) / 2 + SIZE / 2);
+  const [swiped, setSwiped] = useState(false);
+  const [isAddingWallet, setIsAddingWallet] = useState(false);
+
+  const offset = useSharedValue(smartSavings ? rightOffset : leftOffset);
 
   const pan = Gesture.Pan()
     .onBegin(() => {
@@ -32,15 +47,13 @@ export default function AnimatedBtn() {
     .onFinalize(event => {
       offset.value = withSpring(
         // if btn is beyond half, snap to end
-        offset.value > 0
-          ? width.value / 2 - SIZE / 2
-          : -(width.value / 2) + SIZE / 2,
-
+        offset.value > 0 ? rightOffset : leftOffset,
         {
           overshootClamping: true,
         },
       );
       pressed.value = false;
+      if (!swiped) runOnJS(setSwiped)(true);
     });
 
   const animatedStyles = useAnimatedStyle(() => ({
@@ -51,23 +64,35 @@ export default function AnimatedBtn() {
     () => pressed.value,
     pressed => {
       if (!pressed) {
-        // console.log(offset.value, width.value / 2 - SIZE / 2);
+        runOnJS(setIsAddingWallet)(offset.value > 0);
       }
     },
   );
 
+  useEffect(() => {
+    if (swiped) {
+      toggleSmartSavings();
+    }
+  }, [isAddingWallet]);
+
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View
-        onLayout={e => {
-          width.value = e.nativeEvent.layout.width;
-        }}
-        style={styles.wrapper}>
-        <GestureDetector gesture={pan}>
-          <Animated.View style={[styles.box, animatedStyles]}>
-            <Icons.lighlink size={30} />
-          </Animated.View>
-        </GestureDetector>
+      <View style={styles.wrapper}>
+        {getSavingsWallet.isLoading || createSavingsWallet.isLoading ? (
+          <>
+            <Animated.View style={[styles.box, animatedStyles]}>
+              <ActivityIndicator size="small" color={colors.subText} />
+            </Animated.View>
+          </>
+        ) : (
+          <>
+            <GestureDetector gesture={pan}>
+              <Animated.View style={[styles.box, animatedStyles]}>
+                <Icons.lighlink size={30} />
+              </Animated.View>
+            </GestureDetector>
+          </>
+        )}
       </View>
     </GestureHandlerRootView>
   );

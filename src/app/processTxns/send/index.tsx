@@ -261,13 +261,13 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
           flex={0}
           accept={true}
           title="Send ETH"
-          disabled={!isValidAmount || !isValidAddress}
+          // disabled={!isValidAmount || !isValidAddress}
           onPress={() => {
             sendETH({
               to: toAddress,
               amount: amount,
             });
-            navigation.replace('Main', {screen: 'home'});
+            // navigation.replace('Main', {screen: 'home'});
           }}
         />
       </View>

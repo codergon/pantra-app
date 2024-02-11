@@ -1,28 +1,22 @@
-import Toast from 'react-native-toast-message';
-import {Wallet, providers, utils} from 'ethers';
-import {useStorage, useSecureStorage} from 'hooks';
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
-
-// =========================
-// import useInitialization from 'hooks/useInitialization';
-import {parseEther} from 'viem';
 import {IWallet} from 'typings/common';
-import {getSdkError} from '@walletconnect/utils';
-import {SessionTypes} from '@walletconnect/types';
-import {SignClientTypes} from '@walletconnect/types';
-import {EIP155_SIGNING_METHODS} from '../data/EIP155';
-import {handleDeepLinkRedirect} from '../utils/LinkingUtils';
-import {currentETHAddress, web3wallet, _pair} from '../utils/Web3WalletClient';
-
-const SUPPORTED_CHAINS = {
-  mainnet: 'phoenix.lightlink.io',
-  testnet: 'pegasus.lightlink.io',
-};
+import {factoryAbi} from 'contracts/abis';
+import {isAddress, parseEther} from 'viem';
+import Toast from 'react-native-toast-message';
+import React, {useState, useMemo} from 'react';
+import {waitForTransaction} from '@wagmi/core';
+import {Wallet, providers, utils} from 'ethers';
+import {privateKeyToAccount} from 'viem/accounts';
+import {useStorage, useSecureStorage} from 'hooks';
+import {useContractRead, useContractWrite} from 'wagmi';
+import {
+  CONTRACT_ADDRESS,
+  SUPPORTED_CHAINS,
+  WithdrawalInterval,
+} from 'contracts/data';
 
 export default function WalletProvider(props: WalletProviderProps) {
   const [currentChain, setCurrentChain] =
     useState<keyof typeof SUPPORTED_CHAINS>('testnet');
-
   const currentRPC = useMemo(() => {
     return SUPPORTED_CHAINS[currentChain];
   }, [currentChain]);
@@ -32,15 +26,64 @@ export default function WalletProvider(props: WalletProviderProps) {
   const [account, setAccount, isAcctReady] =
     useSecureStorage<IWallet>('account');
 
-  // setAccount();
-
-  const [txnPending, setTxnPending] = useState(false);
-
   const provider = new providers.JsonRpcProvider(
     `https://replicator.${currentRPC}/rpc/vl`,
   );
 
+  // Smart Savings
+  const [smartSavings, setSmartSavings] = useStorage<boolean>(
+    'smartSavings',
+    false,
+  );
+
+  const getSavingsWallet = useContractRead({
+    abi: factoryAbi,
+    functionName: 'getWallet',
+    address: CONTRACT_ADDRESS,
+    enabled: !!account?.address,
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+    }),
+  });
+
+  // Generate a savings contract from the factory
+  const createSavingsWallet = useContractWrite({
+    gasPrice: 0n,
+    abi: factoryAbi,
+    address: CONTRACT_ADDRESS,
+    functionName: 'createWallet',
+    args: [WithdrawalInterval.DAILY],
+    ...(!!account?.privateKey && {
+      account: privateKeyToAccount(account?.privateKey as `0x${string}`),
+    }),
+  });
+
+  // Toggle Smart Savings
+  const toggleSmartSavings = async () => {
+    if (smartSavings) {
+      setSmartSavings(false);
+    } else {
+      try {
+        if (!isAddress(getSavingsWallet?.data as string)) {
+          const txnHash = await createSavingsWallet?.writeAsync();
+          const data = await waitForTransaction({
+            hash: txnHash?.hash,
+          });
+
+          await getSavingsWallet!.refetch();
+
+          setSmartSavings(true);
+        } else {
+          setSmartSavings(true);
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  };
+
   // Send ETH
+  const [txnPending, setTxnPending] = useState(false);
   const sendETH = async ({to, amount}: SendETHProps) => {
     setTxnPending(true);
     try {
@@ -125,28 +168,7 @@ export default function WalletProvider(props: WalletProviderProps) {
     }
   };
 
-  // ==================================================================
-  // const initialized = useInitialization();
-
-  // useEffect(() => {
-  //   console.log('Web3WalletSDK initialized:', initialized);
-  // }, [initialized]);
-
-  // Modal Visible State
-  const [approvalModal, setApprovalModal] = useState(false);
-  const [signModal, setSignModal] = useState(false);
-  const [signTypedDataModal, setSignTypedDataModal] = useState(false);
-  const [sendTransactionModal, setSendTransactionModal] = useState(false);
-  const [copyDialog, setCopyDialog] = useState(false);
-  const [successPair, setSuccessPair] = useState(false);
-
-  // Pairing State
-  const [pairedProposal, setPairedProposal] =
-    useState<SignClientTypes.EventArguments['session_proposal']>();
-
-  const [requestEventData, setRequestEventData] = useState();
-  const [requestSession, setRequestSession] = useState();
-
+  // Update account
   const updateAccount = async (
     key: keyof IWallet,
     value: IWallet[keyof IWallet],
@@ -154,134 +176,15 @@ export default function WalletProvider(props: WalletProviderProps) {
     setAccount({...account, [key]: value} as IWallet);
   };
 
-  async function pair(uri: string) {
-    const pairing = await _pair({uri});
-    setCopyDialog(false);
-
-    // @notice iOS has an issue with modals, so we need to delay the approval modal
-    setTimeout(() => {
-      setApprovalModal(true);
-    }, 1200);
-    return pairing;
-  }
-
-  async function handleAccept() {
-    const {id, params} = pairedProposal;
-    const {requiredNamespaces, relays} = params;
-
-    if (pairedProposal) {
-      const namespaces: SessionTypes.Namespaces = {};
-      Object.keys(requiredNamespaces).forEach(key => {
-        const accounts: string[] = [];
-        requiredNamespaces[key].chains.map(chain => {
-          [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
-        });
-
-        namespaces[key] = {
-          accounts,
-          methods: requiredNamespaces[key].methods,
-          events: requiredNamespaces[key].events,
-        };
-      });
-
-      const session = await web3wallet.approveSession({
-        id,
-        relayProtocol: relays[0].protocol,
-        namespaces,
-      });
-
-      setApprovalModal(false);
-      setSuccessPair(true);
-
-      const sessionMetadata = session?.peer?.metadata;
-      handleDeepLinkRedirect(sessionMetadata?.redirect);
-    }
-  }
-
-  const handleCancel = () => {
-    setCopyDialog(false);
-  };
-
-  async function handleDecline() {
-    setApprovalModal(false);
-
-    if (!pairedProposal) {
-      return;
-    }
-
-    web3wallet.rejectSession({
-      id: pairedProposal.id,
-      reason: getSdkError('USER_REJECTED_METHODS'),
-    });
-  }
-
-  const onSessionProposal = useCallback(
-    (proposal: SignClientTypes.EventArguments['session_proposal']) => {
-      setPairedProposal(proposal);
-    },
-    [],
-  );
-
-  const onSessionRequest = useCallback(
-    async (requestEvent: SignClientTypes.EventArguments['session_request']) => {
-      const {topic, params} = requestEvent;
-      const {request} = params;
-      const requestSessionData =
-        web3wallet.engine.signClient.session.get(topic);
-
-      switch (request.method) {
-        case EIP155_SIGNING_METHODS.ETH_SIGN:
-        case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-          setRequestSession(requestSessionData);
-          setRequestEventData(requestEvent);
-          setSignModal(true);
-          return;
-
-        case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
-        case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
-        case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
-          setRequestSession(requestSessionData);
-          setRequestEventData(requestEvent);
-          setSignTypedDataModal(true);
-          return;
-        case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-        case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-          setRequestSession(requestSessionData);
-          setRequestEventData(requestEvent);
-          setSendTransactionModal(true);
-          return;
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (
-      copyDialog ||
-      approvalModal ||
-      signTypedDataModal ||
-      signModal ||
-      sendTransactionModal
-    ) {
-      web3wallet.on('session_proposal', onSessionProposal);
-      web3wallet.on('session_request', onSessionRequest);
-    }
-  }, [
-    approvalModal,
-    copyDialog,
-    signModal,
-    signTypedDataModal,
-    sendTransactionModal,
-    requestEventData,
-    requestSession,
-    onSessionProposal,
-    onSessionRequest,
-    successPair,
-  ]);
-
   return (
     <WalletContext.Provider
       value={{
+        smartSavings,
+        setSmartSavings,
+        toggleSmartSavings,
+        getSavingsWallet,
+        createSavingsWallet,
+
         account,
         isAddingWallet,
         initialized: true,
@@ -316,6 +219,12 @@ interface CreateWalletProps {
 }
 
 interface WalletContext {
+  smartSavings: boolean | null;
+  setSmartSavings: (value: boolean) => void;
+  toggleSmartSavings: () => Promise<void>;
+  getSavingsWallet: ReturnType<typeof useContractRead>;
+  createSavingsWallet: ReturnType<typeof useContractWrite>;
+
   currentRPC: string;
 
   avatar: string;

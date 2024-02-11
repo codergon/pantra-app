@@ -30,6 +30,10 @@
       "sha1": "9fb55eea582d60f4779388be3102a731aecad62f"
     },
     {
+      "path": "src/assets/images/grads/blur.png",
+      "sha1": "60a2cd695f416aef9521355e3f4efc9801445e16"
+    },
+    {
       "path": "src/assets/images/icon.png",
       "sha1": "e9585b4d09a6d8eafd4bb7e3bc0380ae47223441"
     },
@@ -54,8 +58,8 @@
       "sha1": "744cec58232ab08483f5e69f98ee326c4f29c35e"
     },
     {
-      "path": "src/assets/lotties/pulse.json",
-      "sha1": "3d7dfc1362c8dc0b6a0549ec2d4c58c821d42da1"
+      "path": "src/assets/lotties/wave.json",
+      "sha1": "979f9d6336d21a848a96b1c39ecd6f63cd6758d0"
     }
   ]
 }

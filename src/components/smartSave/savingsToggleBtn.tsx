@@ -1,35 +1,64 @@
+import {Fragment} from 'react';
 import {colors} from 'utils/Theming';
 import AnimatedBtn from './AnimatedBtn';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'components/_ui/typography';
-import {ChevronRight} from 'lucide-react-native';
+import {useWallet} from 'providers/WalletProvider';
+import {ChevronLeft, ChevronRight} from 'lucide-react-native';
+
+const BackgroundText = () => {
+  const {smartSavings} = useWallet();
+
+  return (
+    <View style={styles.btnBG}>
+      <Text style={styles.btnBG_text}>
+        Turn {smartSavings ? 'off' : 'on'} smart savings
+      </Text>
+      <View
+        style={[
+          styles.btnBG_icons,
+          {
+            ...(smartSavings ? {left: 20} : {right: 20}),
+          },
+        ]}>
+        {[1, 2, 3].map((_, i) => {
+          return (
+            <Fragment key={i}>
+              {smartSavings ? (
+                <ChevronLeft
+                  size={20}
+                  color={
+                    i === 0
+                      ? colors.subText1
+                      : i === 1
+                      ? colors.subText2
+                      : colors.white
+                  }
+                  style={{marginRight: -12}}
+                />
+              ) : (
+                <ChevronRight
+                  size={20}
+                  color={
+                    i === 0
+                      ? colors.subText1
+                      : i === 1
+                      ? colors.subText2
+                      : colors.white
+                  }
+                  style={{marginRight: -12}}
+                />
+              )}
+            </Fragment>
+          );
+        })}
+      </View>
+    </View>
+  );
+};
 
 const SavingsToggleBtn = () => {
-  const BackgroundText = () => {
-    return (
-      <View style={styles.btnBG}>
-        <Text style={styles.btnBG_text}>Turn on smart savings</Text>
-        <View style={styles.btnBG_icons}>
-          {[1, 2, 3].map((_, i) => {
-            return (
-              <ChevronRight
-                key={i}
-                size={20}
-                color={
-                  i === 0
-                    ? colors.subText1
-                    : i === 1
-                    ? colors.subText2
-                    : colors.white
-                }
-                style={{marginRight: -12}}
-              />
-            );
-          })}
-        </View>
-      </View>
-    );
-  };
+  const {smartSavings, getSavingsWallet, toggleSmartSavings} = useWallet();
 
   return (
     <>
@@ -86,7 +115,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   btnBG_icons: {
-    right: 20,
     position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',

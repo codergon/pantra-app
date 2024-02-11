@@ -62,10 +62,10 @@ const WalletFromPrivateKey = ({
           <View style={[styles.content]}>
             <View style={[styles.input_container]}>
               <Input
-                multiline
                 autoFocus
                 value={privateKey}
                 style={[styles.input]}
+                secureTextEntry={true}
                 placeholder="64-character private key"
                 onChangeText={text => setPrivateKey(text)}
               />

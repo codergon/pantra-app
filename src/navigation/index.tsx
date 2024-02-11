@@ -289,7 +289,6 @@ function RootNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName="Main"
       screenOptions={{
         headerShown: false,
       }}>
@@ -308,6 +307,10 @@ function RootNavigator() {
           <Stack.Screen name="Main" component={BottomTabNavigator} />
 
           <Stack.Group>
+            <Stack.Screen name="sendETH" component={SendETH} />
+          </Stack.Group>
+
+          <Stack.Group>
             <Stack.Screen
               component={EnterPasscode}
               name="enterPasscodeInitial"
@@ -318,10 +321,6 @@ function RootNavigator() {
 
           <Stack.Group>
             <Stack.Screen name="NFTpreview" component={NFTPreview} />
-          </Stack.Group>
-
-          <Stack.Group>
-            <Stack.Screen name="sendETH" component={SendETH} />
           </Stack.Group>
 
           <Stack.Group>

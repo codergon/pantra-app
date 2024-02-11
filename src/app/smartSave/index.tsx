@@ -1,19 +1,23 @@
+import {isAddress} from 'viem';
 import {styles} from './styles';
 import {View} from 'react-native';
 import {colors} from 'utils/Theming';
 import {Container} from 'components/_ui/custom';
 import FastImage from 'react-native-fast-image';
+import {useWallet} from 'providers/WalletProvider';
 import {BdText, Text} from 'components/_ui/typography';
 import WithdrawalInterval from 'components/smartSave/withdrawalInterval';
 import SavingsToggleBtn from '../../components/smartSave/savingsToggleBtn';
 
 const SmartSave = () => {
+  const {getSavingsWallet} = useWallet();
+
   return (
     <Container paddingTop={10} style={[styles.container]}>
       <View style={[styles.header]}>
         <Text style={{fontSize: 30}}>Smart savings</Text>
         <Text style={{fontSize: 16, color: colors.subText1, lineHeight: 24}}>
-          Save money on from your transactions
+          Automatically save fractions of your transactions
         </Text>
       </View>
 
@@ -53,7 +57,7 @@ const SmartSave = () => {
         <SavingsToggleBtn />
       </View>
 
-      <WithdrawalInterval />
+      {isAddress(getSavingsWallet?.data as string) && <WithdrawalInterval />}
     </Container>
   );
 };

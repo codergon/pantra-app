@@ -1,7 +1,8 @@
 import 'react-native-get-random-values';
+import '@ethersproject/shims';
+
 import 'react-native-url-polyfill/auto';
 import '@walletconnect/react-native-compat';
-import '@ethersproject/shims';
 
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';

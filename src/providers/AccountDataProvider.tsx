@@ -70,7 +70,8 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
     async () => {
       const nfts: INFTItem[] = await axios
         .get(
-          `https://${currentRPC}/api/v2/addresses/${account?.address}/nft/collections?type=`,
+          // `https://${currentRPC}/api/v2/addresses/${account?.address}/nft/collections?type=`,
+          `https://${currentRPC}/api/v2/addresses/${'0xb54966096068c54788928658E6d96457d48C9802'}/nft/collections?type=`,
         )
         .then(res => res.data.items);
 
@@ -136,8 +137,6 @@ export default function AccountDataProvider(props: AccountDataProviderProps) {
       refetchOnWindowFocus: false,
     },
   );
-
-  console.log(JSON.stringify(tokenTransfers?.data?.[0], null, 2));
 
   // Filter txns based on search and filter
   const filteredTxns = useMemo(() => {

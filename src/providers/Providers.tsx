@@ -13,13 +13,16 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {
   DarkTheme,
-  NavigationContainer,
   ThemeProvider,
+  NavigationContainer,
 } from '@react-navigation/native';
 
+import {WagmiConfig} from 'wagmi';
 import {WC_PROJECT_ID} from '@env';
+import {createWalletClient, http} from 'viem';
 import {lightlink} from 'utils/LightLinkChain';
-import {WagmiConfig, useWalletClient} from 'wagmi';
+import {MockConnector} from '@wagmi/core/connectors/mock';
+import {TESTNET_RPC_URL, ZERO_ADDRESS} from 'contracts/data';
 import {defaultWagmiConfig} from '@web3modal/wagmi-react-native';
 
 dayjs.extend(duration);
@@ -27,13 +30,24 @@ const queryClient = new QueryClient();
 
 // Wagmi Config
 const chains = [lightlink];
-const wagmiConfig = defaultWagmiConfig({
+export const walletClient = createWalletClient({
+  chain: lightlink,
+  account: ZERO_ADDRESS,
+  transport: http(TESTNET_RPC_URL),
+});
+const connector = new MockConnector({
+  chains,
+  options: {
+    chainId: 1891,
+    walletClient,
+  },
+});
+export const wagmiConfig = defaultWagmiConfig({
   chains,
   projectId: WC_PROJECT_ID,
   enableWalletConnect: false,
+  extraConnectors: [connector],
 });
-
-useWalletClient;
 
 const Providers = () => {
   return (

@@ -4,8 +4,8 @@ module.exports = {
     [
       'module:react-native-dotenv',
       {
-        moduleName: '@env',
         path: '.env',
+        moduleName: '@env',
       },
     ],
     [
@@ -14,6 +14,7 @@ module.exports = {
         alias: {
           app: './src/app',
           lib: './src/lib',
+          data: './src/data',
           utils: './src/utils',
           hooks: './src/hooks',
           assets: './src/assets',
@@ -21,6 +22,7 @@ module.exports = {
           typings: './src/types',
           layouts: './src/layouts',
           helpers: './src/helpers',
+          contracts: './src/contracts',
           providers: './src/providers',
           constants: './src/constants',
           navigation: './src/navigation',

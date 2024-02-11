@@ -11,7 +11,8 @@
     "assets": "npx react-native-asset",
     "android": "react-native run-android",
     "ios:15": "react-native start --port 8089 --simulator \"iPhone 15 Pro Max\"",
-    "setup": "yarn && cd ios && rm -rf ./build && cd .. && npx pod-install && npx react-native start"
+    "setup": "yarn && cd ios && rm -rf ./build && cd .. && npx pod-install && npx react-native start",
+    "setup:android": "adb reverse tcp:8081 tcp:8081 && yarn react-native run-android"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.7.0",

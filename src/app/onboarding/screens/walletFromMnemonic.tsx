@@ -64,9 +64,9 @@ const WalletFromMnemonic = ({
           <View style={[styles.content]}>
             <View style={[styles.input_container]}>
               <Input
-                multiline
                 autoFocus
                 value={mnemonic}
+                secureTextEntry={true}
                 style={[styles.input]}
                 placeholder="12-word recovery phrase"
                 onChangeText={text => setMnemonic(text)}
