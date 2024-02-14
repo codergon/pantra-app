@@ -4,6 +4,7 @@ import App from '../App';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import WalletProvider from './WalletProvider';
+import SessionProvider from './SessionProvider';
 import SettingsProvider from './SettingsProvider';
 import AppToast from 'components/_common/appToast';
 import {MenuProvider} from 'react-native-popup-menu';
@@ -58,16 +59,18 @@ const Providers = () => {
             <NavigationContainer theme={DarkTheme}>
               <SettingsProvider>
                 <WalletProvider>
-                  <AccountDataProvider>
-                    <MenuProvider>
-                      <GestureHandlerRootView style={{flex: 1}}>
-                        <>
-                          <App />
-                          <AppToast />
-                        </>
-                      </GestureHandlerRootView>
-                    </MenuProvider>
-                  </AccountDataProvider>
+                  <SessionProvider>
+                    <AccountDataProvider>
+                      <MenuProvider>
+                        <GestureHandlerRootView style={{flex: 1}}>
+                          <>
+                            <App />
+                            <AppToast />
+                          </>
+                        </GestureHandlerRootView>
+                      </MenuProvider>
+                    </AccountDataProvider>
+                  </SessionProvider>
                 </WalletProvider>
               </SettingsProvider>
             </NavigationContainer>

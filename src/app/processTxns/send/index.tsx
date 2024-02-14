@@ -32,9 +32,7 @@ const SendETH = ({route, navigation}: RootStackScreenProps<'sendETH'>) => {
 
   const inputRef = useRef<TextInput>(null);
   const [amount, setAmount] = useState('');
-  const [toAddress, setToAddress] = useState(
-    '0x965700b261B5726fF1c813B42AA08Fc8ddB6eF4f',
-  );
+  const [toAddress, setToAddress] = useState('');
   const isValidAddress = useMemo(() => isAddress(toAddress), [toAddress]);
 
   useEffect(() => {

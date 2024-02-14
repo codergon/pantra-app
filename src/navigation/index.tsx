@@ -49,11 +49,15 @@ import SelectActionModal from 'app/modals/selectActionModal';
 import SendETH from 'app/processTxns/send';
 import {useWallet} from 'providers/WalletProvider';
 import {useSettings} from 'providers/SettingsProvider';
+import CustmBackdrop from 'components/modals/custmBackdrop';
+import {useSession} from 'providers/SessionProvider';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 const BottomSheet = createBottomSheetNavigator<BottomSheetParams>();
+
+const EmptyComponent = () => <></>;
 
 // BottomTab Icons
 function TabBarIcon(props: {
@@ -111,6 +115,7 @@ export default function Navigation() {
 // Bottom Sheet Navigator
 const BottomSheetNavigator = () => {
   const insets = useSafeAreaInsets();
+  const {pendingPair, declinePair} = useSession();
 
   return (
     <BottomSheet.Navigator
@@ -242,14 +247,15 @@ const BottomSheetNavigator = () => {
         name="pairModal"
         component={PairModal}
         options={{
+          onDismiss: () => {
+            // if (pendingPair) declinePair(false);
+          },
           detached: true,
           snapPoints: [330],
           enableOverDrag: false,
           handleComponent: null,
-          backdropComponent: null,
           bottomInset: insets.bottom,
-          enableDismissOnClose: false,
-          enablePanDownToClose: false,
+          enableDismissOnClose: true,
           style: {marginHorizontal: 16},
           handleIndicatorStyle: {backgroundColor: colors.modalHandle},
           backgroundComponent: props => (
@@ -304,6 +310,7 @@ function RootNavigator() {
         </>
       ) : (
         <Stack.Group>
+          {/* <Stack.Screen name="sessions" component={ActiveSessions} /> */}
           <Stack.Screen name="Main" component={BottomTabNavigator} />
 
           <Stack.Screen name="sendETH" component={SendETH} />
@@ -353,11 +360,9 @@ function BottomTabNavigator() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
-  const EmptyTab = () => <></>;
-
   return (
     <BottomTab.Navigator
-      initialRouteName="smartSave"
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -393,7 +398,7 @@ function BottomTabNavigator() {
 
       <BottomTab.Screen
         name="tabBtn"
-        component={EmptyTab}
+        component={EmptyComponent}
         options={() => ({
           tabBarButton: () => (
             <TouchableOpacity

@@ -1,27 +1,21 @@
 import {colors} from 'utils/Theming';
 import {StyleSheet, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {RgText, Text} from 'components/_ui/typography';
-import FastImage, {Source} from 'react-native-fast-image';
 
 interface IModalHeaderProps {
   name: string;
   url: string;
-  icon: Source;
+  icon: string;
 }
 
 const ModalHeader = ({name, url, icon}: IModalHeaderProps) => {
   return (
     <View style={styles.platformDetails}>
-      <View
-        style={[
-          styles.imageContainer,
-          {
-            padding: 6,
-          },
-        ]}>
+      <View style={[styles.imageContainer]}>
         <FastImage
           resizeMode="cover"
-          source={icon}
+          source={{uri: icon}}
           style={[styles.platformImage]}
         />
       </View>

@@ -3,6 +3,7 @@ import {colors} from 'utils/Theming';
 import layout from 'constants/layout';
 import {useEffect, useState} from 'react';
 import {extractEthAddress} from 'utils/HelperUtils';
+import {useSession} from 'providers/SessionProvider';
 import {CameraOff, Scan, X} from 'lucide-react-native';
 import {RgText, Text} from 'components/_ui/typography';
 import {useNavigation} from '@react-navigation/native';
@@ -20,22 +21,22 @@ import {
 const ScanQR = ({route}: RootStackScreenProps<'scanQR'>) => {
   const scanAddress = route.params?.scanAddress;
 
+  const {pairWithURI} = useSession();
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const insets = useSafeAreaInsets();
   const device = useCameraDevice('back');
+  const [wcUri, setWcUri] = useState('');
   const [isActive, setIsActive] = useState(true);
   const {hasPermission, requestPermission} = useCameraPermission();
-
-  useEffect(() => {
-    requestPermission();
-  }, []);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: codes => {
       if (scanAddress) {
         try {
+          // check if the value of any of the codes is an ethereum address
           const address = codes.find(code =>
             isAddress(extractEthAddress(code.value ?? '')),
           );
@@ -47,17 +48,28 @@ const ScanQR = ({route}: RootStackScreenProps<'scanQR'>) => {
           }
         } catch (e) {}
       } else {
-        // check if the value of any of the codes is a wallet connect uri
-        const wcUri = codes.find(code => code.value?.includes('wc:'));
+        try {
+          // check if the value of any of the codes is a wallet connect uri
+          const wcUri = codes.find(code => code.value?.includes('wc:'));
 
-        if (wcUri) {
-          setIsActive(false);
-          console.log(JSON.stringify(wcUri?.value, null, 2));
-          // navigation.navigate('connectWallet', {uri: wcUri?.value});
-        }
+          if (wcUri) {
+            setIsActive(false);
+            setWcUri(wcUri.value!);
+          }
+        } catch (e) {}
       }
     },
   });
+
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
+  useEffect(() => {
+    if (!isActive && !scanAddress && wcUri) {
+      pairWithURI({uri: wcUri!});
+    }
+  }, [isActive, scanAddress]);
 
   const renderCamera = () => {
     return (

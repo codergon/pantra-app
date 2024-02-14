@@ -42,7 +42,7 @@ const SecuritySettings = () => {
             icon: <ShieldCheck size={18} weight="bold" color={colors.white} />,
             onSwitch: () => {
               if (passcode) {
-                navigation.navigate('enterPasscode', {isReset: true});
+                navigation.navigate('enterPasscodeInitial', {isReset: true});
               } else {
                 navigation.navigate('createPasscode');
               }

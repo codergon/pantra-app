@@ -7,7 +7,7 @@ const CustomBackground: React.FC<
   BottomSheetBackgroundProps & {
     borderRadius?: number;
   }
-> = ({style, borderRadius = 32, animatedIndex}) => {
+> = ({style, borderRadius = 32}) => {
   const containerStyle = useMemo(() => [style], [style]);
 
   return (
