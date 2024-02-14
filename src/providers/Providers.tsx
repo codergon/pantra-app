@@ -25,6 +25,9 @@ import {lightlink} from 'utils/LightLinkChain';
 import {MockConnector} from '@wagmi/core/connectors/mock';
 import {TESTNET_RPC_URL, ZERO_ADDRESS} from 'contracts/data';
 import {defaultWagmiConfig} from '@web3modal/wagmi-react-native';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 dayjs.extend(duration);
 const queryClient = new QueryClient();

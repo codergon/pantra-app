@@ -3,13 +3,12 @@ import Session from './session';
 import {colors} from 'utils/Theming';
 import {isValidUrl} from 'utils/HelperUtils';
 import {Container} from 'components/_ui/custom';
+import FullBtn from 'components/shared/fullBtn';
 import BackBtn from 'components/_common/backBtn';
 import {useSession} from 'providers/SessionProvider';
 import {useNavigation} from '@react-navigation/native';
 import {Header, RgText, Text} from 'components/_ui/typography';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
-import FullBtn from 'components/shared/fullBtn';
-import {AcceptRejectButton} from 'components/shared/AcceptRejectButton';
 
 const ActiveSessions = () => {
   const navigation = useNavigation();

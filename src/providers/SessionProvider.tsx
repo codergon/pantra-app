@@ -122,7 +122,7 @@ export default function SessionProvider(props: SessionProviderProps) {
           id: pairedProposal?.id,
           namespaces: {
             eip155: {
-              chains: ['eip155:1', 'eip155:3', 'eip155:5'],
+              chains: ['eip155:1', 'eip155:5', 'eip155:1891'],
               events: ['eth_subscription'],
               methods: [
                 'eth_sign',
@@ -131,7 +131,7 @@ export default function SessionProvider(props: SessionProviderProps) {
                 'eth_sendTransaction',
                 'eth_signTransaction',
               ],
-              accounts: ['eip155:1:', 'eip155:3:', 'eip155:5:'].map(
+              accounts: ['eip155:1:', 'eip155:5:', 'eip155:1891:'].map(
                 chainId => chainId + account?.address!,
               ),
             },

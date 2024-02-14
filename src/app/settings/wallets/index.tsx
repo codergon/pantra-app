@@ -1,6 +1,6 @@
 import {styles} from './styles';
-import WalletItem from './walletItem';
 import {colors} from 'utils/Theming';
+import WalletItem from './walletItem';
 import {ScrollView, View} from 'react-native';
 import FullBtn from 'components/shared/fullBtn';
 import {Container} from 'components/_ui/custom';
