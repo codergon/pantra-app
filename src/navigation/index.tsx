@@ -48,9 +48,8 @@ import SelectActionModal from 'app/modals/selectActionModal';
 
 import SendETH from 'app/processTxns/send';
 import {useWallet} from 'providers/WalletProvider';
-import {useSettings} from 'providers/SettingsProvider';
-import CustmBackdrop from 'components/modals/custmBackdrop';
 import {useSession} from 'providers/SessionProvider';
+import {useSettings} from 'providers/SettingsProvider';
 
 // Navigators
 const Stack = createNativeStackNavigator<RootStackParamList>();

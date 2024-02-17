@@ -22,9 +22,6 @@ export default function SettingsProvider({children}: SettingsProviderProps) {
     activeCurrency: currencies[0],
   });
 
-  // setPasscode();
-  // setSettings();
-
   useEffect(() => {
     (async () => {
       if (!settings?.biometrics || isBiometricsSupported) return;

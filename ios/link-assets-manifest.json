@@ -10,48 +10,64 @@
       "sha1": "b3503e9f9e91486282359501075343778fdc4a2e"
     },
     {
-      "path": "src/assets/images/adaptive-icon.png",
-      "sha1": "e9585b4d09a6d8eafd4bb7e3bc0380ae47223441"
-    },
-    {
       "path": "src/assets/images/favicon.png",
       "sha1": "53bc1c90657d82aa82c6fb56f3bcc96c334c39ed"
-    },
-    {
-      "path": "src/assets/images/grads/1.png",
-      "sha1": "454ae2e51ed5ed7305281586105fdacedc34d347"
-    },
-    {
-      "path": "src/assets/images/grads/2.png",
-      "sha1": "848fd3fc4d4ceab07109dedabff03538978d286b"
-    },
-    {
-      "path": "src/assets/images/grads/3.png",
-      "sha1": "9fb55eea582d60f4779388be3102a731aecad62f"
     },
     {
       "path": "src/assets/images/grads/blur.png",
       "sha1": "60a2cd695f416aef9521355e3f4efc9801445e16"
     },
     {
+      "path": "src/assets/images/grads/grad1.png",
+      "sha1": "454ae2e51ed5ed7305281586105fdacedc34d347"
+    },
+    {
       "path": "src/assets/images/icon.png",
       "sha1": "e9585b4d09a6d8eafd4bb7e3bc0380ae47223441"
     },
     {
-      "path": "src/assets/images/masks/mask-1.png",
+      "path": "src/assets/images/masks/mask1.png",
       "sha1": "e41f5788588802922e134453b2d137c2c3f36dd8"
     },
     {
-      "path": "src/assets/images/masks/mask-2.png",
+      "path": "src/assets/images/masks/mask2.png",
       "sha1": "060a7815ac6e8c017cf425a7b951a03a8946b9da"
     },
     {
-      "path": "src/assets/images/masks/mask-3.png",
+      "path": "src/assets/images/masks/mask3.png",
       "sha1": "231c651c66ca26c7c91e09a02eab3c7550b10971"
     },
     {
-      "path": "src/assets/images/screenshot.png",
-      "sha1": "f9ce06d5e590dbd614731afc2c07af715698cac8"
+      "path": "src/assets/images/preview/banner.png",
+      "sha1": "426c0ba23987cbeebf700eb053434c31bbd00514"
+    },
+    {
+      "path": "src/assets/images/preview/preview1.png",
+      "sha1": "74c437ea39cd4391a222a894eb1989ebbba41495"
+    },
+    {
+      "path": "src/assets/images/preview/preview2.png",
+      "sha1": "0d12226a8fd51996b6dd996d8f90e826eb3290b2"
+    },
+    {
+      "path": "src/assets/images/preview/preview3.png",
+      "sha1": "c70eb8036d4dc2f21c7fb67f27bf639704f42044"
+    },
+    {
+      "path": "src/assets/images/preview/preview4.png",
+      "sha1": "728e399ff66c6fca9bce3b34300944d6cc2bafe1"
+    },
+    {
+      "path": "src/assets/images/preview/preview5.png",
+      "sha1": "46e45914dcab69786835c6fa5a8dd01b5fb83500"
+    },
+    {
+      "path": "src/assets/images/preview/preview6.png",
+      "sha1": "1382d38c4016b5946406c82559ab876c594390b4"
+    },
+    {
+      "path": "src/assets/images/preview/preview7.png",
+      "sha1": "029bd62b27ad61a5924baa19b4fb4fb3a40161ef"
     },
     {
       "path": "src/assets/images/splash.png",

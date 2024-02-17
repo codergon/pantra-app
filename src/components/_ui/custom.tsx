@@ -1,3 +1,4 @@
+import {StatusBar} from 'react-native';
 import {
   View,
   ViewProps,
@@ -9,6 +10,7 @@ import {
   SafeAreaViewProps,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import {colors} from 'utils/Theming';
 
 export function SafeAreaView(props: SafeAreaViewProps & ThemeProps) {
   const {style, lightColor, darkColor, ...otherProps} = props;
@@ -64,6 +66,7 @@ export function Container(
         },
         style,
       ]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       {props.children}
     </View>
   );

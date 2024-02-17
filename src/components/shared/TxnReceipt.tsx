@@ -86,7 +86,7 @@ const TxnReceipt = ({txnData}: TxnDetailsProps) => {
                       <FastImage
                         resizeMode={FastImage.resizeMode.cover}
                         style={[{width: '100%', height: '100%'}]}
-                        source={require('assets/images/masks/mask-2.png')}
+                        source={require('assets/images/masks/mask2.png')}
                       />
                     </>
                   )}

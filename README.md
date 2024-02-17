@@ -42,13 +42,13 @@ yarn setup:android
 <table>
   <tr>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/2.png" />
+      <img src="./src/assets/images/preview/preview2.png" />
     </td>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/3.png" />
+      <img src="./src/assets/images/preview/preview3.png" />
     </td>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/4.png" />
+      <img src="./src/assets/images/preview/preview4.png" />
     </td>
   </tr>
 </table>
@@ -56,13 +56,13 @@ yarn setup:android
 <table>
   <tr>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/5.png" />
+      <img src="./src/assets/images/preview/preview5.png" />
     </td>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/6.png" />
+      <img src="./src/assets/images/preview/preview6.png" />
     </td>
     <td width="33%" style='border: none'>
-      <img src="./src/assets/images/preview/7.png" />
+      <img src="./src/assets/images/preview/preview7.png" />
     </td>
   </tr>
 </table>

@@ -6,10 +6,11 @@ import {useWallet} from './WalletProvider';
 import {Network, Alchemy} from 'alchemy-sdk';
 import currencies from 'constants/currencies';
 import {useSettings} from './SettingsProvider';
-import React, {useEffect, useMemo, useState} from 'react';
-import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {INFTItem, IERC20Tokens, ITransaction} from 'typings/common';
 import {TransactionReceipt} from 'typings/txns';
+import {INFTItem, IERC20Tokens} from 'typings/common';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {useQuery, UseQueryResult} from '@tanstack/react-query';
 
 export const alchemy = new Alchemy({
   apiKey: ALCHEMY_API_KEY,
@@ -17,13 +18,15 @@ export const alchemy = new Alchemy({
 });
 
 export default function AccountDataProvider(props: AccountDataProviderProps) {
+  const {isConnected} = useNetInfo();
+
   const {account, setAccount, currentRPC, ethPrices, setEthPrices} =
     useWallet();
   const {setSettings, setPasscode, activeCurrency, useJazzicons} =
     useSettings();
 
   const queryEnabled = useMemo(() => {
-    return !!account?.address;
+    return !!account?.address && !!isConnected;
   }, [account?.address]);
 
   const [txnSearch, setTxnSearch] = useState('');

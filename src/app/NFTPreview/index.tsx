@@ -51,7 +51,7 @@ const NFTpreview = ({route}: RootStackScreenProps<'NFTpreview'>) => {
                 <FastImage
                   resizeMode={FastImage.resizeMode.cover}
                   style={[{width: '100%', height: '100%'}]}
-                  source={require('assets/images/masks/mask-1.png')}
+                  source={require('assets/images/masks/mask1.png')}
                 />
               </>
             )}
@@ -75,7 +75,7 @@ const NFTpreview = ({route}: RootStackScreenProps<'NFTpreview'>) => {
                   <FastImage
                     resizeMode={FastImage.resizeMode.cover}
                     style={[{width: '100%', height: '100%'}]}
-                    source={require('assets/images/masks/mask-1.png')}
+                    source={require('assets/images/masks/mask1.png')}
                   />
                 </>
               )}
