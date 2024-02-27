@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Android Application (.apk)
+        run: yarn release:android
+
+      - name: List the .apks compiled
+        run: ls ./android/app/build/outputs/apk/release/ -hal
+
+      - name: Rename the .apk to the tag version
+        run: mv ./android/app/build/outputs/apk/release/app-universal-release.apk ./android/app/build/outputs/apk/release/pantra_${{ github.ref_name }}.apk
+
+      # todo: sign apks to verify authenticity
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: ./android/app/build/outputs/apk/release
+          retention-days: 3
