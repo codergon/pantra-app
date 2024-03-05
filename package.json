@@ -10,6 +10,7 @@
     "postinstall": "patch-package",
     "assets": "npx react-native-asset",
     "android": "react-native run-android",
+    "release:android": "cd android && ./gradlew assembleRelease",
     "ios:15": "react-native start --port 8089 --simulator \"iPhone 15 Pro Max\"",
     "setup:android": "yarn && cd android && ./gradlew clean && npx react-native start",
     "setup:android-tcp": "adb reverse tcp:8081 tcp:8081 && yarn react-native run-android",
